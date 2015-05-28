@@ -467,10 +467,13 @@ comes through the production system, the number of times it has to run through
 the production system will be tacked per package, along with whether that package
 resulted in a published version. That means that for a given article - elife-01122 we may see the  information similar to the following on a production dashboard
 
-	- elife-01122 | revision 0 | 6 runs | not published  
-	- elife-01122 | revision 1 | 3 runs | version 1
-	- elife-01122 | revision 2 | 3 runs | not published
-	- elife-01122 | revision 3 | 2 runs | version 2
+	- elife-01122 | POA | revision 0 | 6 runs | not published  
+	- elife-01122 | POA | revision 1 | 3 runs | version 1
+	- elife-01122 | POA | revision 2 | 3 runs | not published
+	- elife-01122 | POA | revision 3 | 2 runs | version 2
+	- elife-01122 | VOR | revision 0 | 2 runs | not published  
+	- elife-01122 | VOR | revision 1 | 1 runs | version 1
+	- elife-01122 | VOR | revision 2 | 4 runs | version 2
 
 #### Why don't we store run number information in the file name?
 
