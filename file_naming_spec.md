@@ -20,7 +20,7 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 
 ###### `<asset>`
 
-This refers to an asset file related to an article, for example a figure, sub-figure, data file, video or supplementary file.
+This refers to an asset file related to an article, for example a figure, sub-figure, data file, media, or supplementary file.
 
 ###### `<a-id>`
 
@@ -519,7 +519,7 @@ I have, mainly as I felt that file names for sub components were becoming unweil
 - table -> table  (tab is ambigious)
 - figuresupplement -> subfig
 - supplementaryfile -> suppfile
-- video -> vid
+- media -> media
 - sourcecode -> code  
 - sourcedata -> data  
 - supplimentarymaterial ->
