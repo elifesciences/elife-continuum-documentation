@@ -522,7 +522,6 @@ I have, mainly as I felt that file names for sub components were becoming unweil
 - media -> media
 - sourcecode -> code  
 - sourcedata -> data  
-- supplimentarymaterial ->
 
 
 ## Tying POA and VOR packets in our workflow and their naming convention.
