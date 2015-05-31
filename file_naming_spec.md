@@ -267,7 +267,7 @@ The following JSON is sent to the Drupal container (I've redacted specifics in t
 "publish": "1",
 "volume": " ... ",
 "article-id": "10.7554/eLife.00012",
-"article-version-id": "00013.1",
+"article-version-id": "00012.1",
 "pub-date": "2014-02-28",
 "path": "content/2/e00012",
 "article-type": "research-article",
@@ -363,7 +363,7 @@ The following JSON is sent to the Drupal container (I've redacted specifics in t
 "publish": "1",
 "volume": " ... ",
 "article-id": "10.7554/eLife.00012",
-"article-version-id": "00013.1",
+"article-version-id": "00012.1",
 "pub-date": "2014-02-28",
 "path": "content/2/e00012",
 "article-type": "research-article",
@@ -482,7 +482,7 @@ The following JSON is sent to the Drupal container (I've redacted specifics in t
 "publish": "1",
 "volume": " ... ",
 "article-id": "10.7554/eLife.00012",
-"article-version-id": "00013.2",
+"article-version-id": "00012.2",
 "pub-date": "2014-02-28",
 "path": "content/2/e00012",
 "article-type": "research-article",
@@ -673,7 +673,7 @@ The following JSON is sent to the Drupal container
 "publish": "1",
 "volume": " ... ",
 "article-id": "10.7554/eLife.00012",
-"article-version-id": "00013.1",
+"article-version-id": "00012.1",
 "pub-date": "2014-02-28",
 "path": "content/2/e00012",
 "article-type": "research-article",
@@ -716,8 +716,8 @@ The following JSON is sent to the Drupal container
 "publish": "1",
 "volume": " ... ",
 "article-id": "10.7554/eLife.00012",
-"article-version-id": "00013.2",
-"pub-date": "2014-02-28",
+"article-version-id": "00012.2",
+"pub-date": "2014-03-02",
 "path": "content/2/e00012",
 "article-type": "research-article",
 "status": "POA",
@@ -802,8 +802,8 @@ The following JSON is sent to the Drupal container
 "publish": "1",
 "volume": " ... ",
 "article-id": "10.7554/eLife.00012",
-"article-version-id": "00013.3",
-"pub-date": "2014-02-28",
+"article-version-id": "00012.3",
+"pub-date": "2014-03-15",
 "path": "content/2/e00012",
 "article-type": "research-article",
 "status": "VOR",
@@ -847,7 +847,7 @@ and then we update PubMed with
 - elife_00012.xml  
 
 
-In the new naming scheme it would be convineine if we could do the following
+In the new naming scheme it would be convenience if we could do the following
 
 send them
 
