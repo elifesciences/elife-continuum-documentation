@@ -90,7 +90,7 @@ For example, an article with three main figures, where one figure has three sub 
 Before reaching the publishing workflow an article may go through a number of revisions at any one of a number of steps with the content processor. We indicate updates to the article with a revision number. If no revisions have happened, there will be no revision number on the article. Each further revision is indicated by a revision number. The revision number will also increment for each asset of the article. The revision number is **only** indicated in the containing zip file name from the content processor.
 
 For example, if one image needs to be updated within an article, the revision number increases for
-the containing zip file that is supplied, but all file names within that zip reatin their original names.
+the containing zip file that is supplied, but all file names within that zip retain their original names.
 
 Initial content of an article zip file, with no revisions having occurred
 
@@ -222,35 +222,68 @@ elife-00012-vor.zip contains:
 - elife-00012-vor-fig3-figsup3.tiff
 - elife-00012-vor-fig3-figsup3-data1.csv
 
+
 On publishing event files and internal XML links get renamed and updated to:
 
 elife-00012-vor-v1.zip contains:  
-- elife-00012-vor-v1.xml
-- elife-00012-vor-v1.pdf
-- elife-00012-vor-figures-v1.pdf
-- elife-00012-vor-fig1-v1.tiff
-- elife-00012-vor-fig1-data1-v1.csv
-- elife-00012-vor-fig1-data2-v1.csv
-- elife-00012-vor-fig1-figsup1-v1.tiff
-- elife-00012-vor-fig1-figsup1-data1-v1.csv
-- elife-00012-vor-fig1-figsup2-v1.tiff
-- elife-00012-vor-fig1-figsup2-data1-v1.csv
-- elife-00012-vor-fig1-figsup3-v1.tiff
-- elife-00012-vor-fig1-figsup3-data1-v1.mol
-- elife-00012-vor-fig2-v1.tiff
-- elife-00012-vor-fig2-data1-v1.txt
-- elife-00012-vor-fig3-v1.tiff
-- elife-00012-vor-fig3-data-v1.csv
-- elife-00012-vor-fig3-figsup1-v1.tiff
-- elife-00012-vor-fig3-figsup1-data1-v1.csv
-- elife-00012-vor-fig3-figsup1-data2-v1.csv
-- elife-00012-vor-fig3-figsup1-data3-v1.csv
-- elife-00012-vor-fig3-figsup2-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
-- elife-00012-vor-fig3-figsup3-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
+- elife-00012-v1.xml
+- elife-00012-v1.pdf
+- elife-00012-figures-v1.pdf
+- elife-00012-fig1-v1.tiff
+- elife-00012-fig1-data1-v1.csv
+- elife-00012-fig1-data2-v1.csv
+- elife-00012-fig1-figsup1-v1.tiff
+- elife-00012-fig1-figsup1-data1-v1.csv
+- elife-00012-fig1-figsup2-v1.tiff
+- elife-00012-fig1-figsup2-data1-v1.csv
+- elife-00012-fig1-figsup3-v1.tiff
+- elife-00012-fig1-figsup3-data1-v1.mol
+- elife-00012-fig2-v1.tiff
+- elife-00012-fig2-data1-v1.txt
+- elife-00012-fig3-v1.tiff
+- elife-00012-fig3-data-v1.csv
+- elife-00012-fig3-figsup1-v1.tiff
+- elife-00012-fig3-figsup1-data1-v1.csv
+- elife-00012-fig3-figsup1-data2-v1.csv
+- elife-00012-fig3-figsup1-data3-v1.csv
+- elife-00012-fig3-figsup2-v1.tiff
+- elife-00012-fig3-figsup3-data1-v1.csv
+- elife-00012-fig3-figsup3-v1.tiff
+- elife-00012-fig3-figsup3-data1-v1.csv
 
-Bundle gets archived under the zip file elife-00012-vor-v1.zip.
+We have appended the version number to each file, and we have dropped the `VOR` indicator, as
+this information makes not sense to any person outside of eLife.
+
+The following JSON is sent to the Drupal container (I've redacted specifics in the call to just highlight the components related to the article versions and identifiers)
+
+
+```json
+{
+"force": "1",  
+"title": " ... ",
+"impact-statement": " ... ",  
+"version": "1",
+"doi": "10.7554/eLife.00012",
+"publish": "1",
+"volume": " ... ",
+"article-id": "10.7554/eLife.00012",
+"article-version-id": "00013.1",
+"pub-date": "2014-02-28",
+"path": "content/2/e00012",
+"article-type": "research-article",
+"status": "VOR",
+"categories": {},
+"keywords": {},
+"contributors": [],
+"referenced": {},
+"related-articles": [],
+"children": {},
+"citations": {}  
+}
+```
+
+On getting a success message from the Drupal layer that the publishing event has happened then the bundle gets archived under the zip file elife-00012-vor-v1.zip.
+
 
 ###### example 2
 
@@ -289,32 +322,63 @@ This revision gets archived under elife-00012-vor-r1.zip.
 On publishing event files and internal XML links get renamed and updated to:
 
 elife-00012-vor-v1.zip contains:  
-- elife-00012-vor-v1.xml
-- elife-00012-vor-v1.pdf
-- elife-00012-vor-figures-v1.pdf
-- elife-00012-vor-fig1-v1.tiff
-- elife-00012-vor-fig1-data1-v1.csv
-- elife-00012-vor-fig1-data2-v1.csv
-- elife-00012-vor-fig1-figsup1-v1.tiff
-- elife-00012-vor-fig1-figsup1-data1-v1.csv
-- elife-00012-vor-fig1-figsup2-v1.tiff
-- elife-00012-vor-fig1-figsup2-data1-v1.csv
-- elife-00012-vor-fig1-figsup3-v1.tiff
-- elife-00012-vor-fig1-figsup3-data1-v1.mol
-- elife-00012-vor-fig2-v1.tiff
-- elife-00012-vor-fig2-data1-v1.txt
-- elife-00012-vor-fig3-v1.tiff
-- elife-00012-vor-fig3-data-v1.csv
-- elife-00012-vor-fig3-figsup1-v1.tiff
-- elife-00012-vor-fig3-figsup1-data1-v1.csv
-- elife-00012-vor-fig3-figsup1-data2-v1.csv
-- elife-00012-vor-fig3-figsup1-data3-v1.csv
-- elife-00012-vor-fig3-figsup2-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
-- elife-00012-vor-fig3-figsup3-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
+- elife-00012-v1.xml
+- elife-00012-v1.pdf
+- elife-00012-figures-v1.pdf
+- elife-00012-fig1-v1.tiff
+- elife-00012-fig1-data1-v1.csv
+- elife-00012-fig1-data2-v1.csv
+- elife-00012-fig1-figsup1-v1.tiff
+- elife-00012-fig1-figsup1-data1-v1.csv
+- elife-00012-fig1-figsup2-v1.tiff
+- elife-00012-fig1-figsup2-data1-v1.csv
+- elife-00012-fig1-figsup3-v1.tiff
+- elife-00012-fig1-figsup3-data1-v1.mol
+- elife-00012-fig2-v1.tiff
+- elife-00012-fig2-data1-v1.txt
+- elife-00012-fig3-v1.tiff
+- elife-00012-fig3-data-v1.csv
+- elife-00012-fig3-figsup1-v1.tiff
+- elife-00012-fig3-figsup1-data1-v1.csv
+- elife-00012-fig3-figsup1-data2-v1.csv
+- elife-00012-fig3-figsup1-data3-v1.csv
+- elife-00012-fig3-figsup2-v1.tiff
+- elife-00012-fig3-figsup3-data1-v1.csv
+- elife-00012-fig3-figsup3-v1.tiff
+- elife-00012-fig3-figsup3-data1-v1.csv
 
-This version gets archived under elife-00012-vor-v1.zip.
+We have appended the version number to each file, and we have dropped the `VOR` indicator, as
+this information makes not sense to any person outside of eLife.
+
+The following JSON is sent to the Drupal container (I've redacted specifics in the call to just highlight the components related to the article versions and identifiers)
+
+
+```json
+{
+"force": "1",  
+"title": " ... ",
+"impact-statement": " ... ",  
+"version": "1",
+"doi": "10.7554/eLife.00012",
+"publish": "1",
+"volume": " ... ",
+"article-id": "10.7554/eLife.00012",
+"article-version-id": "00013.1",
+"pub-date": "2014-02-28",
+"path": "content/2/e00012",
+"article-type": "research-article",
+"status": "VOR",
+"categories": {},
+"keywords": {},
+"contributors": [],
+"referenced": {},
+"related-articles": [],
+"children": {},
+"citations": {}  
+}
+```
+
+On getting a success message from the Drupal layer that the publishing event has happened then the bundle gets archived under the zip file elife-00012-vor-v1.zip.
 
 
 ###### example 3
@@ -324,31 +388,31 @@ a tricky author issue, and this third revision makes it to version 2 on the webs
 
 The version that exists in the archive and on the website is the following:
 
-- elife-00012-vor-v1.zip contains
-- elife-00012-vor-v1.xml
-- elife-00012-vor-v1.pdf
-- elife-00012-vor-figures-v1.pdf
-- elife-00012-vor-fig1-v1.tiff
-- elife-00012-vor-fig1-data1-v1.csv
-- elife-00012-vor-fig1-data2-v1.csv
-- elife-00012-vor-fig1-figsup1-v1.tiff
-- elife-00012-vor-fig1-figsup1-data1-v1.csv
-- elife-00012-vor-fig1-figsup2-v1.tiff
-- elife-00012-vor-fig1-figsup2-data1-v1.csv
-- elife-00012-vor-fig1-figsup3-v1.tiff
-- elife-00012-vor-fig1-figsup3-data1-v1.mol
-- elife-00012-vor-fig2-v1.tiff
-- elife-00012-vor-fig2-data1-v1.txt
-- elife-00012-vor-fig3-v1.tiff
-- elife-00012-vor-fig3-data-v1.csv
-- elife-00012-vor-fig3-figsup1-v1.tiff
-- elife-00012-vor-fig3-figsup1-data1-v1.csv
-- elife-00012-vor-fig3-figsup1-data2-v1.csv
-- elife-00012-vor-fig3-figsup1-data3-v1.csv
-- elife-00012-vor-fig3-figsup2-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
-- elife-00012-vor-fig3-figsup3-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
+elife-00012-vor-v1.zip contains
+- elife-00012-v1.xml
+- elife-00012-v1.pdf
+- elife-00012-figures-v1.pdf
+- elife-00012-fig1-v1.tiff
+- elife-00012-fig1-data1-v1.csv
+- elife-00012-fig1-data2-v1.csv
+- elife-00012-fig1-figsup1-v1.tiff
+- elife-00012-fig1-figsup1-data1-v1.csv
+- elife-00012-fig1-figsup2-v1.tiff
+- elife-00012-fig1-figsup2-data1-v1.csv
+- elife-00012-fig1-figsup3-v1.tiff
+- elife-00012-fig1-figsup3-data1-v1.mol
+- elife-00012-fig2-v1.tiff
+- elife-00012-fig2-data1-v1.txt
+- elife-00012-fig3-v1.tiff
+- elife-00012-fig3-data-v1.csv
+- elife-00012-fig3-figsup1-v1.tiff
+- elife-00012-fig3-figsup1-data1-v1.csv
+- elife-00012-fig3-figsup1-data2-v1.csv
+- elife-00012-fig3-figsup1-data3-v1.csv
+- elife-00012-fig3-figsup2-v1.tiff
+- elife-00012-fig3-figsup3-data1-v1.csv
+- elife-00012-fig3-figsup3-v1.tiff
+- elife-00012-fig3-figsup3-data1-v1.csv
 
 Three revisions occur, and the new "live" bundle that comes in to the publsihing system contains the following:
 
@@ -381,30 +445,57 @@ elife-00012-vor-r3.zip contains:
 On publishing event files and internal XML links get renamed and updated to:
 
 elife-00012-vor-v2.zip contains:
-- elife-00012-vor-v2.xml
-- elife-00012-vor-v2.pdf
-- elife-00012-vor-figures-v2.pdf
-- elife-00012-vor-fig1-v2.tiff
-- elife-00012-vor-fig1-data1-v2.csv
-- elife-00012-vor-fig1-data2-v2.csv
-- elife-00012-vor-fig1-figsup1-v2.tiff
-- elife-00012-vor-fig1-figsup1-data1-v2.csv
-- elife-00012-vor-fig1-figsup2-v2.tiff
-- elife-00012-vor-fig1-figsup2-data1-v2.csv
-- elife-00012-vor-fig1-figsup3-v2.tiff
-- elife-00012-vor-fig1-figsup3-data1-v2.mol
-- elife-00012-vor-fig2-v2.tiff
-- elife-00012-vor-fig2-data1-v2.txt
-- elife-00012-vor-fig3-v2.tiff
-- elife-00012-vor-fig3-data-v2.csv
-- elife-00012-vor-fig3-figsup1-v2.tiff
-- elife-00012-vor-fig3-figsup1-data1-v2.csv
-- elife-00012-vor-fig3-figsup1-data2-v2.csv
-- elife-00012-vor-fig3-figsup1-data3-v2.csv
-- elife-00012-vor-fig3-figsup2-v2.tiff
-- elife-00012-vor-fig3-figsup3-data1-v2.csv
-- elife-00012-vor-fig3-figsup3-v2.tiff
-- elife-00012-vor-fig3-figsup3-data1-v2.csv
+- elife-00012-v2.xml
+- elife-00012-v2.pdf
+- elife-00012-figures-v2.pdf
+- elife-00012-fig1-v2.tiff
+- elife-00012-fig1-data1-v2.csv
+- elife-00012-fig1-data2-v2.csv
+- elife-00012-fig1-figsup1-v2.tiff
+- elife-00012-fig1-figsup1-data1-v2.csv
+- elife-00012-fig1-figsup2-v2.tiff
+- elife-00012-fig1-figsup2-data1-v2.csv
+- elife-00012-fig1-figsup3-v2.tiff
+- elife-00012-fig1-figsup3-data1-v2.mol
+- elife-00012-fig2-v2.tiff
+- elife-00012-fig2-data1-v2.txt
+- elife-00012-fig3-v2.tiff
+- elife-00012-fig3-data-v2.csv
+- elife-00012-fig3-figsup1-v2.tiff
+- elife-00012-fig3-figsup1-data1-v2.csv
+- elife-00012-fig3-figsup1-data2-v2.csv
+- elife-00012-fig3-figsup1-data3-v2.csv
+- elife-00012-fig3-figsup2-v2.tiff
+- elife-00012-fig3-figsup3-data1-v2.csv
+- elife-00012-fig3-figsup3-v2.tiff
+- elife-00012-fig3-figsup3-data1-v2.csv
+
+The following JSON is sent to the Drupal container (I've redacted specifics in the call to just highlight the components related to the article versions and identifiers)
+
+```json
+{
+"force": "1",  
+"title": " ... ",
+"impact-statement": " ... ",  
+"version": "2",
+"doi": "10.7554/eLife.00012",
+"publish": "1",
+"volume": " ... ",
+"article-id": "10.7554/eLife.00012",
+"article-version-id": "00013.2",
+"pub-date": "2014-02-28",
+"path": "content/2/e00012",
+"article-type": "research-article",
+"status": "VOR",
+"categories": {},
+"keywords": {},
+"contributors": [],
+"referenced": {},
+"related-articles": [],
+"children": {},
+"citations": {}  
+}
+```
 
 ###### `<ext>``
 
@@ -427,8 +518,10 @@ This is the file extention, common extensions are
 
 All files associated with an article get updated too, either the revision number, or
 the eventual published version number. Although this means that we may end up
-incrementing files that don't change, what is important is that their file names
-now refer to the globally updated version of the published article.
+incrementing files that don't change, what is important is that on publication their file names
+now refer to the globally updated version of the published article. This also means that
+if we need a new file to replace an existing file, we do not run into file naming conflicst. From the point of view of the CDN we now refer to a new file with a new file name, rather than having to wait for a file replacement to propogate through the CDN, meaning these kinds of changes should
+happen instantaneiously.
 
 #### How do we update a version number?
 
@@ -523,6 +616,16 @@ version of the article. We could either not care, or we could put in place some 
 to prevent revisions entering the production system again that have already resulted in a
 successful publising event. I think we might want to consider this story.
 
+#### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
+
+The main requirement from the Drupal side is that articles can be sorted on the article-version-id, so the presence of a `VOR` or `POA` label in this id would require logic in the Drupal layer to
+be able to correctly sort the article versions, as the app would have to know which of these
+kinds of state of the came before which other kinds of state. If we drop this name in the id, then
+the app does not have to carry this logic, and we make the API call to the Drupal layer
+less eLife specific, meaning that in future this system could be more easily adopted
+by other publishers, or used in other workflows that do not have POA or VOR in them.
+
+
 #### In this document have you sneakilly concatenated the names of things like figures? Why, and do you have a full specification list?
 
 I have, mainly as I felt that file names for sub components were becoming unweildy. Here is the start of a specification list
@@ -541,37 +644,98 @@ I have, mainly as I felt that file names for sub components were becoming unweil
 
 #### example 1
 
-poa come in and gets published immediately
+poa comes in and gets published immediately
 
 package in the production system contains the following (after being generated
 	via the POA process.)
 
+elife-00012-poa.zip contains
 - elife-00012-poa.xml  (not complete article XML)
 - elife-00012-poa.pdf
 - elife-00012-poa-suppfiles.zip
 
 On publication these get renamed to:
 
-- elife-00012-poa-v1.xml
-- elife-00012-poa-v1.pdf
-- elife-00012-poa-suppfiles-v1.zip
+elife-00012-poa.zip contains
+- elife-00012-v1.xml
+- elife-00012-v1.pdf
+- elife-00012-suppfiles-v1.zip
 
-An update is required on the POA articles and in the production system we recieve
+The following JSON is sent to the Drupal container
 
+```json
+{
+"force": "1",  
+"title": " ... ",
+"impact-statement": " ... ",  
+"version": "1",
+"doi": "10.7554/eLife.00012",
+"publish": "1",
+"volume": " ... ",
+"article-id": "10.7554/eLife.00012",
+"article-version-id": "00013.1",
+"pub-date": "2014-02-28",
+"path": "content/2/e00012",
+"article-type": "research-article",
+"status": "POA",
+"categories": {},
+"keywords": {},
+"contributors": [],
+"referenced": {},
+"related-articles": [],
+"children": {},
+"citations": {}  
+}
+```
+
+
+An update is required on the POA articles and in the production system we receive
+
+elife-00012-poa-r1.zip contains
 - elife-00012-poa-r1.xml  (not complete article XML)
 - elife-00012-poa-r1.pdf
 - elife-00012-poa-suppfiles-r1.zip
 
 On publication these get renamed to:
 
-- elife-00012-poa-v2.xml  (not complete article XML)
-- elife-00012-poa-v2.pdf
-- elife-00012-poa-suppfiles-v2.zip
+elife-00012-poa-v2.zip contains
+- elife-00012-v2.xml  (not complete article XML)
+- elife-00012-v2.pdf
+- elife-00012-suppfiles-v2.zip
+
+
+The following JSON is sent to the Drupal container
+
+```json
+{
+"force": "1",  
+"title": " ... ",
+"impact-statement": " ... ",  
+"version": "2",
+"doi": "10.7554/eLife.00012",
+"publish": "1",
+"volume": " ... ",
+"article-id": "10.7554/eLife.00012",
+"article-version-id": "00013.2",
+"pub-date": "2014-02-28",
+"path": "content/2/e00012",
+"article-type": "research-article",
+"status": "POA",
+"categories": {},
+"keywords": {},
+"contributors": [],
+"referenced": {},
+"related-articles": [],
+"children": {},
+"citations": {}  
+}
+```
 
 The article goes through the full content processing step and gets a VOR status.
 
 Package comes in to the production system as:
 
+elife-00012-vor.zip contains
 - elife-00012-vor.xml
 - elife-00012-vor.pdf
 - elife-00012-vor-figures.pdf
@@ -597,35 +761,98 @@ Package comes in to the production system as:
 - elife-00012-vor-fig3-figsup3.tiff
 - elife-00012-vor-fig3-figsup3-data1.csv
 
-no modifications are needed and this gets published as:
+no modifications are needed and on publishing these files get renamed as:
 
-- elife-00012-vor-v1.xml
-- elife-00012-vor-v1.pdf
-- elife-00012-vor-figures-v1.pdf
-- elife-00012-vor-fig1-v1.tiff
-- elife-00012-vor-fig1-data1-v1.csv
-- elife-00012-vor-fig1-data2-v1.csv
-- elife-00012-vor-fig1-figsup1-v1.tiff
-- elife-00012-vor-fig1-figsup1-data1-v1.csv
-- elife-00012-vor-fig1-figsup2-v1.tiff
-- elife-00012-vor-fig1-figsup2-data1-v1.csv
-- elife-00012-vor-fig1-figsup3-v1.tiff
-- elife-00012-vor-fig1-figsup3-data1-v1.mol
-- elife-00012-vor-fig2-v1.tiff
-- elife-00012-vor-fig2-data1-v1.txt
-- elife-00012-vor-fig3-v1.tiff
-- elife-00012-vor-fig3-data-v1.csv
-- elife-00012-vor-fig3-figsup1-v1.tiff
-- elife-00012-vor-fig3-figsup1-data1-v1.csv
-- elife-00012-vor-fig3-figsup1-data2-v1.csv
-- elife-00012-vor-fig3-figsup1-data3-v1.csv
-- elife-00012-vor-fig3-figsup2-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
-- elife-00012-vor-fig3-figsup3-v1.tiff
-- elife-00012-vor-fig3-figsup3-data1-v1.csv
+elife-00012-vor-v3.zip contains
+- elife-00012-v3.xml
+- elife-00012-v3.pdf
+- elife-00012-figures-v3.pdf
+- elife-00012-fig1-v3.tiff
+- elife-00012-fig1-data1-v3.csv
+- elife-00012-fig1-data2-v3.csv
+- elife-00012-fig1-figsup1-v3.tiff
+- elife-00012-fig1-figsup1-data1-v3.csv
+- elife-00012-fig1-figsup2-v3.tiff
+- elife-00012-fig1-figsup2-data1-v3.csv
+- elife-00012-fig1-figsup3-v3.tiff
+- elife-00012-fig1-figsup3-data1-v3.mol
+- elife-00012-fig2-v3.tiff
+- elife-00012-fig2-data1-v3.txt
+- elife-00012-fig3-v3.tiff
+- elife-00012-fig3-data-v3.csv
+- elife-00012-fig3-figsup1-v3.tiff
+- elife-00012-fig3-figsup1-data1-v3.csv
+- elife-00012-fig3-figsup1-data2-v3.csv
+- elife-00012-fig3-figsup1-data3-v3.csv
+- elife-00012-fig3-figsup2-v3.tiff
+- elife-00012-fig3-figsup3-data1-v3.csv
+- elife-00012-fig3-figsup3-v3.tiff
+- elife-00012-fig3-figsup3-data1-v3.csv
 
-So the version hisotry of the PDF of this article will look like the following, from oldest to newest:
+The following JSON is sent to the Drupal container  
 
-- elife-00012-poa-v1.pdf
-- elife-00012-poa-v2.pdf
-- elife-00012-vor-v1.pdf
+
+```json
+{
+"force": "1",  
+"title": " ... ",
+"impact-statement": " ... ",  
+"version": "3",
+"doi": "10.7554/eLife.00012",
+"publish": "1",
+"volume": " ... ",
+"article-id": "10.7554/eLife.00012",
+"article-version-id": "00013.3",
+"pub-date": "2014-02-28",
+"path": "content/2/e00012",
+"article-type": "research-article",
+"status": "VOR",
+"categories": {},
+"keywords": {},
+"contributors": [],
+"referenced": {},
+"related-articles": [],
+"children": {},
+"citations": {}  
+}
+```
+
+So the version hisotry of the PDF of this article will look like the following, from oldest to newest, for files have have been published
+
+- elife-00012-v1.pdf  (a POA pdf)
+- elife-00012-v2.pdf  (a POA pdf)
+- elife-00012-v3.pdf  (a VOR pdf)
+
+## Some remaining questions and queries.
+
+
+### Should VOR zip files actually vary a version number that refers to the VOR version,
+or the global version?
+
+If they carry a version number that refers to the VOR version, then the files inside of them can have
+different version numbers to the containing zip file version number. If they contain a version number
+taht refers to hte global version number of the aritlce, then most VOR zip files will start on versio n2, and there will eb no version 1 VOR zip file. I'm siding with the idea that the version number should be global.
+
+### Should VOR and POA zip files that actually get archived in the end have a VOR of aPOA label in the name of the zip file?
+
+We are dropping the VOR and POA lable in the individual files, why keep it in the zip file? I thinkthis is just a convienence for the production team. In fact, the publishing system does not care, this informaiton is transmitted via the data in JSON to the Drupal layer, and is captured in the repoting database, so there is no reason to throw awaty this label when it could be quite handy for anyone who wants to manually inspect the zip archives.
+
+### Can we send PubMed atomically increasing version numbers in the XML that we send them, rather than send them xml files with POA in them?
+We currently send PubMed XML files as follows
+
+- elife_poa_00012.xml
+
+and then we update PubMed with
+
+- elife_00012.xml  
+
+
+In the new naming scheme it would be convineine if we could do the following
+
+send them
+
+- elife-00012-v1.xml
+
+and then we update PubMed with
+
+- elife-00012-v2.xml
