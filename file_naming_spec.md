@@ -3,16 +3,16 @@
 ## File naming pattern
 
 >
-	`elife-<eid>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-data<did>)((-r<revision>)|(-v<version>)).<ext>`
+	`elife-<pid>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-data<did>)((-r<revision>)|(-v<version>)).<ext>`
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
 
 ### components
 
-###### `<eid>`
+###### `<pid>`
 
-This is the eLife id, and is the numerical digit that is used to make up part of the DOI for an article. For example an eLife article with the following DOI `/10.7554/eLife.06659` will have an eid of `06659`.
+This is the eLife id, and is the numerical digit that is used to make up part of the DOI for an article. For example an eLife article with the following DOI `/10.7554/eLife.06659` will have a pid of `06659`.
 
 ###### `<status>`
 
@@ -87,7 +87,7 @@ For example, an article with three main figures, where one figure has three sub 
 
 ###### r `<revision>`
 
-Before reaching the publishing workflow an article may go through a number of revisions at any one of a number of steps with the content processor. We indicate updates to the article with a revision number. If no revisions have happened, there will be no revision number on the article. Each further revision is indicated by a revision number. The revision number will also increment for each asset of the article. The revision number is **only** indicated in the containing zip file name from the content processor.
+Before reaching the publishing workflow an article goes through a number of steps managed by the production department and supplied by the content processor, and could go through revisions at any of those steps. We indicate updates to the article with a revision number in the zipped file naming structure; the actula file names do not change. The revisions apply to each stage as they are deposted into different AWS buckets. If no revisions have happened, there will be no revision number on the zipped file. If a revision happens at a certain stage, it will be given a revision number. At the next stage of the process this revision number will drop off. Each further revision is indicated by a revision number. The revision number is **only** indicated in the containing zip file name from the content processor.
 
 For example, if one image needs to be updated within an article, the revision number increases for
 the containing zip file that is supplied, but all file names within that zip retain their original names.
@@ -121,7 +121,7 @@ elife-00012-vor.zip contains:
 - elife-00012-vor-fig3-figsup3.tiff
 - elife-00012-vor-fig3-figsup3-data1.csv
 
-One revision occurring in the content processing stage, requiring a resupply to the publishing system:
+One revision occurring in the preediting stage of content processing, requiring a resupply to the relevant bucket:
 
 elife-00012-vor-r1.zip contains:
 - elife-00012-vor.xml
@@ -149,10 +149,10 @@ elife-00012-vor-r1.zip contains:
 - elife-00012-vor-fig3-figsup3.tiff
 - elife-00012-vor-fig3-figsup3-data1.csv
 
-5 revisions having occurred:
+At the next stage, copyediting, the revision number is lost. If there are 5 revisions at the revisions stage of the process, the 5th supply will be (discounts revisions at previous stages):
 
 elife-00012-vor-r5.zip contains:
-- elife-00012-vor-r5.xml
+- elife-00012-vor.xml
 - elife-00012-vor.pdf
 - elife-00012-vor-figures.pdf
 - elife-00012-vor-fig1.tiff
