@@ -8,7 +8,7 @@
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
 
-### components
+### Components
 
 ###### `<pid>`
 
