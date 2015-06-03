@@ -45,7 +45,7 @@ article with three figures will have the following asset files:
 
 ###### `<sub-asset>`
 
-Some assets will have sub-assets, eg figure supplements (figsup), source data (data), or source code (code). These are indicated by the sub-asset component.
+Some assets will have sub-assets, eg figure supplements (figsupp), source data (data), or source code (code). These are indicated by the sub-asset component.
 
 ###### `<sa-id>`
 
@@ -53,13 +53,13 @@ Some assets have sub-asset ids, for example, an aritcle with three main figures,
 figure has three figure supplements, and one figure has two figure supplements will have the following:
 
 - elife-00012-fig1.tiff
-- elife-00012-fig1-figsup1.tiff
-- elife-00012-fig1-figsup2.tiff
-- elife-00012-fig1-figsup3.tiff
+- elife-00012-fig1-figsupp1.tiff
+- elife-00012-fig1-figsupp2.tiff
+- elife-00012-fig1-figsupp3.tiff
 - elife-00012-fig2.tiff
 - elife-00012-fig3.tiff
-- elife-00012-fig3-figsup1.tiff
-- elife-00012-fig3-figsup2.tiff
+- elife-00012-fig3-figsupp1.tiff
+- elife-00012-fig3-figsupp2.tiff
 
 ###### data
 
@@ -75,24 +75,24 @@ For example, an article with three main figures, where one figure has three sub 
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
 - elife-00012-fig1-data2.csv
-- elife-00012-fig1-figsup1.tiff
-- elife-00012-fig1-figsup1-data1.csv
-- elife-00012-fig1-figsup2.tiff
-- elife-00012-fig1-figsup2-data1.csv
-- elife-00012-fig1-figsup3.tiff
-- elife-00012-fig1-figsup3-data1.mol
+- elife-00012-fig1-figsupp1.tiff
+- elife-00012-fig1-figsupp1-data1.csv
+- elife-00012-fig1-figsupp2.tiff
+- elife-00012-fig1-figsupp2-data1.csv
+- elife-00012-fig1-figsupp3.tiff
+- elife-00012-fig1-figsupp3-data1.mol
 - elife-00012-fig2.tiff
 - elife-00012-fig2-data1.txt
 - elife-00012-fig3.tiff
 - elife-00012-fig3-data.csv
-- elife-00012-fig3-figsup1.tiff
-- elife-00012-fig3-figsup1-data1.csv
-- elife-00012-fig3-figsup1-data2.csv
-- elife-00012-fig3-figsup1-data3.csv
-- elife-00012-fig3-figsup2.tiff
-- elife-00012-fig3-figsup3-data1.csv
-- elife-00012-fig3-figsup3.tiff
-- elife-00012-fig3-figsup3-data1.csv
+- elife-00012-fig3-figsupp1.tiff
+- elife-00012-fig3-figsupp1-data1.csv
+- elife-00012-fig3-figsupp1-data2.csv
+- elife-00012-fig3-figsupp1-data3.csv
+- elife-00012-fig3-figsupp2.tiff
+- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp3.tiff
+- elife-00012-fig3-figsupp3-data1.csv
 
 
 ###### code
@@ -109,8 +109,8 @@ For example, an article with a top level source code, two main figures, where on
 - elife-00012-fig1.tiff
 - elife-00012-fig1-code1.csv
 - elife-00012-fig2.tiff
-- elife-00012-fig2-figsup1.tiff
-- elife-00012-fig2-figsup1-code1.csv
+- elife-00012-fig2-figsupp1.tiff
+- elife-00012-fig2-figsupp1-code1.csv
 - elife-00012-code1.csv
 
 ##### v`<version>`
@@ -136,24 +136,24 @@ elife-00012-vor.zip contains:
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
 - elife-00012-fig1-data2.csv
-- elife-00012-fig1-figsup1.tiff
-- elife-00012-fig1-figsup1-data1.csv
-- elife-00012-fig1-figsup2.tiff
-- elife-00012-fig1-figsup2-data1.csv
-- elife-00012-fig1-figsup3.tiff
-- elife-00012-fig1-figsup3-data1.mol
+- elife-00012-fig1-figsupp1.tiff
+- elife-00012-fig1-figsupp1-data1.csv
+- elife-00012-fig1-figsupp2.tiff
+- elife-00012-fig1-figsupp2-data1.csv
+- elife-00012-fig1-figsupp3.tiff
+- elife-00012-fig1-figsupp3-data1.mol
 - elife-00012-fig2.tiff
 - elife-00012-fig2-data1.txt
 - elife-00012-fig3.tiff
 - elife-00012-fig3-data.csv
-- elife-00012-fig3-figsup1.tiff
-- elife-00012-fig3-figsup1-data1.csv
-- elife-00012-fig3-figsup1-data2.csv
-- elife-00012-fig3-figsup1-data3.csv
-- elife-00012-fig3-figsup2.tiff
-- elife-00012-fig3-figsup3-data1.csv
-- elife-00012-fig3-figsup3.tiff
-- elife-00012-fig3-figsup3-data1.csv
+- elife-00012-fig3-figsupp1.tiff
+- elife-00012-fig3-figsupp1-data1.csv
+- elife-00012-fig3-figsupp1-data2.csv
+- elife-00012-fig3-figsupp1-data3.csv
+- elife-00012-fig3-figsupp2.tiff
+- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp3.tiff
+- elife-00012-fig3-figsupp3-data1.csv
 
 
 On publishing event files and internal XML links get renamed and updated to (zip retains status indicator):
@@ -165,24 +165,24 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig1-v1.tiff
 - elife-00012-fig1-data1-v1.csv
 - elife-00012-fig1-data2-v1.csv
-- elife-00012-fig1-figsup1-v1.tiff
-- elife-00012-fig1-figsup1-data1-v1.csv
-- elife-00012-fig1-figsup2-v1.tiff
-- elife-00012-fig1-figsup2-data1-v1.csv
-- elife-00012-fig1-figsup3-v1.tiff
-- elife-00012-fig1-figsup3-data1-v1.mol
+- elife-00012-fig1-figsupp1-v1.tiff
+- elife-00012-fig1-figsupp1-data1-v1.csv
+- elife-00012-fig1-figsupp2-v1.tiff
+- elife-00012-fig1-figsupp2-data1-v1.csv
+- elife-00012-fig1-figsupp3-v1.tiff
+- elife-00012-fig1-figsupp3-data1-v1.mol
 - elife-00012-fig2-v1.tiff
 - elife-00012-fig2-data1-v1.txt
 - elife-00012-fig3-v1.tiff
 - elife-00012-fig3-data-v1.csv
-- elife-00012-fig3-figsup1-v1.tiff
-- elife-00012-fig3-figsup1-data1-v1.csv
-- elife-00012-fig3-figsup1-data2-v1.csv
-- elife-00012-fig3-figsup1-data3-v1.csv
-- elife-00012-fig3-figsup2-v1.tiff
-- elife-00012-fig3-figsup3-data1-v1.csv
-- elife-00012-fig3-figsup3-v1.tiff
-- elife-00012-fig3-figsup3-data1-v1.csv
+- elife-00012-fig3-figsupp1-v1.tiff
+- elife-00012-fig3-figsupp1-data1-v1.csv
+- elife-00012-fig3-figsupp1-data2-v1.csv
+- elife-00012-fig3-figsupp1-data3-v1.csv
+- elife-00012-fig3-figsupp2-v1.tiff
+- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp3-v1.tiff
+- elife-00012-fig3-figsupp3-data1-v1.csv
 
 We have appended the version number to each file.
 
@@ -233,24 +233,24 @@ elife-00012-vor.zip contains:
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
 - elife-00012-fig1-data2.csv
-- elife-00012-fig1-figsup1.tiff
-- elife-00012-fig1-figsup1-data1.csv
-- elife-00012-fig1-figsup2.tiff
-- elife-00012-fig1-figsup2-data1.csv
-- elife-00012-fig1-figsup3.tiff
-- elife-00012-fig1-figsup3-data1.mol
+- elife-00012-fig1-figsupp1.tiff
+- elife-00012-fig1-figsupp1-data1.csv
+- elife-00012-fig1-figsupp2.tiff
+- elife-00012-fig1-figsupp2-data1.csv
+- elife-00012-fig1-figsupp3.tiff
+- elife-00012-fig1-figsupp3-data1.mol
 - elife-00012-fig2.tiff
 - elife-00012-fig2-data1.txt
 - elife-00012-fig3.tiff
 - elife-00012-fig3-data.csv
-- elife-00012-fig3-figsup1.tiff
-- elife-00012-fig3-figsup1-data1.csv
-- elife-00012-fig3-figsup1-data2.csv
-- elife-00012-fig3-figsup1-data3.csv
-- elife-00012-fig3-figsup2.tiff
-- elife-00012-fig3-figsup3-data1.csv
-- elife-00012-fig3-figsup3.tiff
-- elife-00012-fig3-figsup3-data1.csv  
+- elife-00012-fig3-figsupp1.tiff
+- elife-00012-fig3-figsupp1-data1.csv
+- elife-00012-fig3-figsupp1-data2.csv
+- elife-00012-fig3-figsupp1-data3.csv
+- elife-00012-fig3-figsupp2.tiff
+- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp3.tiff
+- elife-00012-fig3-figsupp3-data1.csv  
 
 On publishing event files and internal XML links get renamed and updated to:
 
@@ -261,24 +261,24 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig1-v1.tiff
 - elife-00012-fig1-data1-v1.csv
 - elife-00012-fig1-data2-v1.csv
-- elife-00012-fig1-figsup1-v1.tiff
-- elife-00012-fig1-figsup1-data1-v1.csv
-- elife-00012-fig1-figsup2-v1.tiff
-- elife-00012-fig1-figsup2-data1-v1.csv
-- elife-00012-fig1-figsup3-v1.tiff
-- elife-00012-fig1-figsup3-data1-v1.mol
+- elife-00012-fig1-figsupp1-v1.tiff
+- elife-00012-fig1-figsupp1-data1-v1.csv
+- elife-00012-fig1-figsupp2-v1.tiff
+- elife-00012-fig1-figsupp2-data1-v1.csv
+- elife-00012-fig1-figsupp3-v1.tiff
+- elife-00012-fig1-figsupp3-data1-v1.mol
 - elife-00012-fig2-v1.tiff
 - elife-00012-fig2-data1-v1.txt
 - elife-00012-fig3-v1.tiff
 - elife-00012-fig3-data-v1.csv
-- elife-00012-fig3-figsup1-v1.tiff
-- elife-00012-fig3-figsup1-data1-v1.csv
-- elife-00012-fig3-figsup1-data2-v1.csv
-- elife-00012-fig3-figsup1-data3-v1.csv
-- elife-00012-fig3-figsup2-v1.tiff
-- elife-00012-fig3-figsup3-data1-v1.csv
-- elife-00012-fig3-figsup3-v1.tiff
-- elife-00012-fig3-figsup3-data1-v1.csv
+- elife-00012-fig3-figsupp1-v1.tiff
+- elife-00012-fig3-figsupp1-data1-v1.csv
+- elife-00012-fig3-figsupp1-data2-v1.csv
+- elife-00012-fig3-figsupp1-data3-v1.csv
+- elife-00012-fig3-figsupp2-v1.tiff
+- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp3-v1.tiff
+- elife-00012-fig3-figsupp3-data1-v1.csv
 
 We have appended the version number to each file.
 
@@ -327,24 +327,24 @@ elife-00012-vor-v1.zip contains
 - elife-00012-fig1-v1.tiff
 - elife-00012-fig1-data1-v1.csv
 - elife-00012-fig1-data2-v1.csv
-- elife-00012-fig1-figsup1-v1.tiff
-- elife-00012-fig1-figsup1-data1-v1.csv
-- elife-00012-fig1-figsup2-v1.tiff
-- elife-00012-fig1-figsup2-data1-v1.csv
-- elife-00012-fig1-figsup3-v1.tiff
-- elife-00012-fig1-figsup3-data1-v1.mol
+- elife-00012-fig1-figsupp1-v1.tiff
+- elife-00012-fig1-figsupp1-data1-v1.csv
+- elife-00012-fig1-figsupp2-v1.tiff
+- elife-00012-fig1-figsupp2-data1-v1.csv
+- elife-00012-fig1-figsupp3-v1.tiff
+- elife-00012-fig1-figsupp3-data1-v1.mol
 - elife-00012-fig2-v1.tiff
 - elife-00012-fig2-data1-v1.txt
 - elife-00012-fig3-v1.tiff
 - elife-00012-fig3-data-v1.csv
-- elife-00012-fig3-figsup1-v1.tiff
-- elife-00012-fig3-figsup1-data1-v1.csv
-- elife-00012-fig3-figsup1-data2-v1.csv
-- elife-00012-fig3-figsup1-data3-v1.csv
-- elife-00012-fig3-figsup2-v1.tiff
-- elife-00012-fig3-figsup3-data1-v1.csv
-- elife-00012-fig3-figsup3-v1.tiff
-- elife-00012-fig3-figsup3-data1-v1.csv
+- elife-00012-fig3-figsupp1-v1.tiff
+- elife-00012-fig3-figsupp1-data1-v1.csv
+- elife-00012-fig3-figsupp1-data2-v1.csv
+- elife-00012-fig3-figsupp1-data3-v1.csv
+- elife-00012-fig3-figsupp2-v1.tiff
+- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp3-v1.tiff
+- elife-00012-fig3-figsupp3-data1-v1.csv
 
 Three revisions occur, and the new "live" bundle that comes in to the publishing system contains the following:
 
@@ -355,24 +355,24 @@ elife-00012-vor-r1.zip contains:
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
 - elife-00012-fig1-data2.csv
-- elife-00012-fig1-figsup1.tiff
-- elife-00012-fig1-figsup1-data1.csv
-- elife-00012-fig1-figsup2.tiff
-- elife-00012-fig1-figsup2-data1.csv
-- elife-00012-fig1-figsup3.tiff
-- elife-00012-fig1-figsup3-data1.mol
+- elife-00012-fig1-figsupp1.tiff
+- elife-00012-fig1-figsupp1-data1.csv
+- elife-00012-fig1-figsupp2.tiff
+- elife-00012-fig1-figsupp2-data1.csv
+- elife-00012-fig1-figsupp3.tiff
+- elife-00012-fig1-figsupp3-data1.mol
 - elife-00012-fig2.tiff
 - elife-00012-fig2-data1.txt
 - elife-00012-fig3.tiff
 - elife-00012-fig3-data.csv
-- elife-00012-fig3-figsup1.tiff
-- elife-00012-fig3-figsup1-data1.csv
-- elife-00012-fig3-figsup1-data2.csv
-- elife-00012-fig3-figsup1-data3.csv
-- elife-00012-fig3-figsup2.tiff
-- elife-00012-fig3-figsup3-data1.csv
-- elife-00012-fig3-figsup3.tiff
-- elife-00012-fig3-figsup3-data1.csv  
+- elife-00012-fig3-figsupp1.tiff
+- elife-00012-fig3-figsupp1-data1.csv
+- elife-00012-fig3-figsupp1-data2.csv
+- elife-00012-fig3-figsupp1-data3.csv
+- elife-00012-fig3-figsupp2.tiff
+- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp3.tiff
+- elife-00012-fig3-figsupp3-data1.csv  
 
 On publishing event files and internal XML links get renamed and updated to:
 
@@ -383,24 +383,24 @@ elife-00012-vor-v2.zip contains:
 - elife-00012-fig1-v2.tiff
 - elife-00012-fig1-data1-v2.csv
 - elife-00012-fig1-data2-v2.csv
-- elife-00012-fig1-figsup1-v2.tiff
-- elife-00012-fig1-figsup1-data1-v2.csv
-- elife-00012-fig1-figsup2-v2.tiff
-- elife-00012-fig1-figsup2-data1-v2.csv
-- elife-00012-fig1-figsup3-v2.tiff
-- elife-00012-fig1-figsup3-data1-v2.mol
+- elife-00012-fig1-figsupp1-v2.tiff
+- elife-00012-fig1-figsupp1-data1-v2.csv
+- elife-00012-fig1-figsupp2-v2.tiff
+- elife-00012-fig1-figsupp2-data1-v2.csv
+- elife-00012-fig1-figsupp3-v2.tiff
+- elife-00012-fig1-figsupp3-data1-v2.mol
 - elife-00012-fig2-v2.tiff
 - elife-00012-fig2-data1-v2.txt
 - elife-00012-fig3-v2.tiff
 - elife-00012-fig3-data-v2.csv
-- elife-00012-fig3-figsup1-v2.tiff
-- elife-00012-fig3-figsup1-data1-v2.csv
-- elife-00012-fig3-figsup1-data2-v2.csv
-- elife-00012-fig3-figsup1-data3-v2.csv
-- elife-00012-fig3-figsup2-v2.tiff
-- elife-00012-fig3-figsup3-data1-v2.csv
-- elife-00012-fig3-figsup3-v2.tiff
-- elife-00012-fig3-figsup3-data1-v2.csv
+- elife-00012-fig3-figsupp1-v2.tiff
+- elife-00012-fig3-figsupp1-data1-v2.csv
+- elife-00012-fig3-figsupp1-data2-v2.csv
+- elife-00012-fig3-figsupp1-data3-v2.csv
+- elife-00012-fig3-figsupp2-v2.tiff
+- elife-00012-fig3-figsupp3-data1-v2.csv
+- elife-00012-fig3-figsupp3-v2.tiff
+- elife-00012-fig3-figsupp3-data1-v2.csv
 
 The following JSON is sent to the Drupal container (I've redacted specifics in the call to just highlight the components related to the article versions and identifiers)
 
@@ -484,7 +484,7 @@ If we loose our archive we will be unable to accurately recreate a previous stat
 site, and we will have to do a best effort, and publish what we have using the lowest
  version numbers available to us at that time.
 
- We have an open question about where the date of published versions live. We don't have an answer to that yet. 
+ We have an open question about where the date of published versions live. We don't have an answer to that yet.
 
 #### Why are revision numbers not exposed on the final published version?
 
@@ -531,12 +531,12 @@ We start again, I've included even more examples below.
 
 #### How do we prevent an old packet of an article entering the publishing system, and creating a new published version?
 
-In good funtimes news for the publishing platfor, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date. 
+In good funtimes news for the publishing platfor, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date.
 
 
 #### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
 
-The `"article-version-id": "00013.1",` is an id internal to the JSON that gets sent to the Drupal layer and is not part of the file naming convention. 
+The `"article-version-id": "00013.1",` is an id internal to the JSON that gets sent to the Drupal layer and is not part of the file naming convention.
 
 The main requirement from the Drupal side is that articles can be sorted on the article-version-id, so the presence of a `VOR` or `POA` label in this id would require logic in the Drupal layer to
 be able to correctly sort the article versions, as the app would have to know which of these
@@ -663,24 +663,24 @@ elife-00012-vor.zip contains
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
 - elife-00012-fig1-data2.csv
-- elife-00012-fig1-figsup1.tiff
-- elife-00012-fig1-figsup1-data1.csv
-- elife-00012-fig1-figsup2.tiff
-- elife-00012-fig1-figsup2-data1.csv
-- elife-00012-fig1-figsup3.tiff
-- elife-00012-fig1-figsup3-data1.mol
+- elife-00012-fig1-figsupp1.tiff
+- elife-00012-fig1-figsupp1-data1.csv
+- elife-00012-fig1-figsupp2.tiff
+- elife-00012-fig1-figsupp2-data1.csv
+- elife-00012-fig1-figsupp3.tiff
+- elife-00012-fig1-figsupp3-data1.mol
 - elife-00012-fig2.tiff
 - elife-00012-fig2-data1.txt
 - elife-00012-fig3.tiff
 - elife-00012-fig3-data.csv
-- elife-00012-fig3-figsup1.tiff
-- elife-00012-fig3-figsup1-data1.csv
-- elife-00012-fig3-figsup1-data2.csv
-- elife-00012-fig3-figsup1-data3.csv
-- elife-00012-fig3-figsup2.tiff
-- elife-00012-fig3-figsup3-data1.csv
-- elife-00012-fig3-figsup3.tiff
-- elife-00012-fig3-figsup3-data1.csv
+- elife-00012-fig3-figsupp1.tiff
+- elife-00012-fig3-figsupp1-data1.csv
+- elife-00012-fig3-figsupp1-data2.csv
+- elife-00012-fig3-figsupp1-data3.csv
+- elife-00012-fig3-figsupp2.tiff
+- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp3.tiff
+- elife-00012-fig3-figsupp3-data1.csv
 
 no modifications are needed and on publishing these files get renamed as:
 
@@ -691,24 +691,24 @@ elife-00012-vor-v3.zip contains
 - elife-00012-fig1-v3.tiff
 - elife-00012-fig1-data1-v3.csv
 - elife-00012-fig1-data2-v3.csv
-- elife-00012-fig1-figsup1-v3.tiff
-- elife-00012-fig1-figsup1-data1-v3.csv
-- elife-00012-fig1-figsup2-v3.tiff
-- elife-00012-fig1-figsup2-data1-v3.csv
-- elife-00012-fig1-figsup3-v3.tiff
-- elife-00012-fig1-figsup3-data1-v3.mol
+- elife-00012-fig1-figsupp1-v3.tiff
+- elife-00012-fig1-figsupp1-data1-v3.csv
+- elife-00012-fig1-figsupp2-v3.tiff
+- elife-00012-fig1-figsupp2-data1-v3.csv
+- elife-00012-fig1-figsupp3-v3.tiff
+- elife-00012-fig1-figsupp3-data1-v3.mol
 - elife-00012-fig2-v3.tiff
 - elife-00012-fig2-data1-v3.txt
 - elife-00012-fig3-v3.tiff
 - elife-00012-fig3-data-v3.csv
-- elife-00012-fig3-figsup1-v3.tiff
-- elife-00012-fig3-figsup1-data1-v3.csv
-- elife-00012-fig3-figsup1-data2-v3.csv
-- elife-00012-fig3-figsup1-data3-v3.csv
-- elife-00012-fig3-figsup2-v3.tiff
-- elife-00012-fig3-figsup3-data1-v3.csv
-- elife-00012-fig3-figsup3-v3.tiff
-- elife-00012-fig3-figsup3-data1-v3.csv
+- elife-00012-fig3-figsupp1-v3.tiff
+- elife-00012-fig3-figsupp1-data1-v3.csv
+- elife-00012-fig3-figsupp1-data2-v3.csv
+- elife-00012-fig3-figsupp1-data3-v3.csv
+- elife-00012-fig3-figsupp2-v3.tiff
+- elife-00012-fig3-figsupp3-data1-v3.csv
+- elife-00012-fig3-figsupp3-v3.tiff
+- elife-00012-fig3-figsupp3-data1-v3.csv
 
 The following JSON is sent to the Drupal container  
 
@@ -738,11 +738,10 @@ The following JSON is sent to the Drupal container
 }
 ```
 
-And on successful publising `elife-00012-vor-v3.zip` gets archived. 
+And on successful publising `elife-00012-vor-v3.zip` gets archived.
 
 So the version hisotry of the PDF of this article will look like the following, from oldest to newest, for files have have been published
 
 - elife-00012-v1.pdf  (a POA pdf)
 - elife-00012-v2.pdf  (a POA pdf)
 - elife-00012-v3.pdf  (a VOR pdf)
-
