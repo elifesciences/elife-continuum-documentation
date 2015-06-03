@@ -469,8 +469,8 @@ an article thse paths in the XML will need to get updated.
 #### How do we update a revision number?
 
 It is up to the content processor to handle revisions, and to send us the correctly
-named new revision. Revision numbers do not affect the publishing platform as the bot will have removed them beforehand.
-TO DISCUSS WITH IAN
+named new revision. Revision numbers do not affect the publishing platform, so effectivly
+they can be ignored. **We do not need to track revision numbers in the publishing dashboard**.
 
 #### How do we bootstrap a new instance of the site that respects all previous versioned published articles?
 
@@ -488,10 +488,9 @@ site, and we will have to do a best effort, and publish what we have using the l
 
 #### Why are revision numbers not exposed on the final published version?
 
-If we expose revision numbers on the final published version then we can end up with
-situations in which the revision number is greater than the version number, the version number
-is greater than the revision number, or situations in which they are the same. This is considered
-a bad user and developer experience, and rather than revealing this information we have decided that this map needs to be maintained at the metadata level. Ultimately the only business critical information is how many version have been made publicly available, and what are they?
+As revision numbers are no longer tracked in the system, there would be no need to expose them
+in the final pubilshed version.
+
 
 #### How do we update a `run` number in the production system?
 
