@@ -22,7 +22,6 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 ###### `<asset>`
 
 This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), reporting standards (repstand).
-QUESTION - does audio or animation need to go via Glenco. TBC
 
 - fig1
 - media1
