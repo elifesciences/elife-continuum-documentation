@@ -32,6 +32,9 @@ QUESTION - does audio or animation need to go via Glenco. TBC
 - data1
 - supp1
 - repstand1
+- figures
+
+figues refers to the PDF of all the figures.
 
 Should these be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA1 or mediaR1.
 
