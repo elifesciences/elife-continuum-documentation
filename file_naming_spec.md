@@ -33,7 +33,7 @@ QUESTION - does audio or animation need to go via Glenco. TBC
 - supp1
 - repstand1
 
-Should these be present in an appendix or author response, they will take the suffix A or R, respecitvely before the number, ie: figA1 or mediaR1.
+Should these be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA1 or mediaR1.
 
 ###### `<a-id>`
 
