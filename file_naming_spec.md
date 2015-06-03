@@ -749,17 +749,6 @@ So the version hisotry of the PDF of this article will look like the following, 
 ## Some remaining questions and queries.
 
 
-### Should VOR zip files actually vary a version number that refers to the VOR version,
-or the global version?
-
-If they carry a version number that refers to the VOR version, then the files inside of them can have
-different version numbers to the containing zip file version number. If they contain a version number
-taht refers to hte global version number of the aritlce, then most VOR zip files will start on versio n2, and there will eb no version 1 VOR zip file. I'm siding with the idea that the version number should be global.
-
-### Should VOR and POA zip files that actually get archived in the end have a VOR of aPOA label in the name of the zip file?
-
-We are dropping the VOR and POA lable in the individual files, why keep it in the zip file? I thinkthis is just a convienence for the production team. In fact, the publishing system does not care, this informaiton is transmitted via the data in JSON to the Drupal layer, and is captured in the repoting database, so there is no reason to throw awaty this label when it could be quite handy for anyone who wants to manually inspect the zip archives.
-
 ### Can we send PubMed atomically increasing version numbers in the XML that we send them, rather than send them xml files with POA in them?
 We currently send PubMed XML files as follows
 
