@@ -10,7 +10,7 @@ Brackets represent optional components. Pipe represents a choice on component, d
 
 ### Components
 
-###### `<p-id>`
+###### `<f-id>`
 
 This is the file id and is the numerical digit that is used to make up part of the DOI for an article (`<article-id pub-id-type="doi">`). For example an eLife article with the following DOI `/10.7554/eLife.06659` will have an f-id of `06659`.
 
