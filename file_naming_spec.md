@@ -531,21 +531,8 @@ We start again, I've included even more examples below.
 
 #### How do we prevent an old packet of an article entering the publishing system, and creating a new published version?
 
-If the content processor screws up and sends a copy of an already submitted package into the
-production system, but for some godforsaken reason increments the revision number by one,
-then this has the potential to run through the production system and create a newly published
-version of the article that is actually not different from previously published versions
-of the article.
+In good funtimes news for the publishing platfor, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date. 
 
-We could either, not care about this, or we could put in place some roadblack to publishing
-provably similar content again. At this point my recommendation is to not care about this.
-SEE TRELLO TICKET!!! THIS IS A MVP REQUIREMENT
-
-If the content processor sends in a copy of a revision that we have already seen before we could
-end up publsing a new version of the article that is actually a copy of an older crappier
-version of the article. We could either not care, or we could put in place some block
-to prevent revisions entering the production system again that have already resulted in a
-successful publising event. I think we might want to consider this story. YES!!!
 
 #### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
 TO DISCUSS IAN _ NEW TERM HERE!
