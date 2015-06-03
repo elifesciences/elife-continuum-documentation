@@ -499,15 +499,15 @@ through the production system. If any steps in the system fall over we may need 
 run the package through the system again. If the Drupal layer fails to publish
 we may need to run the package through the system again rather than tracking these
 production runs in any file names, these runs will be tracked internally by the production system.
-This informaion will be made available on the production dashboard. Each time a package
+This information will be made available on the production dashboard. Each time a package
 comes through the production system, the number of times it has to run through
 the production system will be tracked per package, along with whether that package
 resulted in a published version. That means that for a given article - elife-01122 we may see the information similar to the following on a production dashboard
 
 	- elife-01122 | POA | 9 runs | version 1  
 	- elife-01122 | POA | 5 runs | version 2
-	- elife-01122 | VOR | 1 runs | version 1
-	- elife-01122 | VOR | 4 runs | version 2
+	- elife-01122 | VOR | 1 runs | version 3
+	- elife-01122 | VOR | 4 runs | version 4
 
 #### Why don't we store run number information in the file name?
 
@@ -525,7 +525,17 @@ At this point no.
 
 #### Do we increment VOR version numbers if there was a POA version number before, or do we start over again with a new version number for the article, as it's name has changed to reflect the new status?
 
-We start again, I've included even more examples below.  
+We increment version numbers atomically, irrespective of whether the version is updated from a VOR or a POA.
+
+#### Why are most of my VOR zip files on archiving named `elife-00012-vor-v2.zip`, even though they are the first VOR versions of the article
+
+All VOR files have have a successful POA will generate a v2 publication, or higher, as the v1 will have been published
+as part of the POA process.
+
+This means that the first zip file of a VOR that gets published will usually have the following name
+`elife-00012-vor-v2.zip`. Although this might seem counter-intuitive, the alternative option of renaming
+the version number of the published version based on state. It also means that other publishing states can be
+accomodated later without reworking the pubilshing logic. 
 
 
 #### How do we prevent an old packet of an article entering the publishing system, and creating a new published version?
