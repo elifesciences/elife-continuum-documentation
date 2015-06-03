@@ -535,7 +535,8 @@ In good funtimes news for the publishing platfor, we have decided that this is t
 
 
 #### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
-TO DISCUSS IAN _ NEW TERM HERE!
+
+The `"article-version-id": "00013.1",` is an id internal to the JSON that gets sent to the Drupal layer and is not part of the file naming convention. 
 
 The main requirement from the Drupal side is that articles can be sorted on the article-version-id, so the presence of a `VOR` or `POA` label in this id would require logic in the Drupal layer to
 be able to correctly sort the article versions, as the app would have to know which of these
