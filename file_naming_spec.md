@@ -12,7 +12,7 @@ Brackets represent optional components. Pipe represents a choice on component, d
 
 ###### `<p-id>`
 
-This is the eLife id (`<article-id pub-id-type="publisher-id">`), and is the numerical digit that is used to make up part of the DOI for an article (`<article-id pub-id-type="doi">`). For example an eLife article with the following DOI `/10.7554/eLife.06659` will have a pid of `06659`.
+This is the eLife id (`<article-id pub-id-type="publisher-id">`), and is the numerical digit that is used to make up part of the DOI for an article (`<article-id pub-id-type="doi">`). For example an eLife article with the following DOI `/10.7554/eLife.06659` will have a p-id of `06659`.
 
 ###### `<status>`
 
