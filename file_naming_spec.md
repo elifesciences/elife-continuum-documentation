@@ -484,7 +484,7 @@ If we loose our archive we will be unable to accurately recreate a previous stat
 site, and we will have to do a best effort, and publish what we have using the lowest
  version numbers available to us at that time.
 
- DATES OF EACH VERSION PUBLISHED - WHERE IS THAT STORED
+ We have an open question about where the date of published versions live. We don't have an answer to that yet. 
 
 #### Why are revision numbers not exposed on the final published version?
 
