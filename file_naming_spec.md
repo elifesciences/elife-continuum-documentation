@@ -21,7 +21,7 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 
 ###### `<asset>`
 
-This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), reporting standards (repstand).
+This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), (figures) the figures pdf, reporting standards (repstand).
 
 - fig1
 - media1
@@ -31,7 +31,6 @@ This refers to an asset file related to an article, ie a figure (fig), source co
 - repstand1
 - figures
 
-figues refers to the PDF of all the figures.
 
 Should these be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA1 or mediaR1.
 
