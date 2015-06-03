@@ -3,7 +3,7 @@
 ## File naming pattern
 
 >
-	`elife-<p-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
+	`elife-<f-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
@@ -12,9 +12,7 @@ Brackets represent optional components. Pipe represents a choice on component, d
 
 ###### `<p-id>`
 
-This is the eLife id (`<article-id pub-id-type="publisher-id">`), and is the numerical digit that is used to make up part of the DOI for an article (`<article-id pub-id-type="doi">`). For example an eLife article with the following DOI `/10.7554/eLife.06659` will have a p-id of `06659`.
-The <article-id pub-id-type="publisher-id"> in the xml is updated when new versions are published.
-IAN!!! NEED TO TALK ABOUT THIS!!
+This is the file id and is the numerical digit that is used to make up part of the DOI for an article (`<article-id pub-id-type="doi">`). For example an eLife article with the following DOI `/10.7554/eLife.06659` will have an f-id of `06659`.
 
 
 ###### `<status>`
