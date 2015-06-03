@@ -3,7 +3,7 @@
 ## File naming pattern
 
 >
-	`elife-<p-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-data<did>)|(-v<version>).<ext>`
+	`elife-<p-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)|(-v<version>).<ext>`
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
@@ -13,6 +13,9 @@ Brackets represent optional components. Pipe represents a choice on component, d
 ###### `<p-id>`
 
 This is the eLife id (`<article-id pub-id-type="publisher-id">`), and is the numerical digit that is used to make up part of the DOI for an article (`<article-id pub-id-type="doi">`). For example an eLife article with the following DOI `/10.7554/eLife.06659` will have a p-id of `06659`.
+The <article-id pub-id-type="publisher-id"> in the xml is updated when new versions are published.
+IAN!!! NEED TO TALK ABOUT THIS!!
+
 
 ###### `<status>`
 
@@ -20,7 +23,17 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 
 ###### `<asset>`
 
-This refers to an asset file related to an article, for example a figure, sub-figure, data file, media, or supplementary file.
+This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), reporting standards (repstand).
+QUESTION - does audio or animation need to go via Glenco. TBC
+
+- fig1
+- media1
+- code1
+- data1
+- supp1
+- repstand1
+
+Should these be present in an appendix or author response, they will take the suffix A or R, respecitvely before the number, ie: figA1 or mediaR1.
 
 ###### `<a-id>`
 
@@ -33,12 +46,12 @@ article with three figures will have the following asset files:
 
 ###### `<sub-asset>`
 
-Some assets will have sub-assets, and these are indicated by the sub-asset component.
+Some assets will have sub-assets, eg figure supplements (figsup), source data (data), or source code (code). These are indicated by the sub-asset component.
 
 ###### `<sa-id>`
 
 Some assets have sub-asset ids, for example, an aritcle with three main figures, where one
-figure has three sub figures, and one figure has two sub figures will have the following:
+figure has three figure supplements, and one figure has two figure supplements will have the following:
 
 - elife-00012-vor-fig1.tiff
 - elife-00012-vor-fig1-figsup1.tiff
@@ -48,16 +61,14 @@ figure has three sub figures, and one figure has two sub figures will have the f
 - elife-00012-vor-fig3.tiff
 - elife-00012-vor-fig3-figsup1.tiff
 - elife-00012-vor-fig3-figsup2.tiff
-- elife-00012-vor-fig3-figsup3.tiff
 
 ###### data
 
-Some assets will have data files associated with them. These data files are indicated by the
-presence of a `data` in the filename.
+Sometimes there is source data at a parent level, but sometimes assets will have source data files associated with them. These data files are indicated by the presence of a `data` in the filename.
 
 ###### `<d-id>`
 
-Assets can have multiple data files associated with them, and these are distinguished with the
+Assets can have multiple source data files associated with them, and these are distinguished with the
 data id.
 
 For example, an article with three main figures, where one figure has three sub figures, and one figure has two sub figures, and all have associated data with some of them having multiple data files, could have the following:
@@ -85,104 +96,27 @@ For example, an article with three main figures, where one figure has three sub 
 - elife-00012-vor-fig3-figsup3-data1.csv
 
 
-###### r `<revision>`
+###### code
 
-Before reaching the publishing workflow an article goes through a number of steps managed by the production department and supplied by the content processor, and could go through revisions at any of those steps. We indicate updates to the article with a revision number in the zipped file naming structure; the actual file names do not change. If no revisions have happened, there will be no revision number on the zipped file. If a revision happens at a certain stage, it will be given a revision number the second time it is deposited. At the next stage of the process this revision number does not apply and the zipped file name reverts to standard. The revision number is **only** indicated in the containing zip file name from the content processor. The revisions apply to each stage only, as they are deposted into different AWS buckets and that tracks the progress through the process. 
+Sometimes there is source code at a parent level, but sometimes assets will have source code files associated with them. These source code files are indicated by the presence of a `code` in the filename.
 
-For example, if one image needs to be updated within an article, the revision number increases for
-the containing zip file that is supplied, but all file names within that zip retain their original names.
+###### `<c-id>`
 
-Initial content of an article zip file, with no revisions having occurred
+Assets can have multiple source code files associated with them, and these are distinguished with the
+code id.
 
+For example, an article with a top level source code, two main figures, where one figure has source code, and one figure has one sub figure with source code:
 
-elife-00012-vor.zip contains:
-- elife-00012-vor.xml
-- elife-00012-vor.pdf
-- elife-00012-vor-figures.pdf
 - elife-00012-vor-fig1.tiff
-- elife-00012-vor-fig1-data1.csv
-- elife-00012-vor-fig1-data2.csv
-- elife-00012-vor-fig1-figsup1.tiff
-- elife-00012-vor-fig1-figsup1-data1.csv
-- elife-00012-vor-fig1-figsup2.tiff
-- elife-00012-vor-fig1-figsup2-data1.csv
-- elife-00012-vor-fig1-figsup3.tiff
-- elife-00012-vor-fig1-figsup3-data1.mol
+- elife-00012-vor-fig1-code1.csv
 - elife-00012-vor-fig2.tiff
-- elife-00012-vor-fig2-data1.txt
-- elife-00012-vor-fig3.tiff
-- elife-00012-vor-fig3-data.csv
-- elife-00012-vor-fig3-figsup1.tiff
-- elife-00012-vor-fig3-figsup1-data1.csv
-- elife-00012-vor-fig3-figsup1-data2.csv
-- elife-00012-vor-fig3-figsup1-data3.csv
-- elife-00012-vor-fig3-figsup2.tiff
-- elife-00012-vor-fig3-figsup3-data1.csv
-- elife-00012-vor-fig3-figsup3.tiff
-- elife-00012-vor-fig3-figsup3-data1.csv
-
-One revision occurring in the preediting stage of content processing, requiring a resupply to the relevant bucket:
-
-elife-00012-vor-r1.zip contains:
-- elife-00012-vor.xml
-- elife-00012-vor.pdf
-- elife-00012-vor-figures.pdf
-- elife-00012-vor-fig1.tiff
-- elife-00012-vor-fig1-data1.csv
-- elife-00012-vor-fig1-data2.csv
-- elife-00012-vor-fig1-figsup1.tiff
-- elife-00012-vor-fig1-figsup1-data1.csv
-- elife-00012-vor-fig1-figsup2.tiff
-- elife-00012-vor-fig1-figsup2-data1.csv
-- elife-00012-vor-fig1-figsup3.tiff
-- elife-00012-vor-fig1-figsup3-data1.mol
-- elife-00012-vor-fig2.tiff
-- elife-00012-vor-fig2-data1.txt
-- elife-00012-vor-fig3.tiff
-- elife-00012-vor-fig3-data.csv
-- elife-00012-vor-fig3-figsup1.tiff
-- elife-00012-vor-fig3-figsup1-data1.csv
-- elife-00012-vor-fig3-figsup1-data2.csv
-- elife-00012-vor-fig3-figsup1-data3.csv
-- elife-00012-vor-fig3-figsup2.tiff
-- elife-00012-vor-fig3-figsup3-data1.csv
-- elife-00012-vor-fig3-figsup3.tiff
-- elife-00012-vor-fig3-figsup3-data1.csv
-
-At the next stage, copyediting, the revision number is lost. If there are 5 revisions at the revisions stage of the process, the 5th supply will be (discounts revisions at previous stages):
-
-elife-00012-vor-r5.zip contains:
-- elife-00012-vor.xml
-- elife-00012-vor.pdf
-- elife-00012-vor-figures.pdf
-- elife-00012-vor-fig1.tiff
-- elife-00012-vor-fig1-data1.csv
-- elife-00012-vor-fig1-data2.csv
-- elife-00012-vor-fig1-figsup1.tiff
-- elife-00012-vor-fig1-figsup1-data1.csv
-- elife-00012-vor-fig1-figsup2.tiff
-- elife-00012-vor-fig1-figsup2-data1.csv
-- elife-00012-vor-fig1-figsup3.tiff
-- elife-00012-vor-fig1-figsup3-data1.mol
-- elife-00012-vor-fig2.tiff
-- elife-00012-vor-fig2-data1.txt
-- elife-00012-vor-fig3.tiff
-- elife-00012-vor-fig3-data.csv
-- elife-00012-vor-fig3-figsup1.tiff
-- elife-00012-vor-fig3-figsup1-data1.csv
-- elife-00012-vor-fig3-figsup1-data2.csv
-- elife-00012-vor-fig3-figsup1-data3.csv
-- elife-00012-vor-fig3-figsup2.tiff
-- elife-00012-vor-fig3-figsup3-data1.csv
-- elife-00012-vor-fig3-figsup3.tiff
-- elife-00012-vor-fig3-figsup3-data1.csv
-
+- elife-00012-vor-fig2-figsup1.tiff
+- elife-00012-vor-fig2-figsup1-code1.csv
+- elife-00012-vor-code1.csv
 
 ##### v`<version>`
 
-When the article finally gets published, it gets assigned a version number for public consumption. These version numbers are incremented only when a new version of the article makes it to the published state on the website. The publishing system has to take on the job
-of checking on the current version number of any prior published versions of the article, and then appropriately incrementing the version number. Unlike with revision numbers, as soon as an article is published it gets a version v1, whereas revisions only get a revision
-number when there is a change to the originally submitted manuscript.
+When the article finally gets published, it gets assigned a version number for public consumption. These version numbers are incremented only when a new version of the article makes it to the published state on the website. The publishing system has to take on the job of checking on the current version number of any prior published versions of the article, and then appropriately incrementing the version number. 
 
 We propose that the publishing system should prepare files to send to the Drupal layer, with
 the anticipated version number applied to the file names, and on a successful publishing event
@@ -192,7 +126,7 @@ As examples, we might have the following situations:
 
 ###### example 1
 
-Article makes it all the way from submission, through first round of content processing to being published.
+Article makes it all the way from submission, through first round of content processing to being published, without a PoA version.
 
 Bundle that appears in the publishing system looks like this:
 
@@ -223,7 +157,7 @@ elife-00012-vor.zip contains:
 - elife-00012-vor-fig3-figsup3-data1.csv
 
 
-On publishing event files and internal XML links get renamed and updated to:
+On publishing event files and internal XML links get renamed and updated to (zip retains status indicator):
 
 elife-00012-vor-v1.zip contains:  
 - elife-00012-v1.xml
@@ -251,8 +185,8 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig3-figsup3-v1.tiff
 - elife-00012-fig3-figsup3-data1-v1.csv
 
-We have appended the version number to each file, and we have dropped the `VOR` indicator, as
-this information makes not sense to any person outside of eLife.
+We have appended the version number to each file, and we have dropped the `VOR` indicator from the files (but remains in the zip file name), as this information makes not sense to any person outside of eLife.
+IAN, WAS THIS YOUR INTENTION TO LEAVE STATUS IN ZIP NAME - WE LIKE THIS!
 
 The following JSON is sent to the Drupal container (I've redacted specifics in the call to just highlight the components related to the article versions and identifiers)
 
@@ -287,11 +221,11 @@ On getting a success message from the Drupal layer that the publishing event has
 
 ###### example 2
 
-One revision comes in before article gets published to the Drupal site, and that revision is the revision that gets published.
+Production delivers an article twice to the Drupal site, and the second is the one that gets published (the first is overwritten).
 
 "Live" version of bundle that enters the publishing system is
 
-elife-00012-vor-r1.zip contains:  
+elife-00012-vor.zip contains:  
 - elife-00012-vor.xml
 - elife-00012-vor.pdf
 - elife-00012-vor-figures.pdf
@@ -316,8 +250,6 @@ elife-00012-vor-r1.zip contains:
 - elife-00012-vor-fig3-figsup3-data1.csv
 - elife-00012-vor-fig3-figsup3.tiff
 - elife-00012-vor-fig3-figsup3-data1.csv  
-
-This revision gets archived under elife-00012-vor-r1.zip.
 
 On publishing event files and internal XML links get renamed and updated to:
 
@@ -383,8 +315,8 @@ On getting a success message from the Drupal layer that the publishing event has
 
 ###### example 3
 
-A first version gets successfully published, but three revisions are needed to address
-a tricky author issue, and this third revision makes it to version 2 on the website.
+A first version gets successfully published. Postpublication three revisions are needed to address
+a tricky author issue, and the third revision makes it to version 2 on the website.
 
 The version that exists in the archive and on the website is the following:
 
@@ -416,7 +348,7 @@ elife-00012-vor-v1.zip contains
 
 Three revisions occur, and the new "live" bundle that comes in to the publsihing system contains the following:
 
-elife-00012-vor-r3.zip contains:  
+elife-00012-vor.zip contains:  
 - elife-00012-vor.xml
 - elife-00012-vor.pdf
 - elife-00012-vor-figures.pdf
@@ -516,12 +448,10 @@ This is the file extention, common extensions are
 
 #### What happens when only a figure gets updated?
 
-All files associated with an article get updated too, either the revision number, or
-the eventual published version number. Although this means that we may end up
+All files associated with an article get updated too. Although this means that we may end up
 incrementing files that don't change, what is important is that on publication their file names
 now refer to the globally updated version of the published article. This also means that
-if we need a new file to replace an existing file, we do not run into file naming conflicst. From the point of view of the CDN we now refer to a new file with a new file name, rather than having to wait for a file replacement to propogate through the CDN, meaning these kinds of changes should
-happen instantaneiously.
+if we need a new file to replace an existing file, we do not run into file naming conflicts. From the point of view of the CDN we now refer to a new file with a new file name, rather than having to wait for a file replacement to propogate through the CDN, meaning these kinds of changes should happen instantaneiously.
 
 #### How do we update a version number?
 
@@ -531,15 +461,16 @@ Drupal layer gets notified with a request to publish this new version, and on
 reciept of success we allow the system to update it's records to indicate a
 new version has been published.  
 
-#### What paths needs to be retained in the XML to assetts?
+#### What paths need to be retained in the XML to assets?
 
-Some components in the aritcle XML will point to file assetts. On creating a new version of
+Some components in the article XML will point to file assets. On creating a new version of
 an article thse paths in the XML will need to get updated.
 
 #### How do we update a revision number?
 
 It is up to the content processor to handle revisions, and to send us the correctly
-named new revision.
+named new revision. Revision numbers do not affect the publishing platform as the bot will have removed them beforehand.
+TO DISCUSS WITH IAN
 
 #### How do we bootstrap a new instance of the site that respects all previous versioned published articles?
 
@@ -552,6 +483,8 @@ being published, and the url path on which these versions should be published.
 If we loose our archive we will be unable to accurately recreate a previous state of our published
 site, and we will have to do a best effort, and publish what we have using the lowest
  version numbers available to us at that time.
+ 
+ DATES OF EACH VERSION PUBLISHED - WHERE IS THAT STORED
 
 #### Why are revision numbers not exposed on the final published version?
 
@@ -565,20 +498,17 @@ a bad user and developer experience, and rather than revealing this information 
 Each time we receive a package from the content processor we may end up running an article
 through the production system. If any steps in the system fall over we may need to
 run the package through the system again. If the Drupal layer fails to publish
-we may need to run the package through the system again Rather than tracking these
+we may need to run the package through the system again rather than tracking these
 production runs in any file names, these runs will be tracked internally by the production system.
-This informaion will be made avaialle on the production dashboard. Each time a package
+This informaion will be made available on the production dashboard. Each time a package
 comes through the production system, the number of times it has to run through
-the production system will be tacked per package, along with whether that package
-resulted in a published version. That means that for a given article - elife-01122 we may see the  information similar to the following on a production dashboard
+the production system will be tracked per package, along with whether that package
+resulted in a published version. That means that for a given article - elife-01122 we may see the information similar to the following on a production dashboard
 
-	- elife-01122 | POA | revision 0 | 6 runs | not published  
-	- elife-01122 | POA | revision 1 | 3 runs | version 1
-	- elife-01122 | POA | revision 2 | 3 runs | not published
-	- elife-01122 | POA | revision 3 | 2 runs | version 2
-	- elife-01122 | VOR | revision 0 | 2 runs | not published  
-	- elife-01122 | VOR | revision 1 | 1 runs | version 1
-	- elife-01122 | VOR | revision 2 | 4 runs | version 2
+	- elife-01122 | POA | 9 runs | version 1  
+	- elife-01122 | POA | 5 runs | version 2
+	- elife-01122 | VOR | 1 runs | version 1
+	- elife-01122 | VOR | 4 runs | version 2
 
 #### Why don't we store run number information in the file name?
 
@@ -609,14 +539,16 @@ of the article.
 
 We could either, not care about this, or we could put in place some roadblack to publishing
 provably similar content again. At this point my recommendation is to not care about this.
+SEE TRELLO TICKET!!! THIS IS A MVP REQUIREMENT
 
 If the content processor sends in a copy of a revision that we have already seen before we could
 end up publsing a new version of the article that is actually a copy of an older crappier
 version of the article. We could either not care, or we could put in place some block
 to prevent revisions entering the production system again that have already resulted in a
-successful publising event. I think we might want to consider this story.
+successful publising event. I think we might want to consider this story. YES!!!
 
 #### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
+TO DISCUSS IAN _ NEW TERM HERE!
 
 The main requirement from the Drupal side is that articles can be sorted on the article-version-id, so the presence of a `VOR` or `POA` label in this id would require logic in the Drupal layer to
 be able to correctly sort the article versions, as the app would have to know which of these
@@ -631,9 +563,8 @@ by other publishers, or used in other workflows that do not have POA or VOR in t
 I have, mainly as I felt that file names for sub components were becoming unweildy. Here is the start of a specification list
 
 - figure -> fig
-- table -> table  (tab is ambigious)
-- figuresupplement -> figsup
-- supplementaryfile -> suppfile
+- figuresupplement -> figsupp
+- supplementaryfile -> supp
 - media -> media
 - sourcecode -> code  
 - sourcedata -> data  
@@ -856,3 +787,96 @@ send them
 and then we update PubMed with
 
 - elife-00012-v2.xml
+- 
+
+###### r `<revision>`
+
+Before reaching the publishing workflow an article goes through a number of steps managed by the production department and supplied by the content processor, and could go through revisions at any of those steps. We indicate updates to the article with a revision number in the zipped file naming structure; the actual file names do not change. If no revisions have happened, there will be no revision number on the zipped file. If a revision happens at a certain stage, it will be given a revision number the second time it is deposited. At the next stage of the process this revision number does not apply and the zipped file name reverts to standard. The revision number is **only** indicated in the containing zip file name from the content processor. The revisions apply to each stage only, as they are deposted into different AWS buckets and that tracks the progress through the process. 
+
+For example, if one image needs to be updated within an article, the revision number increases for
+the containing zip file that is supplied, but all file names within that zip retain their original names.
+
+Initial content of an article zip file, with no revisions having occurred
+
+
+elife-00012-vor.zip contains:
+- elife-00012-vor.xml
+- elife-00012-vor.pdf
+- elife-00012-vor-figures.pdf
+- elife-00012-vor-fig1.tiff
+- elife-00012-vor-fig1-data1.csv
+- elife-00012-vor-fig1-data2.csv
+- elife-00012-vor-fig1-figsup1.tiff
+- elife-00012-vor-fig1-figsup1-data1.csv
+- elife-00012-vor-fig1-figsup2.tiff
+- elife-00012-vor-fig1-figsup2-data1.csv
+- elife-00012-vor-fig1-figsup3.tiff
+- elife-00012-vor-fig1-figsup3-data1.mol
+- elife-00012-vor-fig2.tiff
+- elife-00012-vor-fig2-data1.txt
+- elife-00012-vor-fig3.tiff
+- elife-00012-vor-fig3-data.csv
+- elife-00012-vor-fig3-figsup1.tiff
+- elife-00012-vor-fig3-figsup1-data1.csv
+- elife-00012-vor-fig3-figsup1-data2.csv
+- elife-00012-vor-fig3-figsup1-data3.csv
+- elife-00012-vor-fig3-figsup2.tiff
+- elife-00012-vor-fig3-figsup3-data1.csv
+- elife-00012-vor-fig3-figsup3.tiff
+- elife-00012-vor-fig3-figsup3-data1.csv
+
+One revision occurring in the preediting stage of content processing, requiring a resupply to the relevant bucket:
+
+elife-00012-vor-r1.zip contains:
+- elife-00012-vor.xml
+- elife-00012-vor.pdf
+- elife-00012-vor-figures.pdf
+- elife-00012-vor-fig1.tiff
+- elife-00012-vor-fig1-data1.csv
+- elife-00012-vor-fig1-data2.csv
+- elife-00012-vor-fig1-figsup1.tiff
+- elife-00012-vor-fig1-figsup1-data1.csv
+- elife-00012-vor-fig1-figsup2.tiff
+- elife-00012-vor-fig1-figsup2-data1.csv
+- elife-00012-vor-fig1-figsup3.tiff
+- elife-00012-vor-fig1-figsup3-data1.mol
+- elife-00012-vor-fig2.tiff
+- elife-00012-vor-fig2-data1.txt
+- elife-00012-vor-fig3.tiff
+- elife-00012-vor-fig3-data.csv
+- elife-00012-vor-fig3-figsup1.tiff
+- elife-00012-vor-fig3-figsup1-data1.csv
+- elife-00012-vor-fig3-figsup1-data2.csv
+- elife-00012-vor-fig3-figsup1-data3.csv
+- elife-00012-vor-fig3-figsup2.tiff
+- elife-00012-vor-fig3-figsup3-data1.csv
+- elife-00012-vor-fig3-figsup3.tiff
+- elife-00012-vor-fig3-figsup3-data1.csv
+
+At the next stage, copyediting, the revision number is lost. If there are 5 revisions at the revisions stage of the process, the 5th supply will be (discounts revisions at previous stages):
+
+elife-00012-vor-r5.zip contains:
+- elife-00012-vor.xml
+- elife-00012-vor.pdf
+- elife-00012-vor-figures.pdf
+- elife-00012-vor-fig1.tiff
+- elife-00012-vor-fig1-data1.csv
+- elife-00012-vor-fig1-data2.csv
+- elife-00012-vor-fig1-figsup1.tiff
+- elife-00012-vor-fig1-figsup1-data1.csv
+- elife-00012-vor-fig1-figsup2.tiff
+- elife-00012-vor-fig1-figsup2-data1.csv
+- elife-00012-vor-fig1-figsup3.tiff
+- elife-00012-vor-fig1-figsup3-data1.mol
+- elife-00012-vor-fig2.tiff
+- elife-00012-vor-fig2-data1.txt
+- elife-00012-vor-fig3.tiff
+- elife-00012-vor-fig3-data.csv
+- elife-00012-vor-fig3-figsup1.tiff
+- elife-00012-vor-fig3-figsup1-data1.csv
+- elife-00012-vor-fig3-figsup1-data2.csv
+- elife-00012-vor-fig3-figsup1-data3.csv
+- elife-00012-vor-fig3-figsup2.tiff
+- elife-00012-vor-fig3-figsup3-data1.csv
+- elife-00012-vor-fig3-figsup3.tiff
+- elife-00012-vor-fig3-figsup3-data1.csv
