@@ -543,10 +543,14 @@ I have, mainly as I felt that file names for sub components were becoming unweil
 
 - figure -> fig
 - figuresupplement -> figsupp
-- supplementaryfile -> supp
-- media -> media
-- sourcecode -> code  
-- sourcedata -> data  
+- supplementary file -> supp
+- media (includes videos, audio and animation) -> media
+- source code -> code  
+- source data -> data 
+- figures (PDF if the figures) -> figures
+- reporting standards -> repstand
+- appendix asset file, for example figure -> figA
+- author response asset file, for example figure -> figR
 
 
 ## Tying POA and VOR packets in our workflow and their naming convention.
