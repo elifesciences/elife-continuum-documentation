@@ -462,7 +462,6 @@ an article thse paths in the XML will need to get updated.
 
 It is up to the content processor to handle revisions, and to send us the correctly
 named new revision. Revision numbers do not affect the publishing platform as the bot will have removed them beforehand.
-TO DISCUSS WITH IAN
 
 #### How do we bootstrap a new instance of the site that respects all previous versioned published articles?
 
@@ -518,7 +517,7 @@ At this point no.
 
 #### Do we increment VOR version numbers if there was a POA version number before, or do we start over again with a new version number for the article, as it's name has changed to reflect the new status?
 
-We start again, I've included even more examples below.  
+We increment the versions from PoA thorugh VoR  
 
 
 #### How do we prevent an old packet of an article entering the publishing system, and creating a new published version?
@@ -648,7 +647,7 @@ Later the article goes through the full content processing step and gets a VOR s
 
 Package comes in to the production system as:
 
-elife-00012-vor.zip contains
+elife-00012-vor-r4.zip contains
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
@@ -732,7 +731,7 @@ The following JSON is sent to the Drupal container
 
 And on successful publising `elife-00012-vor-v3.zip` gets archived.
 
-So the version hisotry of the PDF of this article will look like the following, from oldest to newest, for files have have been published
+So the version history of the PDF of this article will look like the following, from oldest to newest, for files have have been published
 
 - elife-00012-v1.pdf  (a POA pdf)
 - elife-00012-v2.pdf  (a POA pdf)
