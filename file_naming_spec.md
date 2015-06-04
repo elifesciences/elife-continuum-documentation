@@ -146,7 +146,7 @@ elife-00012-vor-r1.zip contains:
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
-Note: -r1 could be -r2, r3, r-n. This reflects 
+Note: -r1 could be -r2, r3, r-n. This reflects production processes and is ignored by the publishing platform (with the exception of knowing which zip file to take from the production bucket when ready for publication).
 
 On publishing event files and internal XML links get renamed and updated to (zip retains status indicator):
 
