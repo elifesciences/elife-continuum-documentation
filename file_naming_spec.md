@@ -23,16 +23,7 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 
 This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), (figures) the figures pdf, reporting standards (repstand).
 
-- fig1
-- media1
-- code1
-- data1
-- supp1
-- repstand1
-- figures
-
-
-Should these be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA1 or mediaR1.
+Should these asset files be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA or mediaR.
 
 ###### `<a-id>`
 
@@ -49,7 +40,7 @@ Some assets will have sub-assets, eg figure supplements (figsupp), source data (
 
 ###### `<sa-id>`
 
-Some assets have sub-asset ids, for example, an aritcle with three main figures, where one
+Some assets have sub-asset ids, for example, an article with three main figures, where one
 figure has three figure supplements, and one figure has two figure supplements will have the following:
 
 - elife-00012-fig1.tiff
@@ -70,7 +61,7 @@ Sometimes there is source data at a parent level, but sometimes assets will have
 Assets can have multiple source data files associated with them, and these are distinguished with the
 data id.
 
-For example, an article with three main figures, where one figure has three sub figures, and one figure has two sub figures, and all have associated data with some of them having multiple data files, could have the following:
+For example, an article with three main figures, where one figure has three figure supplements, and one figure has two figure supplements, and all have associated data, with some of them having multiple data files, could have the following:
 
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
@@ -104,7 +95,7 @@ Sometimes there is source code at a parent level, but sometimes assets will have
 Assets can have multiple source code files associated with them, and these are distinguished with the
 code id.
 
-For example, an article with a top level source code, two main figures, where one figure has source code, and one figure has one sub figure with source code:
+For example, an article with a top level source code, two main figures, where one figure has source code, and one figure has one figure supplement with source code:
 
 - elife-00012-fig1.tiff
 - elife-00012-fig1-code1.csv
