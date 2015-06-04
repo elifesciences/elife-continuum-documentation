@@ -522,7 +522,7 @@ We increment the versions from PoA thorugh VoR
 
 #### How do we prevent an old packet of an article entering the publishing system, and creating a new published version?
 
-In good funtimes news for the publishing platfor, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date.
+In good funtimes news for the publishing platform, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date.
 
 
 #### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
