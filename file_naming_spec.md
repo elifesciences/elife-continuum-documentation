@@ -81,7 +81,7 @@ For example, an article with three main figures, where one figure has three figu
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
@@ -142,7 +142,7 @@ elife-00012-vor-r1.zip contains:
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
@@ -172,7 +172,7 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig3-figsupp1-data2-v1.csv
 - elife-00012-fig3-figsupp1-data3-v1.csv
 - elife-00012-fig3-figsupp2-v1.tiff
-- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp2-data1-v1.csv
 - elife-00012-fig3-figsupp3-v1.tiff
 - elife-00012-fig3-figsupp3-data1-v1.csv
 
@@ -240,7 +240,7 @@ elife-00012-vor-r4.zip contains:
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv  
 
@@ -268,7 +268,7 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig3-figsupp1-data2-v1.csv
 - elife-00012-fig3-figsupp1-data3-v1.csv
 - elife-00012-fig3-figsupp2-v1.tiff
-- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp2-data1-v1.csv
 - elife-00012-fig3-figsupp3-v1.tiff
 - elife-00012-fig3-figsupp3-data1-v1.csv
 
@@ -334,7 +334,7 @@ elife-00012-vor-v1.zip contains
 - elife-00012-fig3-figsupp1-data2-v1.csv
 - elife-00012-fig3-figsupp1-data3-v1.csv
 - elife-00012-fig3-figsupp2-v1.tiff
-- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp2-data1-v1.csv
 - elife-00012-fig3-figsupp3-v1.tiff
 - elife-00012-fig3-figsupp3-data1-v1.csv
 
@@ -362,7 +362,7 @@ elife-00012-vor-r6.zip contains:
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv  
 
@@ -390,7 +390,7 @@ elife-00012-vor-v2.zip contains:
 - elife-00012-fig3-figsupp1-data2-v2.csv
 - elife-00012-fig3-figsupp1-data3-v2.csv
 - elife-00012-fig3-figsupp2-v2.tiff
-- elife-00012-fig3-figsupp3-data1-v2.csv
+- elife-00012-fig3-figsupp2-data1-v2.csv
 - elife-00012-fig3-figsupp3-v2.tiff
 - elife-00012-fig3-figsupp3-data1-v2.csv
 
@@ -673,7 +673,7 @@ elife-00012-vor-r4.zip contains
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
@@ -701,7 +701,7 @@ elife-00012-vor-v3.zip contains
 - elife-00012-fig3-figsupp1-data2-v3.csv
 - elife-00012-fig3-figsupp1-data3-v3.csv
 - elife-00012-fig3-figsupp2-v3.tiff
-- elife-00012-fig3-figsupp3-data1-v3.csv
+- elife-00012-fig3-figsupp2-data1-v3.csv
 - elife-00012-fig3-figsupp3-v3.tiff
 - elife-00012-fig3-figsupp3-data1-v3.csv
 
