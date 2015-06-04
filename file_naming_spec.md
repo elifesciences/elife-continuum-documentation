@@ -120,7 +120,7 @@ Article makes it all the way from submission, through first round of content pro
 
 Bundle that appears in the publishing system looks like this:
 
-elife-00012-vor.zip contains:  
+elife-00012-vor-r1.zip contains:  
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
