@@ -218,7 +218,7 @@ The first version
 
 "Live" version of bundle that enters the publishing system is
 
-elife-00012-vor.zip contains:  
+elife-00012-vor-r4.zip contains:  
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
@@ -340,7 +340,7 @@ elife-00012-vor-v1.zip contains
 
 Three revisions occur, and the new "live" bundle that comes in to the publishing system contains the following:
 
-elife-00012-vor-r1.zip contains:  
+elife-00012-vor-r6.zip contains:  
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
