@@ -1,0 +1,31 @@
+NAME: PPP workflow descrption
+SPEC-VERSION: 0.1
+MODIFIED: 2015-04-29
+
+domain: publish # vs dev, vs staging, etc.
+
+journal: eLife
+
+article types:
+  - research vor
+  - research poa
+  - feature
+  - editorial
+  - correction
+  - insight
+
+
+article workflows:
+  research vor: research poa workflow
+  research poa: research vor workflow
+  feature: research vor workflow
+  editorial: research vor workflow
+  correction: research vor workflow
+  insight: research vor workflow
+
+
+valid stages:
+  - assembly
+  - publish
+  - downstream
+  - archive

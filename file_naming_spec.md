@@ -23,16 +23,7 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 
 This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), (figures) the figures pdf, reporting standards (repstand).
 
-- fig1
-- media1
-- code1
-- data1
-- supp1
-- repstand1
-- figures
-
-
-Should these be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA1 or mediaR1.
+Should these asset files be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA or mediaR.
 
 ###### `<a-id>`
 
@@ -49,7 +40,7 @@ Some assets will have sub-assets, eg figure supplements (figsupp), source data (
 
 ###### `<sa-id>`
 
-Some assets have sub-asset ids, for example, an aritcle with three main figures, where one
+Some assets have sub-asset ids, for example, an article with three main figures, where one
 figure has three figure supplements, and one figure has two figure supplements will have the following:
 
 - elife-00012-fig1.tiff
@@ -70,7 +61,7 @@ Sometimes there is source data at a parent level, but sometimes assets will have
 Assets can have multiple source data files associated with them, and these are distinguished with the
 data id.
 
-For example, an article with three main figures, where one figure has three sub figures, and one figure has two sub figures, and all have associated data with some of them having multiple data files, could have the following:
+For example, an article with three main figures, where one figure has three figure supplements, and one figure has two figure supplements, and all have associated data, with some of them having multiple data files, could have the following:
 
 - elife-00012-fig1.tiff
 - elife-00012-fig1-data1.csv
@@ -90,7 +81,7 @@ For example, an article with three main figures, where one figure has three sub 
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
@@ -104,7 +95,7 @@ Sometimes there is source code at a parent level, but sometimes assets will have
 Assets can have multiple source code files associated with them, and these are distinguished with the
 code id.
 
-For example, an article with a top level source code, two main figures, where one figure has source code, and one figure has one sub figure with source code:
+For example, an article with a top level source code, two main figures, where one figure has source code, and one figure has one figure supplement with source code:
 
 - elife-00012-fig1.tiff
 - elife-00012-fig1-code1.csv
@@ -129,7 +120,7 @@ Article makes it all the way from submission, through first round of content pro
 
 Bundle that appears in the publishing system looks like this:
 
-elife-00012-vor.zip contains:  
+elife-00012-vor-r1.zip contains:  
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
@@ -151,10 +142,11 @@ elife-00012-vor.zip contains:
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
+Note: -r1 could be -r2, r3, r-n. This reflects production processes and is ignored by the publishing platform (with the exception of knowing which zip file to take from the production bucket when ready for publication).
 
 On publishing event files and internal XML links get renamed and updated to (zip retains status indicator):
 
@@ -180,7 +172,7 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig3-figsupp1-data2-v1.csv
 - elife-00012-fig3-figsupp1-data3-v1.csv
 - elife-00012-fig3-figsupp2-v1.tiff
-- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp2-data1-v1.csv
 - elife-00012-fig3-figsupp3-v1.tiff
 - elife-00012-fig3-figsupp3-data1-v1.csv
 
@@ -226,7 +218,7 @@ The first version
 
 "Live" version of bundle that enters the publishing system is
 
-elife-00012-vor.zip contains:  
+elife-00012-vor-r4.zip contains:  
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
@@ -248,7 +240,7 @@ elife-00012-vor.zip contains:
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv  
 
@@ -276,7 +268,7 @@ elife-00012-vor-v1.zip contains:
 - elife-00012-fig3-figsupp1-data2-v1.csv
 - elife-00012-fig3-figsupp1-data3-v1.csv
 - elife-00012-fig3-figsupp2-v1.tiff
-- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp2-data1-v1.csv
 - elife-00012-fig3-figsupp3-v1.tiff
 - elife-00012-fig3-figsupp3-data1-v1.csv
 
@@ -342,13 +334,13 @@ elife-00012-vor-v1.zip contains
 - elife-00012-fig3-figsupp1-data2-v1.csv
 - elife-00012-fig3-figsupp1-data3-v1.csv
 - elife-00012-fig3-figsupp2-v1.tiff
-- elife-00012-fig3-figsupp3-data1-v1.csv
+- elife-00012-fig3-figsupp2-data1-v1.csv
 - elife-00012-fig3-figsupp3-v1.tiff
 - elife-00012-fig3-figsupp3-data1-v1.csv
 
 Three revisions occur, and the new "live" bundle that comes in to the publishing system contains the following:
 
-elife-00012-vor-r1.zip contains:  
+elife-00012-vor-r6.zip contains:  
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
@@ -370,7 +362,7 @@ elife-00012-vor-r1.zip contains:
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv  
 
@@ -398,7 +390,7 @@ elife-00012-vor-v2.zip contains:
 - elife-00012-fig3-figsupp1-data2-v2.csv
 - elife-00012-fig3-figsupp1-data3-v2.csv
 - elife-00012-fig3-figsupp2-v2.tiff
-- elife-00012-fig3-figsupp3-data1-v2.csv
+- elife-00012-fig3-figsupp2-data1-v2.csv
 - elife-00012-fig3-figsupp3-v2.tiff
 - elife-00012-fig3-figsupp3-data1-v2.csv
 
@@ -469,8 +461,7 @@ an article thse paths in the XML will need to get updated.
 #### How do we update a revision number?
 
 It is up to the content processor to handle revisions, and to send us the correctly
-named new revision. Revision numbers do not affect the publishing platform, so effectivly
-they can be ignored. **We do not need to track revision numbers in the publishing dashboard**.
+named new revision. Revision numbers do not affect the publishing platform.
 
 #### How do we bootstrap a new instance of the site that respects all previous versioned published articles?
 
@@ -525,22 +516,12 @@ At this point no.
 
 #### Do we increment VOR version numbers if there was a POA version number before, or do we start over again with a new version number for the article, as it's name has changed to reflect the new status?
 
-We increment version numbers atomically, irrespective of whether the version is updated from a VOR or a POA.
-
-#### Why are most of my VOR zip files on archiving named `elife-00012-vor-v2.zip`, even though they are the first VOR versions of the article
-
-All VOR files have have a successful POA will generate a v2 publication, or higher, as the v1 will have been published
-as part of the POA process.
-
-This means that the first zip file of a VOR that gets published will usually have the following name
-`elife-00012-vor-v2.zip`. Although this might seem counter-intuitive, the alternative option of renaming
-the version number of the published version based on state. It also means that other publishing states can be
-accomodated later without reworking the pubilshing logic. 
+We increment the versions from PoA thorugh VoR  
 
 
 #### How do we prevent an old packet of an article entering the publishing system, and creating a new published version?
 
-In good funtimes news for the publishing platfor, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date.
+In good funtimes news for the publishing platform, we have decided that this is the responsability of production. The publishing platform is going to implicity trust production, and will do as it's owers bid. We would like to enable a block in the production system on publishing any v2 or higher content, pending a production manual check, with the ability to remove this block at a later date.
 
 
 #### The `"article-version-id": "00013.1",` now no longer contains any reference to "VOR", why is that?
@@ -561,10 +542,14 @@ I have, mainly as I felt that file names for sub components were becoming unweil
 
 - figure -> fig
 - figuresupplement -> figsupp
-- supplementaryfile -> supp
-- media -> media
-- sourcecode -> code  
-- sourcedata -> data  
+- supplementary file -> supp
+- media (includes videos, audio and animation) -> media
+- source code -> code  
+- source data -> data
+- figures (PDF if the figures) -> figures
+- reporting standards -> repstand
+- appendix asset file, for example figure -> figA
+- author response asset file, for example figure -> figR
 
 
 ## Tying POA and VOR packets in our workflow and their naming convention.
@@ -665,7 +650,7 @@ Later the article goes through the full content processing step and gets a VOR s
 
 Package comes in to the production system as:
 
-elife-00012-vor.zip contains
+elife-00012-vor-r4.zip contains
 - elife-00012.xml
 - elife-00012.pdf
 - elife-00012-figures.pdf
@@ -687,7 +672,7 @@ elife-00012-vor.zip contains
 - elife-00012-fig3-figsupp1-data2.csv
 - elife-00012-fig3-figsupp1-data3.csv
 - elife-00012-fig3-figsupp2.tiff
-- elife-00012-fig3-figsupp3-data1.csv
+- elife-00012-fig3-figsupp2-data1.csv
 - elife-00012-fig3-figsupp3.tiff
 - elife-00012-fig3-figsupp3-data1.csv
 
@@ -715,7 +700,7 @@ elife-00012-vor-v3.zip contains
 - elife-00012-fig3-figsupp1-data2-v3.csv
 - elife-00012-fig3-figsupp1-data3-v3.csv
 - elife-00012-fig3-figsupp2-v3.tiff
-- elife-00012-fig3-figsupp3-data1-v3.csv
+- elife-00012-fig3-figsupp2-data1-v3.csv
 - elife-00012-fig3-figsupp3-v3.tiff
 - elife-00012-fig3-figsupp3-data1-v3.csv
 
@@ -749,7 +734,7 @@ The following JSON is sent to the Drupal container
 
 And on successful publising `elife-00012-vor-v3.zip` gets archived.
 
-So the version hisotry of the PDF of this article will look like the following, from oldest to newest, for files have have been published
+So the version history of the PDF of this article will look like the following, from oldest to newest, for files have have been published
 
 - elife-00012-v1.pdf  (a POA pdf)
 - elife-00012-v2.pdf  (a POA pdf)
