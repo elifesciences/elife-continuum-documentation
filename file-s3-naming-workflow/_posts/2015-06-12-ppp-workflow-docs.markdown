@@ -1,0 +1,439 @@
+---
+layout: post
+title:  "PPP workflow configuration"
+date:   2015-06-12 11:40:32
+categories: ppp docs workflow
+---
+
+{% assign ppp = site.ppp_docs_config %}
+
+# Scene setting
+
+_Scene: An empty repoisotory, somewhere in an anonomous Ec2 repository. Lights come up to reveal
+two characters sitting stage left._
+
+The bot code is deployed via salt. During deployment a copy of [elife-poa-xml-generation]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code.
+
+The bot code imports functions from the elife-poa-xml-generation code, e.g. [here](https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478).
+
+
+# High Level POA workflow
+
+- Zipfile gets sent to {{ ppp.poa-input-bucket-value }} by EJP  
+- `NewS3POA` starter invokes the `PackagePOA` workflow and activity based on a timestamp and the presence of new files having been sent from EJP.  
+- A set of directories are created on the ec2 instance that is running the activiy.
+- Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity  
+- extract a DOI from the Zipfile
+- abort if no DOI can be generated  
+- otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)  
+- in the [copy_pdf_to_hw_staging_dir](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343) function we attempt to decapitate the PDF
+- The new processed files are placed in `self.elife_poa_lib.settings.STAGING_TO_HW_DIR`.  
+- the processing of the zip file should also have decapitated the PDF from EJP, so we
+check whether that PDF has been decapitated. We look in `elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR` to see if that decapitated PDF is present.  
+- a new manifest XML file is generated for Highwire
+- download a set of CSV files from EJP
+- create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the
+csv files downloaded from EJP (this will not cotain the body text of the XML file).  
+- copy all of these files to an S3 Outbox  
+- create an email of the format " email_type = "PackagePOA" and add this to a mail queue. (Mail templates are stored on s3). This is a
+system email and is sent to emails that are configured in `settings.ses_poa_recipient_email`.
+
+---
+- the `PublishPOA` workflow kicks in now  
+- this invokes the `PublishPOA` and the `DepositCrossref` activities  
+- `PublishPOA` creates the following locations
+    - self.publish_bucket = settings.poa_packaging_bucket
+    - self.outbox_folder = "outbox/"
+    - self.published_folder = "published/"  
+- files are downloaded from the s3 bucket that `NewS3POA` populated  
+- some checks are made to confirm that supp files and zip files have complimentary data and files in them  
+- supplement files and zip files are sent to the HW ftp site
+- a go.xml file is created and sent the HW FTP endpoint  
+- If these files make it to HW then xml is sent to
+    - xml_to_crossref_outbox_s3
+    - xml_to_pubmed_outbox_s3
+    - xml_to_publication_email_outbox_s3
+- an email is sent to `settings.ses_poa_recipient_email` (the code here is duplicated from the packacgePOA script)
+
+---
+- the `DepositCrossref` activity kicks in
+- files are downloaded from s3
+- crossref XML is generated
+- files are tidied away
+- an email is sent to `settings.ses_poa_recipient_email`
+
+---
+- Files appears in Highwire express (HWX) with a go.xml file  
+- HWX shows all POA articles for the day on one "batch"
+- <span style="color:red">HW creates a record in HWX</span>
+- <span style="color:red">HW creates nodes in Drupal</span>
+- <span style="color:red">supp files are loaded to the appropriate location for download</span>
+- the PAP batch shows all the POA papers in HWX
+- HWX has a link to the paper in Drupal where the content is in a "not published state"
+- production manually checks the PDF on HWX, usually to check against
+    - special characters
+    - that decapitation has happened on the PDF
+    - that the abstract appears OK
+    - some other checks (listed in the POA protocalls document)
+- production push an "Approve" button
+- another page is displayed with another "Approve button"
+- a "Success Page" is displayed
+- <span style="color:red">Content is added to the search index </span>
+- usually within 1/2 an hour the paper on the Drupal Site is in a published state
+
+---
+
+# High level VOR workflow  
+- content processor sends a zip file to an S3 bucket and to a HW FTP endpoint
+- Files appears in Highwire express (HWX) with a go.xml file  [&#128279;]()
+- each file takes it's own batch through the system  
+- <span style="color:red">HW creates a record in HWX</span>
+- if production can get to HWX then they see the following stages (information can been seen at each of these stages)
+    - preintake
+    - intake
+    - processing
+    - assembly
+    - production  
+    - downstream
+- before assembly HWX does the following
+  - <span style="color:red">images are converted</span>
+  - <span style="color:green">HW creates nodes in Drupal</span>
+  - <span style="color:red">assetts are loaded to the appropriate location, e.g. for download or to the CDN</span>
+  - <span style="color:red">XML is transformed to HTML and provided via a markdup service</span>
+  - <span style="color:red">Some magic rlated article fun happens</span>
+- when the workflow gets to assembly assembly will turn organge and prouction can make a decision
+- at assembly there is a QA report that links to the Drupal site
+- production checks everything in the article on the drupal site
+  - videos
+  - images
+  - tables
+  - decsioin letters
+- production push an "Approve" button
+- another page is displayed with another "Approve button"
+- HWX shows that state is changing in the productino process
+- if the system works correctly then in about 20 minutes
+- <span style="color:red">Content is added to the search index </span>
+- <span style="color:red">HW starts to collect PDF download and pageview metrics </span>
+- <span style="color:red">RSS feed is updated </span>
+- if it goes "red" all bets are off
+- elife-bot picks up the zip file and does activities on that zip file **to be described**
+
+---
+
+# Other Workflows run in our publishing system
+
+---
+- `cron_NewS3XML`
+- check in SimpleDB for info on any new or modified XML files that are in an S3 bucket
+- if there is a new or modified XML file then run the starter_PublishArticle starter
+- `PublishArticle` starter creates a custom workflow for publishing a specific numbered article
+- this workflow invokes the following activities `UnzipArticleXML`, `LensArticle`, `ArticleToOutbox`, `LensXMLFilesList`
+
+---
+- `cron_NewS3PDF`
+
+---  
+- `cron_NewS3SVG`
+
+---
+- `cron_NewS3Suppl`
+
+---
+- `cron_NewS3JPG`
+
+---
+- `cron_NewS3FiguresPDF`
+
+---
+`PublicationEmail`
+
+---
+- `PubRouterDeposit_HEFCE`
+
+---
+- `PubRouterDeposit_Cengage`  
+
+---
+- `PubmedArticleDeposit`
+
+
+https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L179 seems to refer to
+a function in https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py. How does that
+work?
+
+This mainly leads to the question of why the following seems to be needed
+https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L411
+
+https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L427
+
+---
+
+# High Level VOR workflow
+
+---
+
+# Proposed New High Level POA workflow
+
+---
+
+# Proposed New High Level VOR workflow
+
+---
+
+# Remaining Gaps in our Current Workflows
+
+
+
+
+---
+
+# Global configuration options for PPP workflow
+
+Get all of our pieces of AWS infrastructure setup in the correct regions.
+
+`{{ ppp.region }} = {{ ppp.region-value }}`
+
+`{{ ppp.sqs-region }} = {{ ppp.region-value }}`
+
+`{{ ppp.simple-db-region }} = {{ ppp.region-value }}`
+
+`{{ ppp.ses-region }} = {{ ppp.region-value }}`
+
+
+Setup variable for the Amazon Simple Workflow  
+
+`{{ ppp.domain }} = {{ ppp.domain-value}}`  
+
+`{{ ppp.task-list }} = {{ ppp.task-list-value}}`  
+
+Setup variable for the Amazon Simple Queue Service
+
+  `{{ ppp.monitor-queue }} = {{ ppp.monitor-queue-value }}`
+
+  `{{ ppp.monitor-bucket }} = {{ ppp.monitor-bucket-value }}`  
+
+  `{{ ppp.eif-output-bucket }} = {{ ppp.eif-output-bucket-value }}`
+
+---
+
+# eLife bot info.
+
+We refer to workers that are part of the [{{ ppp.bot-repo }}]()
+
+# File naming convention.
+
+The file naming convention can be found at [{{ ppp.naming-convention }}]()
+
+---
+
+# The cron file
+
+A system wide [cron]() file runs. This invokes a [cron.py]({{ ppp.bot-cron-py }}) script.
+
+This script runs multiple starters that start workflows, which call specific sets of activities.
+
+---
+I should make the answer more complete,
+
+https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L146
+That is where the settings bucket name gets used to download the POA zip package
+
+https://github.com/elifesciences/elife-bot/blob/master/provider/ejp.py#L33
+The ejp provider takes the CSV bucket and knows how to find the latest files and data from them
+
+From: Graham Nott [mailto:gnott@starglobal.ca]
+Sent: June-12-15 11:21
+To: 'Ian MULVANY'
+Subject: RE: question about POA bucket settings
+
+Bucket names I see,
+
+For live they are
+
+Where POA zip files are
+https://github.com/elifesciences/elife-bot/blob/master/settings-example.py#L167
+
+Where EJP CSV files are
+https://github.com/elifesciences/elife-bot/blob/master/settings-example.py#L151
+
+There's a different value for each environment, and these of course are in settings.py  (taken from the example)
+
+From: Ian MULVANY [mailto:i.mulvany@elifesciences.org]
+Sent: June-12-15 11:08
+
+---
+
+#### S3Monitor
+  is a generic activity that can look to see if there is something new in an S3 bucket,
+  can probably remain unchanged.
+
+  The `S3Monitor` workflow runs an [S3Monitor activity]({{ ppp.bot-s3-monitor-activity }}) which checks an S3 bucket to see if it has been modified. The time window
+  in which this activity checks an S3 bucket is hardcoded into the cron.py script.
+
+  The `S3Monitor activity` checks state against an AWS Simple DB. This is configured
+  in settings.py with the following setting
+
+  `{{ ppp.simple-db-namespace }} = {{ ppp.simple-db-namespace-value }}`
+
+  The S3 bucket that S3Monitor activity will check against is passed in via a data
+  value to the `do_activity` method of the class instance. It returns information
+  on any items that have changed since last checked.
+
+  **I'm not sure how the S3Monitor activity is pointed at the bucket it needs to
+  look at for the POA publication workflow**.
+
+  The input S3 bucket that is checked for the PublishPOA workflow is set in setttings.py with
+  the following setting
+
+    `{{ ppp.poa-input-bucket }} = {{  ppp.poa-input-bucket-value }}`
+
+
+
+#### `cron_NewS3POA`
+  downloads zip files and csv files from S3 buckets that EJP delivers to. Creates
+  the POA xml from these, and decapitates the PDF. Prepares content for later
+  publication by placing the generated files into an s3 outbox. We may want to
+  create the EIF JSON here.  
+
+
+#### **to be described**
+- `cron_NewS3XML`
+- `cron_NewS3PDF`
+- `cron_NewS3SVG`
+- 'cron_NewS3Suppl'
+- `cron_NewS3JPG`
+- `cron_NewS3FiguresPDF`
+
+We may want to include a new workflow for generating the appropriate images as
+an extension here.  
+
+
+---
+
+#### PublishPOA
+
+`starter_PublishPOA`
+  Publishes POA content that the bot has created from files sent to S3 from EJP.
+  These get publised to `Highwire` `Crossref` and `pubmed`. This activity checks
+  that delivered files contain xml and pdf. This generates the go.xml file needed
+  for Highwire. This prepares an email to be sent to authors to notify them that
+  they have been published. We will need to intercept or replace the control
+  mechanisim in this part of the workflow as part of the PPP project.  
+
+
+The PublishPOA workflow starts two actvities: `PublishPOA` and `DepositCrossref`.
+
+
+#### PublishPOA Activity
+
+New files are downloaded from an S3 Bucket to a temporary set of
+directories on the `Ec2` instance running the activity.
+
+These tempoarary directories are configured created and named in , and they can
+be set in settings.py if desired, but if not set the bot will create them automatically.
+
+This overriding happens in the `override_poa_settings` method of the `activity_PublishPOA`.
+
+Settings that can be overridden are
+
+{% highlight python %}
+  # Override the settings
+   settings.XLS_PATH                   = self.get_tmp_dir() + os.sep + 'ejp-csv' + os.sep
+   settings.TARGET_OUTPUT_DIR          = self.get_tmp_dir() + os.sep + settings.TARGET_OUTPUT_DIR
+   settings.STAGING_TO_HW_DIR          = self.get_tmp_dir() + os.sep + settings.STAGING_TO_HW_DIR
+   settings.FTP_TO_HW_DIR              = self.get_tmp_dir() + os.sep + settings.FTP_TO_HW_DIR
+   settings.MADE_FTP_READY             = self.get_tmp_dir() + os.sep + settings.MADE_FTP_READY
+   settings.EJP_INPUT_DIR              = self.get_tmp_dir() + os.sep + settings.EJP_INPUT_DIR
+   settings.STAGING_DECAPITATE_PDF_DIR = self.get_tmp_dir() + os.sep + settings.STAGING_DECAPITATE_PDF_DIR
+   settings.TMP_DIR                    = self.get_tmp_dir() + os.sep + settings.TMP_DIR
+   settings.DO_NOT_FTP_TO_HW_DIR       = self.get_tmp_dir() + os.sep + 'do-not-ftp-to-hw' + os.sep
+
+   # Override the FTP settings with the bot environment settings
+   settings.FTP_URI = self.settings.POA_FTP_URI
+   settings.FTP_USERNAME = self.settings.POA_FTP_USERNAME
+   settings.FTP_PASSWORD = self.settings.POA_FTP_PASSWORD
+   settings.FTP_CWD = self.settings.POA_FTP_CWD
+{% endhighlight %}
+
+**FIND OUT WHICH OF THESE ARE INTERNAL EC2 DIRECTORIES AND WHICH ARE S3 BUCKETS**
+
+These directories are created by the `create_activity_directories` function. This
+funciton creates the following directories
+
+  - {{ ppp.tmp-dir-TARGET_OUTPUT_DIR }}  
+  - {{ ppp.tmp-dir-STAGING_TO_HW_DIR }}  
+  - {{ ppp.tmp-dir-FTP_TO_HW_DIR }}  
+  - {{ ppp.tmp-dir-MADE_FTP_READY }}  
+  - {{ ppp.tmp-dir-EJP_INPUT_DIR }}  
+  - {{ ppp.tmp-dir-STAGING_DECAPITATE_PDF_DIR }}  
+  - {{ ppp.tmp-dir-TMP_DIR }}
+  - {{ ppp.tmp-dir-XLS_PATH }}
+  - {{ ppp.tmp-dir-DO_NOT_FTP_TO_HW_DIR }}
+
+All of the logic of the activity is described in the `do_activity` function. What
+it does is
+
+download_files_from_s3_outbox:
+    Files `.zip`, `.pdf` and `.xml` files are downloaded from  `{{ ppp.poa-input-bucket }}` to
+    **list the local directory name here**. These file types are hardcoded in the
+    `download_files_from_s3_outbox` function.
+
+#### DepositCrossref Activity
+
+
+---
+
+# PPP POA workflow
+
+# POA workflow
+
+### Zip file arrives from the content processor.
+
+A file with a name like `elife-00012-poa.zip` will arrive into
+
+---
+
+# VOR workflow
+
+
+# YAML config variables.
+
+---
+
+# Current AWS s3 buckets (2015-06-12)
+
+elife-articles
+elife-articles-hw
+elife-articles-log
+elife-billing-alerts
+elife-bot
+elife-bot-dev
+elife-builder
+elife-cdn
+elife-cdn-dev
+elife-cdn-drupal-log
+elife-cdn-log
+elife-ejp-ftp
+elife-ejp-ftp-dev
+elife-ejp-ftp-test
+elife-ejp-poa-delivery
+elife-ejp-poa-delivery-dev
+elife-ejp-raw-output
+elife-lens
+elife-lens-0.1
+elife-lens-dev
+elife-lens-log
+elife-log-data
+elife-nas-s3-backup
+elife-poa-packaging
+elife-poa-packaging-dev
+elife-production
+elife-share
+elife-static-web-host-test
+elife-tahi-uploads-dev
+elife-tahi-uploads-dev-logs
+elife-tnq-crossref-delivery
+
+
+
+{{ ppp.aws_base_path }}

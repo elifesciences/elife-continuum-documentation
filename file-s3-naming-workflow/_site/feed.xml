@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Your awesome title</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>http://yourdomain.com/</link>
+    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 17 Jun 2015 10:28:51 +0100</pubDate>
+    <lastBuildDate>Wed, 17 Jun 2015 10:28:51 +0100</lastBuildDate>
+    <generator>Jekyll v2.5.2</generator>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>
+&lt;p&gt;You’ll find this post in your &lt;code&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Tom&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &amp;#39;Hi, Tom&amp;#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;elife-sciences-aws.com&lt;/p&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://github.com/jekyll/jekyll-help&quot;&gt;Jekyll’s dedicated Help repository&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 12 Jun 2015 12:40:32 +0100</pubDate>
+        <link>http://yourdomain.com/jekyll/update/2015/06/12/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2015/06/12/welcome-to-jekyll.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>PPP workflow configuration</title>
+        <description>
+&lt;h1 id=&quot;scene-setting&quot;&gt;Scene setting&lt;/h1&gt;
+
+&lt;p&gt;&lt;em&gt;Scene: An empty repoisotory, somewhere in an anonomous Ec2 repository. Lights come up to reveal
+two characters sitting stage left.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The bot code is deployed via salt. During deployment a copy of &lt;a href=&quot;https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99&quot;&gt;elife-poa-xml-generation&lt;/a&gt; is brought into the same directory structure as the bot-code.&lt;/p&gt;
+
+&lt;p&gt;The bot code imports functions from the elife-poa-xml-generation code, e.g. &lt;a href=&quot;https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;high-level-poa-workflow&quot;&gt;High Level POA workflow&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Zipfile gets sent to elife-ejp-poa-delivery-dev by EJP  &lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;NewS3POA&lt;/code&gt; starter invokes the &lt;code&gt;PackagePOA&lt;/code&gt; workflow and activity based on a timestamp and the presence of new files having been sent from EJP.  &lt;/li&gt;
+  &lt;li&gt;A set of directories are created on the ec2 instance that is running the activiy.&lt;/li&gt;
+  &lt;li&gt;Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity  &lt;/li&gt;
+  &lt;li&gt;extract a DOI from the Zipfile&lt;/li&gt;
+  &lt;li&gt;abort if no DOI can be generated  &lt;/li&gt;
+  &lt;li&gt;otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)  &lt;/li&gt;
+  &lt;li&gt;in the &lt;a href=&quot;https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343&quot;&gt;copy_pdf_to_hw_staging_dir&lt;/a&gt; function we attempt to decapitate the PDF&lt;/li&gt;
+  &lt;li&gt;The new processed files are placed in &lt;code&gt;self.elife_poa_lib.settings.STAGING_TO_HW_DIR&lt;/code&gt;.  &lt;/li&gt;
+  &lt;li&gt;the processing of the zip file should also have decapitated the PDF from EJP, so we
+check whether that PDF has been decapitated. We look in &lt;code&gt;elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR&lt;/code&gt; to see if that decapitated PDF is present.  &lt;/li&gt;
+  &lt;li&gt;a new manifest XML file is generated for Highwire&lt;/li&gt;
+  &lt;li&gt;download a set of CSV files from EJP&lt;/li&gt;
+  &lt;li&gt;create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the
+csv files downloaded from EJP (this will not cotain the body text of the XML file).  &lt;/li&gt;
+  &lt;li&gt;copy all of these files to an S3 Outbox  &lt;/li&gt;
+  &lt;li&gt;create an email of the format “ email_type = “PackagePOA” and add this to a mail queue. (Mail templates are stored on s3). This is a
+system email and is sent to emails that are configured in &lt;code&gt;settings.ses_poa_recipient_email&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;the &lt;code&gt;PublishPOA&lt;/code&gt; workflow kicks in now  &lt;/li&gt;
+  &lt;li&gt;this invokes the &lt;code&gt;PublishPOA&lt;/code&gt; and the &lt;code&gt;DepositCrossref&lt;/code&gt; activities  &lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;PublishPOA&lt;/code&gt; creates the following locations
+    &lt;ul&gt;
+      &lt;li&gt;self.publish_bucket = settings.poa_packaging_bucket&lt;/li&gt;
+      &lt;li&gt;self.outbox_folder = “outbox/”&lt;/li&gt;
+      &lt;li&gt;self.published_folder = “published/”  &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;files are downloaded from the s3 bucket that &lt;code&gt;NewS3POA&lt;/code&gt; populated  &lt;/li&gt;
+  &lt;li&gt;some checks are made to confirm that supp files and zip files have complimentary data and files in them  &lt;/li&gt;
+  &lt;li&gt;supplement files and zip files are sent to the HW ftp site&lt;/li&gt;
+  &lt;li&gt;a go.xml file is created and sent the HW FTP endpoint  &lt;/li&gt;
+  &lt;li&gt;If these files make it to HW then xml is sent to
+    &lt;ul&gt;
+      &lt;li&gt;xml_to_crossref_outbox_s3&lt;/li&gt;
+      &lt;li&gt;xml_to_pubmed_outbox_s3&lt;/li&gt;
+      &lt;li&gt;xml_to_publication_email_outbox_s3&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;an email is sent to &lt;code&gt;settings.ses_poa_recipient_email&lt;/code&gt; (the code here is duplicated from the packacgePOA script)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;the &lt;code&gt;DepositCrossref&lt;/code&gt; activity kicks in&lt;/li&gt;
+  &lt;li&gt;files are downloaded from s3&lt;/li&gt;
+  &lt;li&gt;crossref XML is generated&lt;/li&gt;
+  &lt;li&gt;files are tidied away&lt;/li&gt;
+  &lt;li&gt;an email is sent to &lt;code&gt;settings.ses_poa_recipient_email&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;Files appears in Highwire express (HWX) with a go.xml file  &lt;/li&gt;
+  &lt;li&gt;HWX shows all POA articles for the day on one “batch”&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;HW creates a record in HWX&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;HW creates nodes in Drupal&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;supp files are loaded to the appropriate location for download&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;the PAP batch shows all the POA papers in HWX&lt;/li&gt;
+  &lt;li&gt;HWX has a link to the paper in Drupal where the content is in a “not published state”&lt;/li&gt;
+  &lt;li&gt;production manually checks the PDF on HWX, usually to check against
+    &lt;ul&gt;
+      &lt;li&gt;special characters&lt;/li&gt;
+      &lt;li&gt;that decapitation has happened on the PDF&lt;/li&gt;
+      &lt;li&gt;that the abstract appears OK&lt;/li&gt;
+      &lt;li&gt;some other checks (listed in the POA protocalls document)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;production push an “Approve” button&lt;/li&gt;
+  &lt;li&gt;another page is displayed with another “Approve button”&lt;/li&gt;
+  &lt;li&gt;a “Success Page” is displayed&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;Content is added to the search index &lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;usually within 1/2 an hour the paper on the Drupal Site is in a published state&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;high-level-vor-workflow&quot;&gt;High level VOR workflow&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;content processor sends a zip file to an S3 bucket and to a HW FTP endpoint&lt;/li&gt;
+  &lt;li&gt;Files appears in Highwire express (HWX) with a go.xml file  &lt;a href=&quot;&quot;&gt;🔗&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;each file takes it’s own batch through the system  &lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;HW creates a record in HWX&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;if production can get to HWX then they see the following stages (information can been seen at each of these stages)
+    &lt;ul&gt;
+      &lt;li&gt;preintake&lt;/li&gt;
+      &lt;li&gt;intake&lt;/li&gt;
+      &lt;li&gt;processing&lt;/li&gt;
+      &lt;li&gt;assembly&lt;/li&gt;
+      &lt;li&gt;production  &lt;/li&gt;
+      &lt;li&gt;downstream&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;before assembly HWX does the following
+    &lt;ul&gt;
+      &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;images are converted&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span style=&quot;color:green&quot;&gt;HW creates nodes in Drupal&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;assetts are loaded to the appropriate location, e.g. for download or to the CDN&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;XML is transformed to HTML and provided via a markdup service&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;Some magic rlated article fun happens&lt;/span&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;when the workflow gets to assembly assembly will turn organge and prouction can make a decision&lt;/li&gt;
+  &lt;li&gt;at assembly there is a QA report that links to the Drupal site&lt;/li&gt;
+  &lt;li&gt;production checks everything in the article on the drupal site
+    &lt;ul&gt;
+      &lt;li&gt;videos&lt;/li&gt;
+      &lt;li&gt;images&lt;/li&gt;
+      &lt;li&gt;tables&lt;/li&gt;
+      &lt;li&gt;decsioin letters&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;production push an “Approve” button&lt;/li&gt;
+  &lt;li&gt;another page is displayed with another “Approve button”&lt;/li&gt;
+  &lt;li&gt;HWX shows that state is changing in the productino process&lt;/li&gt;
+  &lt;li&gt;if the system works correctly then in about 20 minutes&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;Content is added to the search index &lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;HW starts to collect PDF download and pageview metrics &lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;span style=&quot;color:red&quot;&gt;RSS feed is updated &lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;if it goes “red” all bets are off&lt;/li&gt;
+  &lt;li&gt;elife-bot picks up the zip file and does activities on that zip file &lt;strong&gt;to be described&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;other-workflows-run-in-our-publishing-system&quot;&gt;Other Workflows run in our publishing system&lt;/h1&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3XML&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;check in SimpleDB for info on any new or modified XML files that are in an S3 bucket&lt;/li&gt;
+  &lt;li&gt;if there is a new or modified XML file then run the starter_PublishArticle starter&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;PublishArticle&lt;/code&gt; starter creates a custom workflow for publishing a specific numbered article&lt;/li&gt;
+  &lt;li&gt;this workflow invokes the following activities &lt;code&gt;UnzipArticleXML&lt;/code&gt;, &lt;code&gt;LensArticle&lt;/code&gt;, &lt;code&gt;ArticleToOutbox&lt;/code&gt;, &lt;code&gt;LensXMLFilesList&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3PDF&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3SVG&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3Suppl&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3JPG&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3FiguresPDF&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;&lt;code&gt;PublicationEmail&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;PubRouterDeposit_HEFCE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;PubRouterDeposit_Cengage&lt;/code&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;PubmedArticleDeposit&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L179 seems to refer to
+a function in https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py. How does that
+work?&lt;/p&gt;
+
+&lt;p&gt;This mainly leads to the question of why the following seems to be needed
+https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L411&lt;/p&gt;
+
+&lt;p&gt;https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L427&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;high-level-vor-workflow-1&quot;&gt;High Level VOR workflow&lt;/h1&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;proposed-new-high-level-poa-workflow&quot;&gt;Proposed New High Level POA workflow&lt;/h1&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;proposed-new-high-level-vor-workflow&quot;&gt;Proposed New High Level VOR workflow&lt;/h1&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;remaining-gaps-in-our-current-workflows&quot;&gt;Remaining Gaps in our Current Workflows&lt;/h1&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;global-configuration-options-for-ppp-workflow&quot;&gt;Global configuration options for PPP workflow&lt;/h1&gt;
+
+&lt;p&gt;Get all of our pieces of AWS infrastructure setup in the correct regions.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;aws-region = us-east-1&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;jr_sqs_region = us-east-1&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;simpledb_region = us-east-1&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ses_region = us-east-1&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Setup variable for the Amazon Simple Workflow  &lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;domain = Publish&lt;/code&gt;  &lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;default_task_list = DefaultTaskList&lt;/code&gt;  &lt;/p&gt;
+
+&lt;p&gt;Setup variable for the Amazon Simple Queue Service&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;jr_S3_monitor_queue = ppp-test-queue&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;jr_S3_monitor_bucket = ppp-test-source&lt;/code&gt;  &lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;jr_S3_NAF_bucket = ppp-test-naf-output&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;elife-bot-info&quot;&gt;eLife bot info.&lt;/h1&gt;
+
+&lt;p&gt;We refer to workers that are part of the &lt;a href=&quot;&quot;&gt;https://github.com/elifesciences/elife-bot&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;file-naming-convention&quot;&gt;File naming convention.&lt;/h1&gt;
+
+&lt;p&gt;The file naming convention can be found at &lt;a href=&quot;&quot;&gt;https://github.com/elifesciences/ppp-project/blob/master/file_naming_spec.md&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;the-cron-file&quot;&gt;The cron file&lt;/h1&gt;
+
+&lt;p&gt;A system wide &lt;a href=&quot;&quot;&gt;cron&lt;/a&gt; file runs. This invokes a &lt;a href=&quot;https://github.com/elifesciences/elife-bot/blob/master/cron.py&quot;&gt;cron.py&lt;/a&gt; script.&lt;/p&gt;
+
+&lt;p&gt;This script runs multiple starters that start workflows, which call specific sets of activities.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;I should make the answer more complete,&lt;/p&gt;
+
+&lt;p&gt;https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L146
+That is where the settings bucket name gets used to download the POA zip package&lt;/p&gt;
+
+&lt;p&gt;https://github.com/elifesciences/elife-bot/blob/master/provider/ejp.py#L33
+The ejp provider takes the CSV bucket and knows how to find the latest files and data from them&lt;/p&gt;
+
+&lt;p&gt;From: Graham Nott [mailto:gnott@starglobal.ca]
+Sent: June-12-15 11:21
+To: ‘Ian MULVANY’
+Subject: RE: question about POA bucket settings&lt;/p&gt;
+
+&lt;p&gt;Bucket names I see,&lt;/p&gt;
+
+&lt;p&gt;For live they are&lt;/p&gt;
+
+&lt;p&gt;Where POA zip files are
+https://github.com/elifesciences/elife-bot/blob/master/settings-example.py#L167&lt;/p&gt;
+
+&lt;p&gt;Where EJP CSV files are
+https://github.com/elifesciences/elife-bot/blob/master/settings-example.py#L151&lt;/p&gt;
+
+&lt;p&gt;There’s a different value for each environment, and these of course are in settings.py  (taken from the example)&lt;/p&gt;
+
+&lt;p&gt;From: Ian MULVANY [mailto:i.mulvany@elifesciences.org]
+Sent: June-12-15 11:08&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;s3monitor&quot;&gt; S3Monitor&lt;/h4&gt;
+&lt;p&gt;is a generic activity that can look to see if there is something new in an S3 bucket,
+  can probably remain unchanged.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;S3Monitor&lt;/code&gt; workflow runs an &lt;a href=&quot;tmp&quot;&gt;S3Monitor activity&lt;/a&gt; which checks an S3 bucket to see if it has been modified. The time window
+  in which this activity checks an S3 bucket is hardcoded into the cron.py script.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;S3Monitor activity&lt;/code&gt; checks state against an AWS Simple DB. This is configured
+  in settings.py with the following setting&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;simpledb_domain_postfix = _dev&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The S3 bucket that S3Monitor activity will check against is passed in via a data
+  value to the &lt;code&gt;do_activity&lt;/code&gt; method of the class instance. It returns information
+  on any items that have changed since last checked.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;I’m not sure how the S3Monitor activity is pointed at the bucket it needs to
+  look at for the POA publication workflow&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The input S3 bucket that is checked for the PublishPOA workflow is set in setttings.py with
+  the following setting&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;`poa_bucket = elife-ejp-poa-delivery-dev`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;cronnews3poa&quot;&gt;&lt;code&gt;cron_NewS3POA&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;downloads zip files and csv files from S3 buckets that EJP delivers to. Creates
+  the POA xml from these, and decapitates the PDF. Prepares content for later
+  publication by placing the generated files into an s3 outbox. We may want to
+  create the EIF JSON here.  &lt;/p&gt;
+
+&lt;h4 id=&quot;to-be-described&quot;&gt;&lt;strong&gt;to be described&lt;/strong&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3XML&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3PDF&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3SVG&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;‘cron_NewS3Suppl’&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3JPG&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;cron_NewS3FiguresPDF&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We may want to include a new workflow for generating the appropriate images as
+an extension here.  &lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;publishpoa&quot;&gt; PublishPOA&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;starter_PublishPOA&lt;/code&gt;
+  Publishes POA content that the bot has created from files sent to S3 from EJP.
+  These get publised to &lt;code&gt;Highwire&lt;/code&gt; &lt;code&gt;Crossref&lt;/code&gt; and &lt;code&gt;pubmed&lt;/code&gt;. This activity checks
+  that delivered files contain xml and pdf. This generates the go.xml file needed
+  for Highwire. This prepares an email to be sent to authors to notify them that
+  they have been published. We will need to intercept or replace the control
+  mechanisim in this part of the workflow as part of the PPP project.  &lt;/p&gt;
+
+&lt;p&gt;The PublishPOA workflow starts two actvities: &lt;code&gt;PublishPOA&lt;/code&gt; and &lt;code&gt;DepositCrossref&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;publishpoa-activity&quot;&gt; PublishPOA Activity&lt;/h4&gt;
+
+&lt;p&gt;New files are downloaded from an S3 Bucket to a temporary set of
+directories on the &lt;code&gt;Ec2&lt;/code&gt; instance running the activity.&lt;/p&gt;
+
+&lt;p&gt;These tempoarary directories are configured created and named in , and they can
+be set in settings.py if desired, but if not set the bot will create them automatically.&lt;/p&gt;
+
+&lt;p&gt;This overriding happens in the &lt;code&gt;override_poa_settings&lt;/code&gt; method of the &lt;code&gt;activity_PublishPOA&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Settings that can be overridden are&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Override the settings&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;XLS_PATH&lt;/span&gt;                   &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;ejp-csv&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TARGET_OUTPUT_DIR&lt;/span&gt;          &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TARGET_OUTPUT_DIR&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;STAGING_TO_HW_DIR&lt;/span&gt;          &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;STAGING_TO_HW_DIR&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FTP_TO_HW_DIR&lt;/span&gt;              &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FTP_TO_HW_DIR&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MADE_FTP_READY&lt;/span&gt;             &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MADE_FTP_READY&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EJP_INPUT_DIR&lt;/span&gt;              &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EJP_INPUT_DIR&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;STAGING_DECAPITATE_PDF_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;STAGING_DECAPITATE_PDF_DIR&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TMP_DIR&lt;/span&gt;                    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TMP_DIR&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DO_NOT_FTP_TO_HW_DIR&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_tmp_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;do-not-ftp-to-hw&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sep&lt;/span&gt;
+
+   &lt;span class=&quot;c&quot;&gt;# Override the FTP settings with the bot environment settings&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FTP_URI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POA_FTP_URI&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FTP_USERNAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POA_FTP_USERNAME&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FTP_PASSWORD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POA_FTP_PASSWORD&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FTP_CWD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POA_FTP_CWD&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;FIND OUT WHICH OF THESE ARE INTERNAL EC2 DIRECTORIES AND WHICH ARE S3 BUCKETS&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;These directories are created by the &lt;code&gt;create_activity_directories&lt;/code&gt; function. This
+funciton creates the following directories&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;TARGET_OUTPUT_DIR  &lt;/li&gt;
+  &lt;li&gt;STAGING_TO_HW_DIR  &lt;/li&gt;
+  &lt;li&gt;FTP_TO_HW_DIR  &lt;/li&gt;
+  &lt;li&gt;MADE_FTP_READY  &lt;/li&gt;
+  &lt;li&gt;EJP_INPUT_DIR  &lt;/li&gt;
+  &lt;li&gt;STAGING_DECAPITATE_PDF_DIR  &lt;/li&gt;
+  &lt;li&gt;TMP_DIR&lt;/li&gt;
+  &lt;li&gt;XLS_PATH&lt;/li&gt;
+  &lt;li&gt;DO_NOT_FTP_TO_HW_DIR&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All of the logic of the activity is described in the &lt;code&gt;do_activity&lt;/code&gt; function. What
+it does is&lt;/p&gt;
+
+&lt;p&gt;download_files_from_s3_outbox:
+    Files &lt;code&gt;.zip&lt;/code&gt;, &lt;code&gt;.pdf&lt;/code&gt; and &lt;code&gt;.xml&lt;/code&gt; files are downloaded from  &lt;code&gt;poa_bucket&lt;/code&gt; to
+    &lt;strong&gt;list the local directory name here&lt;/strong&gt;. These file types are hardcoded in the
+    &lt;code&gt;download_files_from_s3_outbox&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;h4 id=&quot;depositcrossref-activity&quot;&gt; DepositCrossref Activity&lt;/h4&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;ppp-poa-workflow&quot;&gt;PPP POA workflow&lt;/h1&gt;
+
+&lt;h1 id=&quot;poa-workflow&quot;&gt;POA workflow&lt;/h1&gt;
+
+&lt;h3 id=&quot;zip-file-arrives-from-the-content-processor&quot;&gt;Zip file arrives from the content processor.&lt;/h3&gt;
+
+&lt;p&gt;A file with a name like &lt;code&gt;elife-00012-poa.zip&lt;/code&gt; will arrive into&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;vor-workflow&quot;&gt;VOR workflow&lt;/h1&gt;
+
+&lt;h1 id=&quot;yaml-config-variables&quot;&gt; YAML config variables.&lt;/h1&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;current-aws-s3-buckets-2015-06-12&quot;&gt;Current AWS s3 buckets (2015-06-12)&lt;/h1&gt;
+
+&lt;p&gt;elife-articles
+elife-articles-hw
+elife-articles-log
+elife-billing-alerts
+elife-bot
+elife-bot-dev
+elife-builder
+elife-cdn
+elife-cdn-dev
+elife-cdn-drupal-log
+elife-cdn-log
+elife-ejp-ftp
+elife-ejp-ftp-dev
+elife-ejp-ftp-test
+elife-ejp-poa-delivery
+elife-ejp-poa-delivery-dev
+elife-ejp-raw-output
+elife-lens
+elife-lens-0.1
+elife-lens-dev
+elife-lens-log
+elife-log-data
+elife-nas-s3-backup
+elife-poa-packaging
+elife-poa-packaging-dev
+elife-production
+elife-share
+elife-static-web-host-test
+elife-tahi-uploads-dev
+elife-tahi-uploads-dev-logs
+elife-tnq-crossref-delivery&lt;/p&gt;
+
+&lt;p&gt;elife-sciences-aws.com&lt;/p&gt;
+</description>
+        <pubDate>Fri, 12 Jun 2015 12:40:32 +0100</pubDate>
+        <link>http://yourdomain.com/ppp/docs/workflow/2015/06/12/ppp-workflow-docs.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/ppp/docs/workflow/2015/06/12/ppp-workflow-docs.html</guid>
+        
+        
+        <category>ppp</category>
+        
+        <category>docs</category>
+        
+        <category>workflow</category>
+        
+      </item>
+    
+  </channel>
+</rss>
