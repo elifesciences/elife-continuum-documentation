@@ -15,7 +15,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ## Deploying and configuring the bot code
 
-The bot code is deployed via salt. During deployment a copy of [elife-poa-xml-generation]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code.
+The bot code is deployed via salt. During deployment [elife-poa-xml-generation is cloned]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code. The [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) has many functions that are used throughout.
 
 The bot code imports functions from the elife-poa-xml-generation code, e.g. [here](https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478).
 
@@ -157,58 +157,72 @@ eLife article numbers into volumes, and it's not clear that this is doing. **TOD
  [call UnzipArticleSVG](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishSVG.py#L54) and then
  [call ConverterSVGtoJPG](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishSVG.py#L65).
  - [UnzipArticleSVG](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleSVG.py) Download a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket.
- - [ConverterSVGtoJPG](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ConverterSVGtoJPG.py) - Extract base64 image data from SVG and save as JPG: Download a S3 object from the elife-articles bucket, unzip if necessary, convert each, and save to the elife-cdn bucket. **TODO: evaluate if we need this workflow, or can we dump it and replace it with the on-server image processing workflow that we currently have?** 
+ - [ConverterSVGtoJPG](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ConverterSVGtoJPG.py) - Extract base64 image data from SVG and save as JPG: Download a S3 object from the elife-articles bucket, unzip if necessary, convert each, and save to the elife-cdn bucket. **TODO: evaluate if we need this workflow, or can we dump it and replace it with the on-server image processing workflow that we currently have?**
+ **TODO: remove this workflow from cron.py**
 
 
 ---
-- `cron_NewS3Suppl`
+- `cron_NewS3Suppl` - Cron job to check for new article S3 supplemental and start workflows, eventually runs the
+[UnzipArticleSuppl](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleSuppl.py) activity. This Downloads a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket." **TODO: reafctor this method into a general upload to CDN method**.
+
+---
+- `cron_NewS3JPG` starts `starter_PublishJPG` which starts the workflow `PublishJPG`, which invokes the activity `UnzipArticleJPG`
+- [UnzipArticleJPG](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleJPG.py) puts a file into the CDN.
+
+---
+- `cron_NewS3FiguresPDF` starts starter `starter_PublishFiguresPDF` which invokes workflow `PublishFiguresPDF` which invokes the activity
+`UnzipArticleFiguresPDF` **TODO: refactor crons and starters to place `start_ping_marker` and similar into a single code location**
+- [UnzipArticleFiguresPDF](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleFiguresPDF.py) again we have
+"Download a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket.".
+
+---
+- `PublicationEmail` starts worker `PublicationEmail` which starts activity `PublicationEmail`.
+- [PublicationEmail activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py) - Queue emails to notify of a new article publication.
+- [sets a POA publication bucket from settings.py](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L50)
+- [internally defines some settings](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L50) that specify which article types not to email about, and which kinds of emails to send.
+- [downloads templates from s3](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L341)
+- [gets xml files from s3 outbox](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L109)
+- do some author extraction and article checking
+- [send an email](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L150)
+- emails are sent by adding the [email to a queue](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L583) **TODO: find out how this queue is then processed for actually sending mail**
+- [clean up the outbox](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L157)
 
 
 ---
-- `cron_NewS3JPG`
+- `PubRouterDeposit_HEFCE` there is [an interesting](https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PubRouterDeposit.py#L63) logic block that multipurposes this starter to start a workflow if the workflow is `HEFCE` or `Cengage`. Starts workflow `PubRouterDeposit`.
+Starts activity `PubRouterDeposit`.
+- [PubRouterDeposit activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py) "Download article XML from pub_router outbox, approve each for publication, and deposit files via FTP to pub router."
+- looks again at [poa packaging outboux](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L55)
+- if we have an approved article [ftp the article](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L105) **TODO: get clarity on how we get aproval for this step**  
+- starts the [FTPArticle workflow](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L163). This seems to potentially be the first location where an activity starts a new workflow.
+- the [FTPArticle workflow](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_FTPArticle.py) simply starts the
+[FTPArticle activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py)
+- creates [internal activity directories](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L71)
+- [download files to be sent](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L79)  
+- [choose between HEFCE and CENGAGE](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L85) for ftping the article
+- extract ftp credentials [from the settings.py file](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L105-L117)
+- the main differences between HEFCE and CENGAGE can be seen [here](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L121-L137) and seem to be based on differences in files to be sent.  
+**TODO: refactor to rationalise download from s3**  
+**TODO: refactor activity_FTPArticle.py to be a generic FTP script with no knowledge of the endpoint**
+
+---
+- `PubRouterDeposit_Cengage`  - this is identical to the PubRouterDeposit_HEFCE starter, execpt that the workflow id is set to
+Cengage in order to trigger the if clauses int he PubRouterDeposit workflow.
 
 
 ---
-- `cron_NewS3FiguresPDF`
-
----
-- `PublicationEmail`
-
----
-- `PubRouterDeposit_HEFCE`
-
----
-- `PubRouterDeposit_Cengage`  
-
----
-- `PubmedArticleDeposit`
+- `PubmedArticleDeposit` starts workflow `PubmedArticleDeposit` which starts activity `PubmedArticleDeposit`
+- [PubmedArticleDeposit activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py) Download article XML from pubmed outbox, generate pubmed article XML, and deposit with pubmed.
+- [poa packaging bucket set by settings](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L66)
+- [download files](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L93)
+- [ftp file files](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L104)
+- this [calls on a funciton in the elife-poa-xml-generation repo to ftp to highwire](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L604)
+- the actual [ftp to highwire code](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/ftp_to_highwire.py) seems to get it's
+FTP settings from a [settings file local to elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/ftp_to_highwire.py#L23-L27)
+- **TODO: bring the ftp to pubmed function into a common ftp function** 
 
 
-https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L179 seems to refer to
-a function in https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py. How does that
-work?
-
-This mainly leads to the question of why the following seems to be needed
-https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L411
-
-https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L427
-
----
-
-# High Level VOR workflow
-
----
-
-# Proposed New High Level POA workflow
-
----
-
-# Proposed New High Level VOR workflow
-
----
-
-# Remaining Gaps in our Current Workflows
-
+**TODO: bring more clarity to which kinds of new files (VOR vs POA, asset vs XML) are the files that get actioned by the many cdn deposit workflows.**
 
 
 
