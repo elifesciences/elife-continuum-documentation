@@ -3,7 +3,7 @@
 ## File naming pattern
 
 >
-	`elife-<f-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
+	`elife-<f-id>-<status>(-<revision><r-id>)(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
