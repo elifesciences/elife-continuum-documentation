@@ -9,15 +9,84 @@ categories: ppp docs workflow
 
 # Scene setting
 
-## This documentation
+# TL;DR
+
+This document descripves the current and future outlines of the elife-bot publishing workflow.  
+
+- Lines in **red** are components that we need to build for the PPP project.  
+- Lines in **green** are components that we have built for the PPP project.  
+
+After the tl;dr section we go into detail on how to configure and run the bot code.
+
+## Current POA workflow
+
+to be completed
+
+## Current VOR workflow
+
+to be completed
+
+## Future POA workflow
+
+to be completed
+
+## Future VOR workflow
+
+to be completed
+
+
+
+
+# Longer documentation
 
 This documentation aims to refer to the [exp branch](https://github.com/elifesciences/elife-bot/tree/exp) of the eLife-bot code.
 
-## Deploying and configuring the bot code
+## Deployment and configuration of the elife-bot
 
-The bot code is deployed via salt. During deployment [elife-poa-xml-generation is cloned]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code. The [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) has many functions that are used throughout.
+#### Deployment
 
-The bot code imports functions from the elife-poa-xml-generation code, e.g. [here](https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478).
+The main bot code is deployed via salt. The `exp` branch is currently deployed locally.
+
+During salt deployment [elife-poa-xml-generation is cloned]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code. The [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) has many functions that are used throughout, e.g. [here](https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478).
+
+#### Configuration  
+
+As a result of bringing in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) repo there are a number of locations where bot settings can be found. Settings can be used to configure ftp credentials, the names of s3 buckets, times for cron jobs, and a number of other configurables. A summary of these are:x:
+
+- elife-bot settings  
+  the most natural home for settings for the project, for the master branch this is configured via salt.
+- cronfile for the bot  
+  this starts the main python processes that are responsible for interacting with amazon SWF. For the master branch this is set via salt
+- cron.py & cron starters  
+  some specific workflows are tied to starting at specific times of the hour, and those times and workflows are laid out in cron.py and in the
+  associated starter files.  
+- elife-poa-xml-generation  
+  some functions are called from the elif -poa-xml-generation repo, and that repo contains it's own settings file. For example
+  ftp credentials for pubmed are set here, rather than in the main bot settings file.
+- inline
+  some functions have settings hardwired in them, I've attempted to call out where that happens in the documentation that follows.  
+
+# Cron.py and the control flow  
+
+Cron.py is set to run by a cron script every *TBD* minutes. It runs it's main function `run_cron` which will invoke a starter process, if certain conditions are met at the given moment in time that cron.py is run. These starter processes in turn invoke workflows that themselves invoke activities. When each workflow and activity is begun a set of equivlant named workflows and activities are created in Amazon Simple Work Flow (SWF), and SWF is responsible for tracking ongoing workflows and activities, and tracking completion. History of activities tends to be written to an Amazon Simple DB instance.
+
+### Current list of starters, workflows and activities
+
+We now list the starters, workflows and activities that are started by cron.py. We provide a more detailed view later
+with links to where settings are configured for these.
+
+The format here is
+
+- starter: starter_name (starter description)
+  - workflow: Workflow name (workflow description)
+    - activity: activity1 (activity description)
+    - activity: activity2 (activity description)
+    - activity: activity3 (activity description)
+
+
+- starter: starter_S3Monitor
+
+
 
 
 # High Level POA workflow
@@ -219,7 +288,7 @@ Cengage in order to trigger the if clauses int he PubRouterDeposit workflow.
 - this [calls on a funciton in the elife-poa-xml-generation repo to ftp to highwire](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L604)
 - the actual [ftp to highwire code](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/ftp_to_highwire.py) seems to get it's
 FTP settings from a [settings file local to elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/ftp_to_highwire.py#L23-L27)
-- **TODO: bring the ftp to pubmed function into a common ftp function** 
+- **TODO: bring the ftp to pubmed function into a common ftp function**
 
 
 **TODO: bring more clarity to which kinds of new files (VOR vs POA, asset vs XML) are the files that get actioned by the many cdn deposit workflows.**
@@ -335,19 +404,6 @@ Sent: June-12-15 11:08
   the POA xml from these, and decapitates the PDF. Prepares content for later
   publication by placing the generated files into an s3 outbox. We may want to
   create the EIF JSON here.  
-
-
-#### **to be described**
-- `cron_NewS3XML`
-- `cron_NewS3PDF`
-- `cron_NewS3SVG`
-- 'cron_NewS3Suppl'
-- `cron_NewS3JPG`
-- `cron_NewS3FiguresPDF`
-
-We may want to include a new workflow for generating the appropriate images as
-an extension here.  
-
 
 ---
 
