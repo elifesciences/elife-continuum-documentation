@@ -9,8 +9,11 @@ categories: ppp docs workflow
 
 # Scene setting
 
-_Scene: An empty repoisotory, somewhere in an anonomous Ec2 repository. Lights come up to reveal
-two characters sitting stage left._
+## This documentation
+
+This documentation aims to refer to the [exp branch](https://github.com/elifesciences/elife-bot/tree/exp) of the eLife-bot code.
+
+## Deploying and configuring the bot code
 
 The bot code is deployed via salt. During deployment a copy of [elife-poa-xml-generation]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code.
 
@@ -116,7 +119,7 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 - <span style="color:red">HW starts to collect PDF download and pageview metrics </span>
 - <span style="color:red">RSS feed is updated </span>
 - if it goes "red" all bets are off
-- elife-bot picks up the zip file and does activities on that zip file **to be described**
+- elife-bot picks up the zip file and does activities on that zip file **TODO:to be described**
 
 ---
 
@@ -124,13 +127,28 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 
 ---
 - `cron_NewS3XML`
-- check in SimpleDB for info on any new or modified XML files that are in an S3 bucket
-- if there is a new or modified XML file then run the starter_PublishArticle starter
+- check in SimpleDB for info on any new or modified XML files that are in an S3 bucket since a given date [code](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)  
+- if there is a new or modified XML file then run the [starter_PublishArticle starter](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)
 - `PublishArticle` starter creates a custom workflow for publishing a specific numbered article
-- this workflow invokes the following activities `UnzipArticleXML`, `LensArticle`, `ArticleToOutbox`, `LensXMLFilesList`
+- this workflow [calls UnzipArticleXML](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61), [calls LensArticle](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61), [calls ArticleToOutbox](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61), [calls LensXMLFilesList](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)
+- [UnzipArticleXML](https://github.com/jrdigi/elife-bot/blob/exp/activity/activity_UnzipArticleXML.py) - Download a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket. Functions for handling documents are provided by [filesystem.py](https://github.com/elifesciences/elife-bot/blob/exp/provider/filesystem.py). The cdn name is set  by a [call to settings.py](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleXML.py#L58). **TODO:How do we know where to download a file from?**
+- `LensArticle` Create a lens article index.html page for the particular article. The HTML template for the lens landing page is stored in S3 and is accessed via [templates.py](https://github.com/elifesciences/elife-bot/blob/exp/provider/templates.py). The name of the
+location of the templates dir in s3 is [set in settings.py](https://github.com/elifesciences/elife-bot/blob/exp/provider/templates.py#L33). The location of the lens bucket is [set in a call to settings.py](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_LensArticle.py#L70).
+- [ArticleToOutbox](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ArticleToOutbox.py) Download a S3 object from the elife-articles bucket, unzip if necessary, and save to outbox folder on S3. This will actually write the file to the following
+locations  
+```
+  self.pubmed_outbox_folder = "pubmed/outbox/"  
+  self.publication_email_outbox_folder = "publication_email/outbox/"  
+  self.pub_router_outbox_folder = "pub_router/outbox/"  
+  self.cengage_outbox_folder = "cengage/outbox/"  
+```
+Much of the logic seems quite similar to `UnzipArticleXML`, however this activity includes a function [is_resupply](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ArticleToOutbox.py#L140) that seems to hard-code
+eLife article numbers into volumes, and it's not clear that this is doing. **TODO: find out why we have this card coded**
+
 
 ---
 - `cron_NewS3PDF`
+
 
 ---  
 - `cron_NewS3SVG`
@@ -145,7 +163,7 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 - `cron_NewS3FiguresPDF`
 
 ---
-`PublicationEmail`
+- `PublicationEmail`
 
 ---
 - `PubRouterDeposit_HEFCE`
