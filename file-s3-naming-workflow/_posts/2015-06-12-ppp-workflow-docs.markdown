@@ -147,17 +147,26 @@ eLife article numbers into volumes, and it's not clear that this is doing. **TOD
 
 
 ---
-- `cron_NewS3PDF`
-
+- `cron_NewS3PDF` checks for new PDF file, and if found [starts the starter_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/starter/cron_NewS3PDF.py#L79) **TODO:look at how to tidy up the starter code to remove dependency on SDB**  
+- The [starter_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PublishPDF.py) [starts the PublishPDF ](https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PublishPDF.py#L56) **TODO: determine where we look for new PDF files**
+- the [workflow_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py) [invokes UnzipArticlePDF](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py#L54)  
+- [UnzipArticlePDF](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticlePDF.py) Downloads a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket **TODO: refactor UnzipArticlePDF along with other activities, that push content to the CDN, and provide one generalised activity for this**.  
 
 ---  
-- `cron_NewS3SVG`
+- `cron_NewS3SVG` very similar to previous workflow in terms of getting SVG files, but then we do the following
+ [call UnzipArticleSVG](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishSVG.py#L54) and then
+ [call ConverterSVGtoJPG](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishSVG.py#L65).
+ - [UnzipArticleSVG](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleSVG.py) Download a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket.
+ - [ConverterSVGtoJPG](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ConverterSVGtoJPG.py) - Extract base64 image data from SVG and save as JPG: Download a S3 object from the elife-articles bucket, unzip if necessary, convert each, and save to the elife-cdn bucket. **TODO: evaluate if we need this workflow, or can we dump it and replace it with the on-server image processing workflow that we currently have?** 
+
 
 ---
 - `cron_NewS3Suppl`
 
+
 ---
 - `cron_NewS3JPG`
+
 
 ---
 - `cron_NewS3FiguresPDF`
