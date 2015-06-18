@@ -7,6 +7,26 @@
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
+This pattern covers both inbound zip files and the contents of those zip files. We can break it out into two branches, one for the zip files and one for the assets inside the zip files. 
+
+#### Zip File naming pattern
+
+Inbound zip files will be of the form
+
+>
+	`elife-<f-id>-<status>(-<revision><r-id>)(-v<version>).zip`
+
+After processing revision numbers will be dropped and zip files will be of the form 
+
+>
+	`elife-<f-id>-<status>(-v<version>).zip`
+
+
+#### Assets naming pattern 
+
+>
+	`elife-<f-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
+
 
 ### Components
 
