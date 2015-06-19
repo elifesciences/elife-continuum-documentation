@@ -7,14 +7,26 @@ categories: ppp docs workflow
 
 {% assign ppp = site.ppp_docs_config %}
 
+# TODO list for this document
+
+gusimate on how much is remaining to be done with this document.
+
+- give outline of starters, workers and activities (10%)
+- provide links to how each activity gets it's settings, and how content flows within a workflow  (80%)
+- write up from the point of view of an incoming document what activities it experiences for current VOR and POA workflows (50%)
+- highlight the parts of the workflow that we need to create activities for to replace HW (10%)
+- write up a proposed doc showing what our new workflows might look like  (0%)
+- complete tl;dr overview of the doc (10%)
+- summarise reccomendations on how to refactor the bot code (50%)
+
 # Scene setting
 
 # TL;DR
 
-This document descripves the current and future outlines of the elife-bot publishing workflow.  
+This document descripves the current and future outlines of the elife-bot publishing workflow.
 
-- Lines in **red** are components that we need to build for the PPP project.  
-- Lines in **green** are components that we have built for the PPP project.  
+- Lines in **red** are components that we need to build for the PPP project.
+- Lines in **green** are components that we have built for the PPP project.
 
 After the tl;dr section we go into detail on how to configure and run the bot code.
 
@@ -49,24 +61,26 @@ The main bot code is deployed via salt. The `exp` branch is currently deployed l
 
 During salt deployment [elife-poa-xml-generation is cloned]( https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99) is brought into the same directory structure as the bot-code. The [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) has many functions that are used throughout, e.g. [here](https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478).
 
-#### Configuration  
+We may decide to integrate with the [elife api](https://github.com/elifesciences/elife-api-documentation)
 
-As a result of bringing in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) repo there are a number of locations where bot settings can be found. Settings can be used to configure ftp credentials, the names of s3 buckets, times for cron jobs, and a number of other configurables. A summary of these are:x:
+#### Configuration
 
-- elife-bot settings  
+As a result of bringing in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) repo there are a number of locations where bot settings can be found. Settings can be used to configure ftp credentials, the names of s3 buckets, times for cron jobs, and a number of other configurables. A summary of these are:
+
+- elife-bot settings
   the most natural home for settings for the project, for the master branch this is configured via salt.
-- cronfile for the bot  
+- cronfile for the bot
   this starts the main python processes that are responsible for interacting with amazon SWF. For the master branch this is set via salt
-- cron.py & cron starters  
+- cron.py & cron starters
   some specific workflows are tied to starting at specific times of the hour, and those times and workflows are laid out in cron.py and in the
-  associated starter files.  
-- elife-poa-xml-generation  
+  associated starter files.
+- elife-poa-xml-generation
   some functions are called from the elif -poa-xml-generation repo, and that repo contains it's own settings file. For example
   ftp credentials for pubmed are set here, rather than in the main bot settings file.
 - inline
-  some functions have settings hardwired in them, I've attempted to call out where that happens in the documentation that follows.  
+  some functions have settings hardwired in them, I've attempted to call out where that happens in the documentation that follows.
 
-# Cron.py and the control flow  
+# Cron.py and the control flow
 
 Cron.py is set to run by a cron script every *TBD* minutes. It runs it's main function `run_cron` which will invoke a starter process, if certain conditions are met at the given moment in time that cron.py is run. These starter processes in turn invoke workflows that themselves invoke activities. When each workflow and activity is begun a set of equivlant named workflows and activities are created in Amazon Simple Work Flow (SWF), and SWF is responsible for tracking ongoing workflows and activities, and tracking completion. History of activities tends to be written to an Amazon Simple DB instance.
 
@@ -77,50 +91,128 @@ with links to where settings are configured for these.
 
 The format here is
 
-- starter: starter_name (starter description)
-  - workflow: Workflow name (workflow description)
-    - activity: activity1 (activity description)
-    - activity: activity2 (activity description)
-    - activity: activity3 (activity description)
+- cron_starter: starter invoked from cron.py (usually invokes another starter, can sometimes go straight to triggering a workflow)
+  - starter: starter_name (starter description)
+    - workflow: Workflow name (workflow description)
+      - activity: activity1 (activity description)
+      - activity: activity2 (activity description)
+      - activity: activity3 (activity description)
+
+<span/>
+
+- cron_starter: starter_S3Monitor
+  - workflow: S3Monitor
+    - activity: S3Monitor
+
+<span/>
+
+- cron_starter: starter_PublishPOA
+  - workflow: PublishPOA
+    - activity: PublishPOA
+    - activity: DepositCrossref
+
+<span/>
+
+- cron_starter: cron_NewS3XML
+  - starter: starter_PublishArticle
+    - workflow: PublishArticle
+      - activity: UnzipArticleXML
+      - activity: LensArticle
+      - activity: ArticleToOutbox
+      - activity: LensXMLFilesList
+
+<span/>
+
+- cron_starter: cron_NewS3PDF
+  - starter: starter_PublishPDF
+    - worflow: PublishPDF
+      - activity: UnzipArticlePDF
+
+<span/>
+
+- cron_starter: cron_NewS3SVG (this job is no longer needed)
+  - starter: starter_PublishSVG
+    - workflow: PublishSVG
+      - activity: UnzipArticleSVG
+      - activity: ConverterSVGtoJPG
+
+<span/>
+
+- starter: cron_NewS3Suppl
+  - workflow:
+
+<span/>
+
+- starter: cron_NewS3JPG
+  - workflow:
+
+<span/>
+
+- starter: cron_NewS3FiguresPDF
+  - workflow:
+
+<span/>
+
+- starter: cron_NewS3POA
+  - workflow:
+
+<span/>
+
+- starter: starter_PublicationEmail
+
+<span/>
+
+- starter: starter_PubRouterDeposit
+
+<span/>
+
+- starter: starter_PubRouterDeposit
+
+<span/>
+
+- starter: starter_PubmedArticleDeposit
+
+<span/>
+
+- starter: starter_AdminEmail
 
 
-- starter: starter_S3Monitor
 
 
 
 
 # High Level POA workflow
 
-- Zipfile gets sent to {{ ppp.poa-input-bucket-value }} by EJP  
-- `NewS3POA` starter invokes the `PackagePOA` workflow and activity based on a timestamp and the presence of new files having been sent from EJP.  
+- Zipfile gets sent to {{ ppp.poa-input-bucket-value }} by EJP
+- `NewS3POA` starter invokes the `PackagePOA` workflow and activity based on a timestamp and the presence of new files having been sent from EJP.
 - A set of directories are created on the ec2 instance that is running the activiy.
-- Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity  
+- Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity
 - extract a DOI from the Zipfile
-- abort if no DOI can be generated  
-- otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)  
+- abort if no DOI can be generated
+- otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)
 - in the [copy_pdf_to_hw_staging_dir](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343) function we attempt to decapitate the PDF
-- The new processed files are placed in `self.elife_poa_lib.settings.STAGING_TO_HW_DIR`.  
+- The new processed files are placed in `self.elife_poa_lib.settings.STAGING_TO_HW_DIR`.
 - the processing of the zip file should also have decapitated the PDF from EJP, so we
-check whether that PDF has been decapitated. We look in `elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR` to see if that decapitated PDF is present.  
+check whether that PDF has been decapitated. We look in `elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR` to see if that decapitated PDF is present.
 - a new manifest XML file is generated for Highwire
 - download a set of CSV files from EJP
 - create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the
-csv files downloaded from EJP (this will not cotain the body text of the XML file).  
-- copy all of these files to an S3 Outbox  
+csv files downloaded from EJP (this will not cotain the body text of the XML file).
+- copy all of these files to an S3 Outbox
 - create an email of the format " email_type = "PackagePOA" and add this to a mail queue. (Mail templates are stored on s3). This is a
 system email and is sent to emails that are configured in `settings.ses_poa_recipient_email`.
 
 ---
-- the `PublishPOA` workflow kicks in now  
-- this invokes the `PublishPOA` and the `DepositCrossref` activities  
+- the `PublishPOA` workflow kicks in now
+- this invokes the `PublishPOA` and the `DepositCrossref` activities
 - `PublishPOA` creates the following locations
     - self.publish_bucket = settings.poa_packaging_bucket
     - self.outbox_folder = "outbox/"
-    - self.published_folder = "published/"  
-- files are downloaded from the s3 bucket that `NewS3POA` populated  
-- some checks are made to confirm that supp files and zip files have complimentary data and files in them  
+    - self.published_folder = "published/"
+- files are downloaded from the s3 bucket that `NewS3POA` populated
+- some checks are made to confirm that supp files and zip files have complimentary data and files in them
 - supplement files and zip files are sent to the HW ftp site
-- a go.xml file is created and sent the HW FTP endpoint  
+- a go.xml file is created and sent the HW FTP endpoint
 - If these files make it to HW then xml is sent to
     - xml_to_crossref_outbox_s3
     - xml_to_pubmed_outbox_s3
@@ -135,7 +227,7 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 - an email is sent to `settings.ses_poa_recipient_email`
 
 ---
-- Files appears in Highwire express (HWX) with a go.xml file  
+- Files appears in Highwire express (HWX) with a go.xml file
 - HWX shows all POA articles for the day on one "batch"
 - <span style="color:red">HW creates a record in HWX</span>
 - <span style="color:red">HW creates nodes in Drupal</span>
@@ -155,17 +247,17 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 
 ---
 
-# High level VOR workflow  
+# High level VOR workflow
 - content processor sends a zip file to an S3 bucket and to a HW FTP endpoint
 - Files appears in Highwire express (HWX) with a go.xml file  [&#128279;]()
-- each file takes it's own batch through the system  
+- each file takes it's own batch through the system
 - <span style="color:red">HW creates a record in HWX</span>
 - if production can get to HWX then they see the following stages (information can been seen at each of these stages)
     - preintake
     - intake
     - processing
     - assembly
-    - production  
+    - production
     - downstream
 - before assembly HWX does the following
   - <span style="color:red">images are converted</span>
@@ -196,7 +288,7 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 
 ---
 - `cron_NewS3XML`
-- check in SimpleDB for info on any new or modified XML files that are in an S3 bucket since a given date [code](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)  
+- check in SimpleDB for info on any new or modified XML files that are in an S3 bucket since a given date [code](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)
 - if there is a new or modified XML file then run the [starter_PublishArticle starter](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)
 - `PublishArticle` starter creates a custom workflow for publishing a specific numbered article
 - this workflow [calls UnzipArticleXML](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61), [calls LensArticle](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61), [calls ArticleToOutbox](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61), [calls LensXMLFilesList](https://github.com/jrdigi/elife-bot/blob/exp/starter/cron_NewS3XML.py#L61)
@@ -204,24 +296,24 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 - `LensArticle` Create a lens article index.html page for the particular article. The HTML template for the lens landing page is stored in S3 and is accessed via [templates.py](https://github.com/elifesciences/elife-bot/blob/exp/provider/templates.py). The name of the
 location of the templates dir in s3 is [set in settings.py](https://github.com/elifesciences/elife-bot/blob/exp/provider/templates.py#L33). The location of the lens bucket is [set in a call to settings.py](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_LensArticle.py#L70).
 - [ArticleToOutbox](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ArticleToOutbox.py) Download a S3 object from the elife-articles bucket, unzip if necessary, and save to outbox folder on S3. This will actually write the file to the following
-locations  
+locations
 ```
-  self.pubmed_outbox_folder = "pubmed/outbox/"  
-  self.publication_email_outbox_folder = "publication_email/outbox/"  
-  self.pub_router_outbox_folder = "pub_router/outbox/"  
-  self.cengage_outbox_folder = "cengage/outbox/"  
+  self.pubmed_outbox_folder = "pubmed/outbox/"
+  self.publication_email_outbox_folder = "publication_email/outbox/"
+  self.pub_router_outbox_folder = "pub_router/outbox/"
+  self.cengage_outbox_folder = "cengage/outbox/"
 ```
 Much of the logic seems quite similar to `UnzipArticleXML`, however this activity includes a function [is_resupply](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ArticleToOutbox.py#L140) that seems to hard-code
 eLife article numbers into volumes, and it's not clear that this is doing. **TODO: find out why we have this card coded**
 
 
 ---
-- `cron_NewS3PDF` checks for new PDF file, and if found [starts the starter_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/starter/cron_NewS3PDF.py#L79) **TODO:look at how to tidy up the starter code to remove dependency on SDB**  
+- `cron_NewS3PDF` checks for new PDF file, and if found [starts the starter_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/starter/cron_NewS3PDF.py#L79) **TODO:look at how to tidy up the starter code to remove dependency on SDB**
 - The [starter_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PublishPDF.py) [starts the PublishPDF ](https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PublishPDF.py#L56) **TODO: determine where we look for new PDF files**
-- the [workflow_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py) [invokes UnzipArticlePDF](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py#L54)  
-- [UnzipArticlePDF](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticlePDF.py) Downloads a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket **TODO: refactor UnzipArticlePDF along with other activities, that push content to the CDN, and provide one generalised activity for this**.  
+- the [workflow_PublishPDF](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py) [invokes UnzipArticlePDF](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py#L54)
+- [UnzipArticlePDF](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticlePDF.py) Downloads a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket **TODO: refactor UnzipArticlePDF along with other activities, that push content to the CDN, and provide one generalised activity for this**.
 
----  
+---
 - `cron_NewS3SVG` very similar to previous workflow in terms of getting SVG files, but then we do the following
  [call UnzipArticleSVG](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishSVG.py#L54) and then
  [call ConverterSVGtoJPG](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishSVG.py#L65).
@@ -262,16 +354,16 @@ eLife article numbers into volumes, and it's not clear that this is doing. **TOD
 Starts activity `PubRouterDeposit`.
 - [PubRouterDeposit activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py) "Download article XML from pub_router outbox, approve each for publication, and deposit files via FTP to pub router."
 - looks again at [poa packaging outboux](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L55)
-- if we have an approved article [ftp the article](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L105) **TODO: get clarity on how we get aproval for this step**  
+- if we have an approved article [ftp the article](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L105) **TODO: get clarity on how we get aproval for this step**
 - starts the [FTPArticle workflow](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L163). This seems to potentially be the first location where an activity starts a new workflow.
 - the [FTPArticle workflow](https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_FTPArticle.py) simply starts the
 [FTPArticle activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py)
 - creates [internal activity directories](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L71)
-- [download files to be sent](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L79)  
+- [download files to be sent](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L79)
 - [choose between HEFCE and CENGAGE](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L85) for ftping the article
 - extract ftp credentials [from the settings.py file](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L105-L117)
-- the main differences between HEFCE and CENGAGE can be seen [here](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L121-L137) and seem to be based on differences in files to be sent.  
-**TODO: refactor to rationalise download from s3**  
+- the main differences between HEFCE and CENGAGE can be seen [here](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L121-L137) and seem to be based on differences in files to be sent.
+**TODO: refactor to rationalise download from s3**
 **TODO: refactor activity_FTPArticle.py to be a generic FTP script with no knowledge of the endpoint**
 
 ---
@@ -310,17 +402,17 @@ Get all of our pieces of AWS infrastructure setup in the correct regions.
 `{{ ppp.ses-region }} = {{ ppp.region-value }}`
 
 
-Setup variable for the Amazon Simple Workflow  
+Setup variable for the Amazon Simple Workflow
 
-`{{ ppp.domain }} = {{ ppp.domain-value}}`  
+`{{ ppp.domain }} = {{ ppp.domain-value}}`
 
-`{{ ppp.task-list }} = {{ ppp.task-list-value}}`  
+`{{ ppp.task-list }} = {{ ppp.task-list-value}}`
 
 Setup variable for the Amazon Simple Queue Service
 
   `{{ ppp.monitor-queue }} = {{ ppp.monitor-queue-value }}`
 
-  `{{ ppp.monitor-bucket }} = {{ ppp.monitor-bucket-value }}`  
+  `{{ ppp.monitor-bucket }} = {{ ppp.monitor-bucket-value }}`
 
   `{{ ppp.eif-output-bucket }} = {{ ppp.eif-output-bucket-value }}`
 
@@ -403,7 +495,7 @@ Sent: June-12-15 11:08
   downloads zip files and csv files from S3 buckets that EJP delivers to. Creates
   the POA xml from these, and decapitates the PDF. Prepares content for later
   publication by placing the generated files into an s3 outbox. We may want to
-  create the EIF JSON here.  
+  create the EIF JSON here.
 
 ---
 
@@ -415,7 +507,7 @@ Sent: June-12-15 11:08
   that delivered files contain xml and pdf. This generates the go.xml file needed
   for Highwire. This prepares an email to be sent to authors to notify them that
   they have been published. We will need to intercept or replace the control
-  mechanisim in this part of the workflow as part of the PPP project.  
+  mechanisim in this part of the workflow as part of the PPP project.
 
 
 The PublishPOA workflow starts two actvities: `PublishPOA` and `DepositCrossref`.
@@ -457,12 +549,12 @@ Settings that can be overridden are
 These directories are created by the `create_activity_directories` function. This
 funciton creates the following directories
 
-  - {{ ppp.tmp-dir-TARGET_OUTPUT_DIR }}  
-  - {{ ppp.tmp-dir-STAGING_TO_HW_DIR }}  
-  - {{ ppp.tmp-dir-FTP_TO_HW_DIR }}  
-  - {{ ppp.tmp-dir-MADE_FTP_READY }}  
-  - {{ ppp.tmp-dir-EJP_INPUT_DIR }}  
-  - {{ ppp.tmp-dir-STAGING_DECAPITATE_PDF_DIR }}  
+  - {{ ppp.tmp-dir-TARGET_OUTPUT_DIR }}
+  - {{ ppp.tmp-dir-STAGING_TO_HW_DIR }}
+  - {{ ppp.tmp-dir-FTP_TO_HW_DIR }}
+  - {{ ppp.tmp-dir-MADE_FTP_READY }}
+  - {{ ppp.tmp-dir-EJP_INPUT_DIR }}
+  - {{ ppp.tmp-dir-STAGING_DECAPITATE_PDF_DIR }}
   - {{ ppp.tmp-dir-TMP_DIR }}
   - {{ ppp.tmp-dir-XLS_PATH }}
   - {{ ppp.tmp-dir-DO_NOT_FTP_TO_HW_DIR }}
