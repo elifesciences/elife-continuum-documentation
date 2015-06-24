@@ -5,18 +5,14 @@ date:   2015-06-12 11:40:32
 categories: ppp docs workflow
 ---
 
-{% assign ppp = site.ppp_docs_config %}
+
 
 ----
 
 # TODO list for this document
 
-- provide links to how each activity gets it's settings, and how content flows within a workflow  (80%)
-
-- write up from the point of view of an incoming document what activities it experiences for current VOR and POA workflows (50%)
-
-- highlight the parts of the workflow that we need to create activities for to replace HW (10%)
-- write up a proposed doc showing what our new workflows might look like  (0%)
+- highlight the parts of the workflow that we need to create activities for to replace HW (70%)
+- write up a proposed doc showing what our new workflows might look like  (60%)
 - complete tl;dr overview of the doc (10%)
 
 ----
@@ -25,42 +21,20 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ----
 
-# TL;DR
-
-This document describes the current and future outlines of the elife-bot publishing workflow.
-
-- Lines in **red** are components that we need to build for the PPP project.
-- Lines in **green** are components that we have built for the PPP project.
-
-After the tl;dr section we go into detail on how to configure and run the bot code.
-
-
-## Current POA workflow
-
-to be completed
-
-## Current VOR workflow
-
-to be completed
-
-## Future POA workflow
-
-to be completed
-
-## Future VOR workflow
-
-to be completed
-
-----
-
 # Existing POA workflow
 
-- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket
+- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket. They have been provided access to this via the [https://cloudgates.net]() service, and to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resullpy FTP credentials to the vendor.
 - when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the `elife-ejp-poa-delivery` S3 bucket
 - `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be teh same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
 - this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [settings.poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
 - the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
+- this will create a folder in an outbox of the folloiwng format
+    - folder name YYYYMMDD
+    - folder contains, for each article to be published, a file of the following kind
+      - elife_poa_eNNNNN.xml
+      - elife_poa_eNNNNN_ds.zip
+      - decap_elife_poa_eNNNNN.pdf
 - this sends files to HW and to crossref and prepares files for downstream delivery.
 - Files appears in Highwire express (HWX)
 - HWX shows all POA articles for the day on one "batch"
@@ -73,18 +47,25 @@ to be completed
     - special characters
     - that decapitation has happened on the PDF
     - that the abstract appears OK
-    - some other checks (listed in the POA protocalls document)
+    - some other checks (listed in the POA protocals document)
 - production push an "Approve" button
 - another page is displayed with another "Approve button"
 - a "Success Page" is displayed
 - <span style="color:red">Content is added to the search index </span>
 - usually within 1/2 an hour the paper on the Drupal Site is in a published state
-
+- it's not clear to me which of the "publish" activities operate on the contents that we have here.
 
 ---
+
 # Existing VOR workflow
-- content processor sends a zip file to an S3 bucket and to a HW FTP endpoint
-- Files appears in Highwire express (HWX) with a go.xml file  [&#128279;]()
+
+- content processor sends a zip file to an S3 bucket and to a HW FTP endpoint, I _think_ these go into the s3 bucket `elife-articles-hw`.
+- content processor sends Crossref an XML file to update the crossref record
+- These files appear in a directory named as NNNNN - where this is the `f-id`. There is one folder for every article. The folder contains files of the format
+  - elife_YYYY_NNNNN.img.zip
+  - elife_YYYY_NNNNN.pdf.zip
+  - elife_YYYY_NNNNN.xml.zip
+- Files appears in Highwire express (HWX)
 - each file takes it's own batch through the system
 - <span style="color:red">HW creates a record in HWX</span>
 - if production can get to HWX then they see the following stages (information can been seen at each of these stages)
@@ -98,27 +79,81 @@ to be completed
   - <span style="color:red">images are converted</span>
   - <span style="color:green">HW creates nodes in Drupal</span>
   - <span style="color:red">assetts are loaded to the appropriate location, e.g. for download or to the CDN</span>
-  - <span style="color:red">XML is transformed to HTML and provided via a markdup service</span>
+  - <span style="color:red">XML is transformed to HTML and provided via a markup service</span>
   - <span style="color:red">Some magic related article fun happens</span>
 - when the workflow gets to assembly assembly will turn orange and production can make a decision
 - at assembly there is a QA report that links to the Drupal site
-- production checks everything in the article on the drupal site
+- production checks everything in the article on the Drupal site
   - videos
   - images
   - tables
   - decision letters
 - production push an "Approve" button
 - another page is displayed with another "Approve button"
-- HWX shows that state is changing in the productino process
+- HWX shows that state is changing in the production process
 - if the system works correctly then in about 20 minutes
 - <span style="color:red">Content is added to the search index </span>
 - <span style="color:red">HW starts to collect PDF download and pageview metrics </span>
 - <span style="color:red">RSS feed is updated </span>
 - if it goes "red" all bets are off
-- elife-bot picks up the zip file and does activities on that zip file **TODO:to be described**
+- elife-bot via a setting in the db.provier script, is monitoring for [new files of  spcific types ](https://github.com/elifesciences/elife-bot/blob/master/provider/simpleDB.py#L236) ("xml", "pdf", "img", "suppl", "video", "svg", "jpg", "figures").
+- the bucket that is polled is [defined in settings.py](https://github.com/elifesciences/elife-bot/blob/exp/settings-example.py#L20).
+- Where new files have been identified as appropriate, then the following workflows are triggered, which mostly send content to the CDN, and also prepare a Lens landing page.
+- cron_NewS3XML [more info](#PublishPDF)
+- cron_NewS3PDF [more info](#PublishPDF)
+- cron_NewS3SVG [more info](#PublishSVG)
+- cron_NewS3Suppl [more info](#PublishPDF)
+- cron_NewS3JPG [more info](#PublishPDF)
+- cron_NewS3FiguresPDF [more info](#PublishPDF)
+
+----
+
+# Existing Deposition workflows
+
+- Pub router deposits once per day 23:45 UTC
+- Cengage deposits once per day 22:45 UTC
+- pubmed depostits happen every hour
+- pubmed deposits inlude some code to determine version number of the article and to
+[set the published date appropriatly](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197).
+
+**TODO: determine where we have code that pings the Drupal site for publication dates**
 
 
 ---
+
+# Proposed new VOR workflow (all to be discussed)
+
+- content processor sends a zip file to an S3 bucket that follows our [new naming convention]().
+- The arrival of a file triggers an SQS event which triggers a workflow
+- an activity in the workflow unpacks the zip file into an s3 bucket
+- an activity in the workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store)
+- an activity in the workflow hits an API to determine the current working version number
+    - this api will deterine what the previous published date was if we are looking
+    at resupplying an article through this workflow.
+- on receipt of a usable version number for the file a series of activities are
+ invoked
+    - zip content is placed into some working state or working directory (To be confiremed?)
+    - article XML is rewritten to point to the new updated figure and supp file versions
+    - images are renamed to match the new version number
+    - images are resized based on an input YAML file
+    - XML and generates the EIF JSON, which includes the version number, but indicates that the article needs to be in an unpublished state
+    - XML is placed in a location where the markup service can access it
+    - the Drupal site hits the markup service and generates the full article page (to be confimed)
+    - a reciept JSON is generated by the Drupal site
+- the publishing team receive a link to enable them to preview the content
+- the publishing team approve content, and publish it
+- Drupal is instructed to update it's search index
+- the Drupal layer confirms that a specific version has been published
+- content in the CDN is unmasked (to be confirmed)
+- the data store that keeps track of version numbers is updated
+- the files in the working directory are archived with the appropriate version number
+- the publication date of that version is recorded in a data store
+- RSS feed is updated on the Drupal site
+- crossref is updated with our article info
+- content is placed in the appropriate locations for downstream article deposition to occur
+
+**TODO: evaluate whether we need to retain the existing publish to CDN workflows**
+
 
 ----
 
@@ -207,7 +242,7 @@ starter_S3Monitor look in an S3 bucket and store changes to that bucket as metad
 
 Config for simpledb is done in settings.py
 
-  `{{ ppp.simple-db-region }} = {{ ppp.region-value }}`
+  `simpledb_region = us-east-1`
 
 
 ----
@@ -222,7 +257,7 @@ Config for simpledb is done in settings.py
 The PackagePOA workflow is quite intricate. Crucially it calls on a number
 of functions in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) for in order to complete the workflow.
 
-- looks for content in {{ ppp.poa-input-bucket-value }} (delivered by EJP)
+- looks for content in `elife-ejp-poa-delivery` (delivered by EJP)
 - A set of directories are created on the ec2 instance that is running the activity.
 - Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity
 - extract a DOI from the Zipfile
@@ -458,31 +493,3 @@ and should be terminated.
 - deduplicate code that is used to send emails
 - remove starter dependcy on SDB
 - move hard coded config variable out of the code into a settings or YAML file
-
-
-# Global configuration options for PPP workflow
-
-Get all of our pieces of AWS infrastructure setup in the correct regions.
-
-`{{ ppp.region }} = {{ ppp.region-value }}`
-
-`{{ ppp.sqs-region }} = {{ ppp.region-value }}`
-
-`{{ ppp.simple-db-region }} = {{ ppp.region-value }}`
-
-`{{ ppp.ses-region }} = {{ ppp.region-value }}`
-
-
-Setup variable for the Amazon Simple Workflow
-
-`{{ ppp.domain }} = {{ ppp.domain-value}}`
-
-`{{ ppp.task-list }} = {{ ppp.task-list-value}}`
-
-Setup variable for the Amazon Simple Queue Service
-
-  `{{ ppp.monitor-queue }} = {{ ppp.monitor-queue-value }}`
-
-  `{{ ppp.monitor-bucket }} = {{ ppp.monitor-bucket-value }}`
-
-  `{{ ppp.eif-output-bucket }} = {{ ppp.eif-output-bucket-value }}`
