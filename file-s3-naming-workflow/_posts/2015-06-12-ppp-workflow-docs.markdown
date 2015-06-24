@@ -11,20 +11,17 @@ categories: ppp docs workflow
 
 # TODO list for this document
 
-gusimate on how much is remaining to be done with this document.
-
-
 - provide links to how each activity gets it's settings, and how content flows within a workflow  (80%)
+
 - write up from the point of view of an incoming document what activities it experiences for current VOR and POA workflows (50%)
+
 - highlight the parts of the workflow that we need to create activities for to replace HW (10%)
 - write up a proposed doc showing what our new workflows might look like  (0%)
 - complete tl;dr overview of the doc (10%)
-- summarise reccomendations on how to refactor the bot code (50%)
 
 ----
 
 This documentation aims to refer to the [exp branch](https://github.com/elifesciences/elife-bot/tree/exp) of the eLife-bot code.
-
 
 ----
 
@@ -484,7 +481,16 @@ and should be terminated.
 
 ---
 
-#
+# Reccomendations for refactoring
+
+- remove SVG workflow
+- unify FTP workflows
+- unify code used for sending files to CDN
+- understand, and potentially remove, the hard coded article number list in ArticleToOutbox
+- deduplicate code that is used to send emails
+- remove starter dependcy on SDB
+- move hard coded config variable out of the code into a settings or YAML file
+
 
 # Global configuration options for PPP workflow
 
