@@ -1,0 +1,638 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>"PPP workflow configuration"</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style id="mkstylesheet">
+html,body{color:black}#wrapper{font:16px helvetica,arial,freesans,clean,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6;padding:3px;background:#fff;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;border:solid 1px #dddddd !important;color:#333}p{margin:1em 0}a{color:#4183c4;text-decoration:none}#wrapper{background-color:#fff;padding:30px;margin:15px;font-size:16px;line-height:1.6}#wrapper>*:first-child{margin-top:0 !important}#wrapper>*:last-child{margin-bottom:0 !important}@media screen{#wrapper{border:solid 1px #ddd}}h1,h2,h3,h4,h5,h6{position:relative;margin-top:1em;margin-bottom:16px;font-weight:700;line-height:1.4;color:#333}h1{padding-bottom:.3em;font-size:2.25em;line-height:1.2;border-bottom:1px solid #eee}h2{padding-bottom:0.3em;font-size:1.75em;line-height:1.225;border-bottom:1px solid #eee}h3{font-size:1.5em;line-height:1.43}h4{font-size:1.25em}h5{font-size:1em}h6{color:#777;font-size:1em}p,blockquote,ul,ol,dl,table,pre{margin-top:0;margin-bottom:16px}hr{height:4px;padding:0;margin:16px 0;background-color:#e7e7e7;border:0 none}ul,ol{padding-left:2em}ul.no-list,ol.no-list{padding:0;list-style-type:none}ul ul,ul ol{margin-top:0;margin-bottom:0}ol ol,ol ul{margin-top:0;margin-bottom:0}li>p{margin-top:16px}dl{padding:0}dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}dl dd{padding:0 16px;margin-bottom:16px}blockquote{padding:0 15px;margin-left:0;color:#777;border-left:4px solid #ddd}blockquote>:first-child{margin-top:0}blockquote>:last-child{margin-bottom:0}table{display:block;width:100%;overflow:auto}table th{font-weight:700;padding:6px 13px;border:1px solid #ddd}table td{padding:6px 13px;border:1px solid #ddd}table tr{background-color:#fff;border-top:1px solid #ccc}table tr:nth-child(2n){background-color:#f8f8f8}img{max-width:100%;-moz-box-sizing:border-box;box-sizing:border-box}span.frame{display:block;overflow:hidden}span.frame>span{display:block;float:left;width:auto;padding:7px;margin:13px 0 0;overflow:hidden;border:1px solid #ddd}span.frame span img{display:block;float:left}span.frame span span{display:block;padding:5px 0 0;clear:both;color:#333}span.align-center{display:block;overflow:hidden;clear:both}span.align-center>span{display:block;margin:13px auto 0;overflow:hidden;text-align:center}span.align-center span img{margin:0 auto;text-align:center}span.align-right{display:block;overflow:hidden;clear:both}span.align-right>span{display:block;margin:13px 0 0;overflow:hidden;text-align:right}span.align-right span img{margin:0;text-align:right}span.float-left{display:block;float:left;margin-right:13px;overflow:hidden}span.float-left span{margin:13px 0 0}span.float-right{display:block;float:right;margin-left:13px;overflow:hidden}span.float-right>span{display:block;margin:13px auto 0;overflow:hidden;text-align:right}code,tt{padding:0;padding-top:.2em;padding-bottom:.2em;margin:0;font-size:85%;background-color:rgba(0,0,0,0.04);border-radius:3px}code:before,code:after{letter-spacing:-.2em;content:"\00a0"}tt:before,tt:after{letter-spacing:-.2em;content:"\00a0"}code br,tt br{display:none}del code{text-decoration:inherit;vertical-align:text-top}pre>code{padding:0;margin:0;font-size:100%;white-space:pre;background:transparent;border:0}.highlight{margin-bottom:16px}.highlight pre{padding:16px;margin-bottom:0;overflow:auto;font-size:85%;line-height:1.45;background-color:#f7f7f7;border-radius:3px}pre{padding:16px;margin-bottom:16px;overflow:auto;font-size:85%;line-height:1.45;background-color:#f7f7f7;border-radius:3px;word-wrap:normal}pre code,pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}pre code:before,pre code:after{content:normal}pre tt:before,pre tt:after{content:normal}.poetry pre{font-family:Georgia, Garamond, serif !important;font-style:italic;font-size:110% !important;line-height:1.6em;display:block;margin-left:1em}.poetry pre code{font-family:Georgia, Garamond, serif !important;word-break:break-all;word-break:break-word;-webkit-hyphens:auto;-moz-hyphens:auto;hyphens:auto;white-space:pre-wrap}sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;vertical-align:super;position:relative}sub{vertical-align:sub;top:-1px}@media print{body{background:#fff}img,table,figure{page-break-inside:avoid}#wrapper{background:#fff;border:none !important;font-size:12px}pre code{overflow:visible}}@media screen{body.inverted{color:#eee !important;border-color:#555;box-shadow:none}.inverted #wrapper,.inverted hr,.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted th,.inverted .math,.inverted caption,.inverted dd,.inverted dt,.inverted blockquote{color:#eee !important;border-color:#555;box-shadow:none}.inverted td,.inverted th{background:#333}.inverted pre,.inverted code,.inverted tt{background:#eeeeee !important;color:#111}.inverted h2{border-color:#555555}.inverted hr{border-color:#777;border-width:1px !important}::selection{background:rgba(157,193,200,0.5)}h1::selection{background-color:rgba(45,156,208,0.3)}h2::selection{background-color:rgba(90,182,224,0.3)}h3::selection,h4::selection,h5::selection,h6::selection,li::selection,ol::selection{background-color:rgba(133,201,232,0.3)}code::selection{background-color:rgba(0,0,0,0.7);color:#eeeeee}code span::selection{background-color:rgba(0,0,0,0.7) !important;color:#eeeeee !important}a::selection{background-color:rgba(255,230,102,0.2)}.inverted a::selection{background-color:rgba(255,230,102,0.6)}td::selection,th::selection,caption::selection{background-color:rgba(180,237,95,0.5)}.inverted{background:#0b2531;background:#252a2a}.inverted #wrapper{background:#252a2a}.inverted a{color:#acd1d5}}.highlight{background:#fff}.highlight .c{color:#998;font-style:italic}.highlight .err{color:#a61717;background-color:#e3d2d2}.highlight .k,.highlight .o{font-weight:700}.highlight .cm{color:#998;font-style:italic}.highlight .cp{color:#999;font-weight:700}.highlight .c1{color:#998;font-style:italic}.highlight .cs{color:#999;font-weight:700;font-style:italic}.highlight .gd{color:#000;background-color:#fdd}.highlight .gd .x{color:#000;background-color:#faa}.highlight .ge{font-style:italic}.highlight .gr{color:#a00}.highlight .gh{color:#999}.highlight .gi{color:#000;background-color:#dfd}.highlight .gi .x{color:#000;background-color:#afa}.highlight .go{color:#888}.highlight .gp{color:#555}.highlight .gs{font-weight:700}.highlight .gu{color:purple;font-weight:700}.highlight .gt{color:#a00}.highlight .kc,.highlight .kd,.highlight .kn,.highlight .kp,.highlight .kr{font-weight:700}.highlight .kt{color:#458;font-weight:700}.highlight .m{color:#099}.highlight .s{color:#d14}.highlight .n{color:#333}.highlight .na{color:teal}.highlight .nb{color:#0086b3}.highlight .nc{color:#458;font-weight:700}.highlight .no{color:teal}.highlight .ni{color:purple}.highlight .ne,.highlight .nf{color:#900;font-weight:700}.highlight .nn{color:#555}.highlight .nt{color:navy}.highlight .nv{color:teal}.highlight .ow{font-weight:700}.highlight .w{color:#bbb}.highlight .mf,.highlight .mh,.highlight .mi,.highlight .mo{color:#099}.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .se,.highlight .sh,.highlight .si,.highlight .sx{color:#d14}.highlight .sr{color:#009926}.highlight .s1{color:#d14}.highlight .ss{color:#990073}.highlight .bp{color:#999}.highlight .vc,.highlight .vg,.highlight .vi{color:teal}.highlight .il{color:#099}.highlight .gc{color:#999;background-color:#EAF2F5}.type-csharp .highlight .k,.type-csharp .highlight .kt{color:blue}.type-csharp .highlight .nf{color:#000;font-weight:400}.type-csharp .highlight .nc{color:#2b91af}.type-csharp .highlight .nn{color:#000}.type-csharp .highlight .s,.type-csharp .highlight .sc{color:#a31515}.type-csharp .highlight .k,.type-csharp .highlight .kt{color:#00F}.type-csharp .highlight .nf{color:#000;font-weight:normal}.type-csharp .highlight .nc{color:#2B91AF}.type-csharp .highlight .nn{color:#000}.type-csharp .highlight .s,.type-csharp .highlight .sc{color:#A31515}body.dark #wrapper{background:transparent !important;box-shadow:none !important}
+#mkreplaced-toc{list-style-position:inside;padding:0;margin:0 0 0 1rem;list-style-type:none}#mkreplaced-toc li::before{content:''}#mkreplaced-toc li{font-size:1.5rem;line-height:1.5;font-weight:normal}#mkreplaced-toc li ul{font-size:1.3rem;font-weight:300;padding:.5rem 0;margin:0 0 0 1rem}#mkreplaced-toc li.missing{list-style-type:none !important}#mkreplaced-toc.max-1 ul,#mkreplaced-toc.max1 ul{display:none}#mkreplaced-toc.max-2 ul ul,#mkreplaced-toc.max2 ul ul{display:none}#mkreplaced-toc.max-3 ul ul ul,#mkreplaced-toc.max3 ul ul ul{display:none}#mkreplaced-toc.max-4 ul ul ul ul,#mkreplaced-toc.max4 ul ul ul ul{display:none}#mkreplaced-toc.max-5 ul ul ul ul ul,#mkreplaced-toc.max5 ul ul ul ul ul{display:none}
+
+@media print{
+#wrapper #generated-toc-clone,#generated-toc{display:none!important}
+}
+#wrapper #generated-toc-clone, #wrapper #mkreplaced-toc, #wrapper #generated-toc-clone ul, #wrapper #mkreplaced-toc ul {
+    list-style-position: inside
+}
+#wrapper #generated-toc-clone li.missing, #wrapper #mkreplaced-toc li.missing {
+    list-style-type: none!important
+}
+#wrapper #generated-toc-clone, #wrapper #mkreplaced-toc {
+    list-style-type: upper-roman
+}
+#wrapper #generated-toc-clone>li>ul, #wrapper #mkreplaced-toc>li>ul  {
+    list-style-type: decimal
+}
+#wrapper #generated-toc-clone>li>ul>li>ul, #wrapper #mkreplaced-toc>li>ul>li>ul {
+    list-style-type: decimal-leading-zero
+}
+#wrapper #generated-toc-clone>li>ul>li>ul>li>ul, #wrapper #mkreplaced-toc>li>ul>li>ul>li>ul {
+    list-style-type: lower-greek
+}
+#wrapper #generated-toc-clone>li>ul>li>ul>li>ul>li>ul, #wrapper #mkreplaced-toc>li>ul>li>ul>li>ul>li>ul {
+    list-style-type: disc
+}
+#wrapper #generated-toc-clone>li>ul>li>ul>li>ul>li>ul>li>ul, #wrapper #mkreplaced-toc>li>ul>li>ul>li>ul>li>ul>li>ul {
+    list-style-type: square
+}
+#wrapper #generated-toc-clone,#wrapper #mkreplaced-toc{list-style-position:outside!important;margin-left:3rem;}
+</style>
+
+</head>
+<body class="normal">
+  <div id="wrapper">
+      <hr />
+
+<h1 id="todolistforthisdocument">TODO list for this document</h1>
+
+<ul>
+<li>highlight the parts of the workflow that we need to create activities for to replace HW (70%)</li>
+<li>write up a proposed doc showing what our new workflows might look like (60%)</li>
+<li>complete tl;dr overview of the doc (10%)</li>
+</ul>
+
+<hr />
+
+<p>This documentation aims to refer to the <a href="https://github.com/elifesciences/elife-bot/tree/exp">exp branch</a> of the eLife-bot code.</p>
+
+<hr />
+
+<h1 id="existingpoaworkflow">Existing POA workflow</h1>
+
+<ul>
+<li>every hour EJP sends csv files with metadata to the <code>elife-ejp-ftp</code> S3 bucket. They have been provided access to this via the <a href="">https://cloudgates.net</a> service, and to change the location of this we need to <a href="https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service">modify the cloudgates settings</a> and resullpy FTP credentials to the vendor.</li>
+<li>when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the <code>elife-ejp-poa-delivery</code> S3 bucket</li>
+<li><code>cron.py</code> checks at 11am for new content in a bucket defined by the setting <code>poa_bucket</code> which needs to be set to be teh same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)</li>
+<li>on discovering a new file in that bucket (via the S3Monitor activity) the <a href="#PackagePOA">PackagePOA</a> activity is started</li>
+<li>this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the <a href="https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py">elife-poa-xml-generation</a> code. It then sends the output to an s3 bucket <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276">that is defined</a> by the <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60">settings.poa_packaging_bucket</a> which is set to <code>elife-poa-packaging</code></li>
+<li>the <a href="#PublishPOA">PublishPOA</a> is invoked if a new file is found in <code>elife-poa-packaging</code>.</li>
+<li>this will create a folder in an outbox of the folloiwng format
+
+<ul>
+<li>folder name YYYYMMDD</li>
+<li>folder contains, for each article to be published, a file of the following kind</li>
+<li>elife_poa_eNNNNN.xml</li>
+<li>elife_poa_eNNNNN_ds.zip</li>
+<li>decap_elife_poa_eNNNNN.pdf</li>
+</ul></li>
+<li>this sends files to HW and to crossref and prepares files for downstream delivery.</li>
+<li>Files appears in Highwire express (HWX)</li>
+<li>HWX shows all POA articles for the day on one &#8220;batch&#8221;</li>
+<li><span style="color:red">HW creates a record in HWX</span></li>
+<li><span style="color:red">HW creates nodes in Drupal</span></li>
+<li><span style="color:red">supp files are loaded to the appropriate location for download</span></li>
+<li>the PAP batch shows all the POA papers in HWX</li>
+<li>HWX has a link to the paper in Drupal where the content is in a &#8220;not published state&#8221;</li>
+<li>production manually checks the PDF on HWX, usually to check against
+
+<ul>
+<li>special characters</li>
+<li>that decapitation has happened on the PDF</li>
+<li>that the abstract appears OK</li>
+<li>some other checks (listed in the POA protocals document)</li>
+</ul></li>
+<li>production push an &#8220;Approve&#8221; button</li>
+<li>another page is displayed with another &#8220;Approve button&#8221;</li>
+<li>a &#8220;Success Page&#8221; is displayed</li>
+<li><span style="color:red">Content is added to the search index </span></li>
+<li>usually within 1/2 an hour the paper on the Drupal Site is in a published state</li>
+<li>it&#8217;s not clear to me which of the &#8220;publish&#8221; activities operate on the contents that we have here.</li>
+</ul>
+
+<hr />
+
+<h1 id="existingvorworkflow">Existing VOR workflow</h1>
+
+<ul>
+<li>content processor sends a zip file to an S3 bucket and to a HW FTP endpoint, I <em>think</em> these go into the s3 bucket <code>elife-articles-hw</code>.</li>
+<li>content processor sends Crossref an XML file to update the crossref record</li>
+<li>These files appear in a directory named as NNNNN - where this is the <code>f-id</code>. There is one folder for every article. The folder contains files of the format</li>
+<li>elife_YYYY_NNNNN.img.zip</li>
+<li>elife_YYYY_NNNNN.pdf.zip</li>
+<li>elife_YYYY_NNNNN.xml.zip</li>
+<li>Files appears in Highwire express (HWX)</li>
+<li>each file takes it&#8217;s own batch through the system</li>
+<li><span style="color:red">HW creates a record in HWX</span></li>
+<li>if production can get to HWX then they see the following stages (information can been seen at each of these stages)
+
+<ul>
+<li>pre-intake</li>
+<li>intake</li>
+<li>processing</li>
+<li>assembly</li>
+<li>production</li>
+<li>downstream</li>
+</ul></li>
+<li>before assembly HWX does the following</li>
+<li><span style="color:red">images are converted</span></li>
+<li><span style="color:green">HW creates nodes in Drupal</span></li>
+<li><span style="color:red">assetts are loaded to the appropriate location, e.g. for download or to the CDN</span></li>
+<li><span style="color:red">XML is transformed to HTML and provided via a markup service</span></li>
+<li><span style="color:red">Some magic related article fun happens</span></li>
+<li>when the workflow gets to assembly assembly will turn orange and production can make a decision</li>
+<li>at assembly there is a QA report that links to the Drupal site</li>
+<li>production checks everything in the article on the Drupal site</li>
+<li>videos</li>
+<li>images</li>
+<li>tables</li>
+<li>decision letters</li>
+<li>production push an &#8220;Approve&#8221; button</li>
+<li>another page is displayed with another &#8220;Approve button&#8221;</li>
+<li>HWX shows that state is changing in the production process</li>
+<li>if the system works correctly then in about 20 minutes</li>
+<li><span style="color:red">Content is added to the search index </span></li>
+<li><span style="color:red">HW starts to collect PDF download and pageview metrics </span></li>
+<li><span style="color:red">RSS feed is updated </span></li>
+<li>if it goes &#8220;red&#8221; all bets are off</li>
+<li>elife-bot via a setting in the db.provier script, is monitoring for <a href="https://github.com/elifesciences/elife-bot/blob/master/provider/simpleDB.py#L236">new files of spcific types </a> (&#8220;xml&#8221;, &#8220;pdf&#8221;, &#8220;img&#8221;, &#8220;suppl&#8221;, &#8220;video&#8221;, &#8220;svg&#8221;, &#8220;jpg&#8221;, &#8220;figures&#8221;).</li>
+<li>the bucket that is polled is <a href="https://github.com/elifesciences/elife-bot/blob/exp/settings-example.py#L20">defined in settings.py</a>.</li>
+<li>Where new files have been identified as appropriate, then the following workflows are triggered, which mostly send content to the CDN, and also prepare a Lens landing page.</li>
+<li>cron_NewS3XML <a href="#PublishPDF">more info</a></li>
+<li>cron_NewS3PDF <a href="#PublishPDF">more info</a></li>
+<li>cron_NewS3SVG <a href="#PublishSVG">more info</a></li>
+<li>cron_NewS3Suppl <a href="#PublishPDF">more info</a></li>
+<li>cron_NewS3JPG <a href="#PublishPDF">more info</a></li>
+<li>cron_NewS3FiguresPDF <a href="#PublishPDF">more info</a></li>
+</ul>
+
+<hr />
+
+<h1 id="existingdepositionworkflows">Existing Deposition workflows</h1>
+
+<ul>
+<li>Pub router deposits once per day 23:45 UTC</li>
+<li>Cengage deposits once per day 22:45 UTC</li>
+<li>pubmed depostits happen every hour</li>
+<li>pubmed deposits inlude some code to determine version number of the article and to<br/>
+<a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197">set the published date appropriatly</a>.</li>
+</ul>
+
+<p><strong>TODO: determine where we have code that pings the Drupal site for publication dates</strong></p>
+
+<hr />
+
+<h1 id="proposednewvorworkflowalltobediscussed">Proposed new VOR workflow (all to be discussed)</h1>
+
+<ul>
+<li>content processor sends a zip file to an S3 bucket that follows our <a href="">new naming convention</a>.</li>
+<li>The arrival of a file triggers an SQS event which triggers a workflow</li>
+<li>an activity in the workflow unpacks the zip file into an s3 bucket</li>
+<li>an activity in the workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store)</li>
+<li>an activity in the workflow hits an API to determine the current working version number
+
+<ul>
+<li>this api will deterine what the previous published date was if we are looking<br/>
+at resupplying an article through this workflow.</li>
+</ul></li>
+<li>on receipt of a usable version number for the file a series of activities are<br/>
+ invoked
+
+<ul>
+<li>zip content is placed into some working state or working directory (To be confiremed?)</li>
+<li>article XML is rewritten to point to the new updated figure and supp file versions</li>
+<li>images are renamed to match the new version number</li>
+<li>images are resized based on an input YAML file</li>
+<li>XML and generates the EIF JSON, which includes the version number, but indicates that the article needs to be in an unpublished state</li>
+<li>XML is placed in a location where the markup service can access it</li>
+<li>the Drupal site hits the markup service and generates the full article page (to be confimed)</li>
+<li>a reciept JSON is generated by the Drupal site</li>
+</ul></li>
+<li>the publishing team receive a link to enable them to preview the content</li>
+<li>the publishing team approve content, and publish it</li>
+<li>Drupal is instructed to update it&#8217;s search index</li>
+<li>the Drupal layer confirms that a specific version has been published</li>
+<li>content in the CDN is unmasked (to be confirmed)</li>
+<li>the data store that keeps track of version numbers is updated</li>
+<li>the files in the working directory are archived with the appropriate version number</li>
+<li>the publication date of that version is recorded in a data store</li>
+<li>RSS feed is updated on the Drupal site</li>
+<li>crossref is updated with our article info</li>
+<li>content is placed in the appropriate locations for downstream article deposition to occur</li>
+</ul>
+
+<p><strong>TODO: evaluate whether we need to retain the existing publish to CDN workflows</strong></p>
+
+<hr />
+
+<h1 id="botoverview.">Bot overview.</h1>
+
+<p>The eLife bot uses <a href="http://aws.amazon.com/swf/">Amazon Simple Workflow</a> to manage<br/>
+coordinated tasks in our publishing workflow.</p>
+
+<p>We start a workflow from a <code>cron.py</code> script, which usually invokes a starter, invoking a workflow which in turn invokes a set of activities. The usual strucutre<br/>
+for a given workflow looks like this:</p>
+
+<ul>
+<li>cron_starter: starter invoked from cron.py (usually invokes another starter, can sometimes go straight to triggering a workflow)</li>
+<li>starter: starter_name
+
+<ul>
+<li>workflow: Workflow name</li>
+<li>activity: activity1</li>
+<li>activity: activity2</li>
+<li>activity: activity3</li>
+</ul></li>
+</ul>
+
+<p>The workflows that we have developed so far are the following ones:</p>
+
+<ul>
+<li>S3Monitor - looks for changes in an s3 bucket and updated SDB with info (<a href="#S3Monitor">more details</a>)</li>
+<li>PackagePOA - generates POA XML, decapitates PDF,prepares emails for authors and packages content in readyness for deliery to HW (<a href="#PackagePOA">more details</a>)</li>
+<li>PublishPOA - generate go.xml, ftp content to HW, and place content ready for further downstream delivery to pubmed and crossref, send content to crossref. (<a href="#PublishPOA">more details</a>)</li>
+<li>PublishArticle - puts an XML file on the CDN, creates a lens template HTML for that article, send the XML to an outbox for downstream processing (<a href="#PublishArticle">more details</a>)</li>
+<li>PublishPDF - puts a PDF in the CDN (<a href="#PublishPDF">more details</a>)</li>
+<li>PublishSuppl - puts supplemental data in the CDN (<a href="#PublishPDF">more details</a>)</li>
+<li>PublishJPG - put JPGs into the CDN (<a href="#PublishPDF">more details</a>)</li>
+<li>PublishFiguresPDF - moves figuresPDF to the CDN (<a href="#PublishPDF">more details</a>)</li>
+<li>PublicationEmail - emails authors on publication of their POA article (<a href="#PublicationEmail">more details</a>)</li>
+<li>PubRouterDeposit - picks a destination to FTP content to, calls FTPArticle (<a href="#PubRouterDeposit">more details</a>)</li>
+<li>FTPArticle - FTPs content to an endpoint (<a href="#FTPArticle">more details</a>)</li>
+<li>PubmedArticleDeposit - Ftps content to pubmed, does not use FTPArticle worfkflow (<a href="#PubmedArticleDeposit">more details</a>)</li>
+<li>AdminEmail - sends emails about workflow state to admins (<a href="#AdminEmail">more details</a>)</li>
+<li>PublishSVG - no longer used (<a href="#PublishSVG">more details</a>)</li>
+</ul>
+
+<h2 id="deploymentandconfigurationoftheelife-bot">Deployment and configuration of the elife-bot</h2>
+
+<h4 id="deployment">Deployment</h4>
+
+<p>The main bot code is deployed via salt. The <code>exp</code> branch is currently deployed locally.</p>
+
+<p>During salt deployment <a href="https://github.com/elifesciences/elife-builder/blob/d0f15aaea37fd953de421c2c84333286078e2823/salt/salt/elife-bot/init.sls#L99">elife-poa-xml-generation is cloned</a> is brought into the same directory structure as the bot-code. The <a href="https://github.com/elifesciences/elife-poa-xml-generation">elife-poa-xml-generation repo</a> has many functions that are used throughout, e.g. <a href="https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L478">here</a>.</p>
+
+<p>We may decide to integrate with the <a href="https://github.com/elifesciences/elife-api-documentation">elife api</a></p>
+
+<hr />
+
+<h4 id="configuration">Configuration</h4>
+
+<p>As a result of bringing in the <a href="https://github.com/elifesciences/elife-poa-xml-generation">elife-poa-xml-generation repo</a> repo there are a number of locations where bot settings can be found. Settings can be used to configure ftp credentials, the names of s3 buckets, times for cron jobs, and a number of other configurables. A summary of these are:</p>
+
+<ul>
+<li>elife-bot settings<br/>
+ the most natural home for settings for the project, for the master branch this is configured via salt.</li>
+<li>cronfile for the bot<br/>
+ this starts the main python processes that are responsible for interacting with amazon SWF. For the master branch this is set via salt</li>
+<li>cron.py &amp; cron starters<br/>
+ some specific workflows are tied to starting at specific times of the hour, and those times and workflows are laid out in cron.py and in the<br/>
+ associated starter files.</li>
+<li>elife-poa-xml-generation<br/>
+ some functions are called from the elif -poa-xml-generation repo, and that repo contains it&#8217;s own settings file. For example<br/>
+ ftp credentials for pubmed are set here, rather than in the main bot settings file.</li>
+<li>inline<br/>
+ some functions have settings hardwired in them, I&#8217;ve attempted to call out where that happens in the documentation that follows.</li>
+</ul>
+
+<hr />
+
+<h4 id="detaileddescriptionofworkflows">Detailed description of workflows</h4>
+
+<p><a name="detailed-workflows"></a></p>
+
+<h2 id="cron.pyandthecontrolflow">Cron.py and the control flow</h2>
+
+<p>Cron.py is set to run by a cron script every <em>TBD</em> minutes. It runs it&#8217;s main function <code>run_cron</code> which will invoke a starter process, if certain conditions are met at the given moment in time that cron.py is run. These starter processes in turn invoke workflows that themselves invoke activities. When each workflow and activity is begun a set of equivlant named workflows and activities are created in Amazon Simple Work Flow (SWF), and SWF is responsible for tracking ongoing workflows and activities, and tracking completion. History of activities tends to be written to an Amazon Simple DB instance.</p>
+
+<hr />
+
+<p><a name="S3Monitor"></a></p>
+
+<p>starter_S3Monitor look in an S3 bucket and store changes to that bucket as metadata in a simple DB database.</p>
+
+<ul>
+<li>cron_starter: starter_S3Monitor</li>
+<li>workflow: S3Monitor
+
+<ul>
+<li>activity: S3Monitor (S3Monitor activity: poll S3 bucket and save object metadata into SimpleDB)</li>
+</ul></li>
+</ul>
+
+<p>Config for simpledb is done in settings.py</p>
+
+<p><code>simpledb_region = us-east-1</code></p>
+
+<hr />
+
+<p><a name="PackagePOA"></a></p>
+
+<ul>
+<li>cron_starter: cron_NewS3POA</li>
+<li>starter: starter_PackagePOA
+
+<ul>
+<li>workflow: PackagePOA</li>
+<li>activity: PackagePOA (build new POA xml based on content from EJP, and place in a location for another workflow to pick up for delivery to HW)</li>
+</ul></li>
+</ul>
+
+<p>The PackagePOA workflow is quite intricate. Crucially it calls on a number<br/>
+of functions in the <a href="https://github.com/elifesciences/elife-poa-xml-generation">elife-poa-xml-generation repo</a> for in order to complete the workflow.</p>
+
+<ul>
+<li>looks for content in <code>elife-ejp-poa-delivery</code> (delivered by EJP)</li>
+<li>A set of directories are created on the ec2 instance that is running the activity.</li>
+<li>Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity</li>
+<li>extract a DOI from the Zipfile</li>
+<li>abort if no DOI can be generated</li>
+<li>otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)</li>
+<li>in the <a href="https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343">copy_pdf_to_hw_staging_dir</a> function we attempt to decapitate the PDF</li>
+<li>The new processed files are placed in <code>self.elife_poa_lib.settings.STAGING_TO_HW_DIR</code>.</li>
+<li>the processing of the zip file should also have decapitated the PDF from EJP, so we<br/>
+check whether that PDF has been decapitated. We look in <code>elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR</code> to see if that decapitated PDF is present.</li>
+<li>a new manifest XML file is generated for Highwire</li>
+<li>download a set of CSV files from EJP</li>
+<li>create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the<br/>
+csv files downloaded from EJP (this will not cotain the body text of the XML file).</li>
+<li>copy all of these files to an S3 Outbox</li>
+<li>create an email of the format &#8220; email_type = &#8221;PackagePOA&quot; and add this to a mail queue. (Mail templates are stored on s3). This is a<br/>
+system email and is sent to emails that are configured in <code>settings.ses_poa_recipient_email</code>.</li>
+</ul>
+
+<hr />
+
+<p><a name="PublishPOA"></a></p>
+
+<ul>
+<li>cron_starter: starter_PublishPOA</li>
+<li>workflow: PublishPOA
+
+<ul>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublishPOA.py">PublishPOA</a> (files are sent to HW, and to local folders for further processing, see below)</li>
+<li>activity: DepositCrossref (generate crossref XML and put a copy is a specific named S3 bucket)</li>
+</ul></li>
+</ul>
+
+<p>The <code>PublishPOA</code> activity is quite intricate, and does the following:</p>
+
+<ul>
+<li><code>PublishPOA</code> creates the following directories
+
+<ul>
+<li>self.publish_bucket = settings.poa_packaging_bucket</li>
+<li>self.outbox_folder = &#8220;outbox/&#8221;</li>
+<li>self.published_folder = &#8220;published/&#8221;</li>
+</ul></li>
+<li>files are downloaded from the s3 bucket that <code>NewS3POA</code> populated</li>
+<li>some checks are made to confirm that supp files and zip files have complimentary data and files in them</li>
+<li>supplement files and zip files are sent to the HW ftp site</li>
+<li>a go.xml file is created and sent the HW FTP endpoint</li>
+<li>If these files make it to HW then xml is sent to
+
+<ul>
+<li>xml_to_crossref_outbox_s3</li>
+<li>xml_to_pubmed_outbox_s3</li>
+<li>xml_to_publication_email_outbox_s3</li>
+</ul></li>
+<li>an email is sent to <code>settings.ses_poa_recipient_email</code> (the code here is duplicated from the packagePOA script)</li>
+</ul>
+
+<p>The base S3 bucket for packaging POA content is <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublishPOA.py#L57">set in the settings file</a>, and sub-folders are set in the <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublishPOA.py">PublishPOA activity</a>, see for example the setting of <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublishPOA.py#L62">crossref/outbox</a>.</p>
+
+<p><strong>TODO: de-duplicate the email code</strong></p>
+
+<p><strong>TODO: determine how this workflow knows which files to start working on</strong></p>
+
+<hr />
+
+<p><a name="PublishArticle"></a></p>
+
+<p>cron_NewS3XML - check in SimpleDB for info on any new or modified XML files that are in an S3 bucket since a given date, then publish that specific numbered XML file via a series of activities.</p>
+
+<ul>
+<li>cron_starter: cron_NewS3XML</li>
+<li>starter: starter_PublishArticle
+
+<ul>
+<li>workflow: PublishArticle</li>
+<li>activity: <a href="https://github.com/jrdigi/elife-bot/blob/exp/activity/activity_UnzipArticleXML.py">UnzipArticleXML</a> (download XML from S3 and save to the CDN)</li>
+<li>activity: LensArticle (Create a lens article index.html)</li>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ArticleToOutbox.py">ArticleToOutbox</a> (copy article from s3 to a set of folders on the local ec2 instance).</li>
+<li>activity: LensXMLFilesList (Create the eLife Lens xml list file for cache warming, and then save those to the S3 CDN bucket)</li>
+</ul></li>
+</ul>
+
+<p><a href="https://github.com/elifesciences/elife-bot/blob/exp/provider/filesystem.py">filesystem.py</a> provides access to the file system.</p>
+
+<p><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleXML.py#L58">Cdn location setting</a> (in settings.py).</p>
+
+<p>The HTML template for the lens landing page is stored in S3 and is accessed via <a href="https://github.com/elifesciences/elife-bot/blob/exp/provider/templates.py">templates.py</a>.</p>
+
+<p>Templates dir in s3 is <a href="https://github.com/elifesciences/elife-bot/blob/exp/provider/templates.py#L33">set in settings.py</a>.</p>
+
+<p>Lens bucket location is <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_LensArticle.py#L70">set in a call to settings.py</a>.</p>
+
+<p>ArticleToOutbox creates the following local directories in the Ec2 instance</p>
+
+<ul>
+<li><code>self.pubmed_outbox_folder = &quot;pubmed/outbox/</code></li>
+<li><code>self.publication_email_outbox_folder = &quot;publication_email/outbox/&quot;</code></li>
+<li><code>self.pub_router_outbox_folder = &quot;pub_router/outbox/&quot;</code></li>
+<li><code>self.cengage_outbox_folder = &quot;cengage/outbox/&quot;</code></li>
+</ul>
+
+<p>Much of the logic of <code>ArticleToOutbox</code> seems quite similar to <code>UnzipArticleXML</code>, however this activity includes a function <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ArticleToOutbox.py#L140">is_resupply</a> that seems to hard-code<br/>
+eLife article numbers into volumes, and it&#8217;s not clear why.</p>
+
+<p><strong>TODO:How do we know where to download a file from?</strong></p>
+
+<p><strong>TODO: find out why we have a hard coded file list in ArticleToOutbox.</strong></p>
+
+<hr />
+
+<p><a name="PublishPDF"></a></p>
+
+<p>cron_NewS3PDF, cron_NewS3Suppl, cron_NewS3JPG, cron_NewS3FiguresPDF, these workflows are almost identical and they take a file from S3 and place it into<br/>
+the CDN. They have a significant amount of code duplication.</p>
+
+<ul>
+<li>cron_starter: cron_NewS3PDF</li>
+<li>starter: <a href="https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PublishPDF.py">starter_PublishPDF</a>
+
+<ul>
+<li>workflow: <a href="https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_PublishPDF.py">PublishPDF </a></li>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticlePDF.py">UnzipArticlePDF</a> (takes a PDF file from S3 and puts it in the cdn)</li>
+</ul></li>
+</ul>
+
+<p><strong>TODO:look at how to tidy up the starter code to remove dependency on SDB</strong></p>
+
+<p><strong>TODO: refactor UnzipArticlePDF along with other activities, that push content to the CDN, and provide one generalised activity for this</strong>.</p>
+
+<ul>
+<li><p>cron_starter: cron_NewS3Suppl </p></li>
+<li>starter: starter_PublishSuppl
+
+<ul>
+<li>workflow: PublishSuppl</li>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleSuppl.py">UnzipArticleSuppl</a> (Downloads a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket.)</li>
+</ul></li>
+<li><p>cron_starter: cron_NewS3JPG </p></li>
+<li>starter: starter_PublishJPG
+
+<ul>
+<li>workflow: PublishJPG</li>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleJPG.py">UnzipArticleJPG</a> puts a file into the CDN.</li>
+</ul></li>
+<li><p>cron_starter: cron_NewS3FiguresPDF </p></li>
+<li>starter: starter_PublishFiguresPDF
+
+<ul>
+<li>workflow: PublishFiguresPDF</li>
+<li>activity: [UnzipArticleFiguresPDF](https://github.com/elifesciences/elife-bot/blob/exp/<br/>
+ activity/activity_UnzipArticleFiguresPDF.py)</li>
+</ul></li>
+</ul>
+
+<hr />
+
+<p><a name="PublicationEmail"></a></p>
+
+<p>starter_PublicationEmail - prepares an email to send to authors on publication of their paper via POA.</p>
+
+<ul>
+<li>cron_starter: starter_PublicationEmail</li>
+<li>workflow: PublicationEmail
+
+<ul>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py">PublicationEmail</a> (prepares an email to send to authors)</li>
+</ul></li>
+</ul>
+
+<p>The PublicationEmail activity is moderatly involved, it does the following:</p>
+
+<ul>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L50">sets a POA publication bucket from settings.py</a></li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L50">internally defines some settings</a> that specify which article types not to email about, and which kinds of emails to send.</li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L341">downloads templates from s3</a></li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L109">gets xml files from s3 outbox</a></li>
+<li>do some author extraction and article checking</li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L150">send an email</a></li>
+<li>emails are sent by adding the <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L583">email to a queue</a></li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PublicationEmail.py#L157">clean up the outbox</a></li>
+</ul>
+
+<p><strong>TODO: find out how this queue is then processed for actually sending mail</strong></p>
+
+<hr />
+
+<p><a name="FTPArticle"></a></p>
+
+<p>starter_PubRouterDeposit - deposits articles either with HEFCE or with CENGAGE depending on how the workflow is created.</p>
+
+<ul>
+<li>cron_starter: starter_PubRouterDeposit (pick between HEFCE or CENGAGE workflow)</li>
+<li>workflow: PubRouterDeposit
+
+<ul>
+<li>activity: PubRouterDeposit (deposit an article via FTP)</li>
+<li>workflow: FTPArticle
+
+<ul>
+<li>activity: FTPArticle</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>The PubRouterDeposit activity is moderatly invovled, and it will inovke a new workflow - the FTP article workflow, if it needs to FTP an artticle.</p>
+
+<ul>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/starter/starter_PubRouterDeposit.py#L63">pick between HEFCE or CENGAGE</a></li>
+<li>looks again at <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L55">poa packaging outboux</a></li>
+<li>if we have an approved article <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L105">ftp the article</a></li>
+<li>starts the <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubRouterDeposit.py#L163">FTPArticle workflow</a>. This seems to potentially be the first location where an activity starts a new workflow.</li>
+<li>the <a href="https://github.com/elifesciences/elife-bot/blob/exp/workflow/workflow_FTPArticle.py">FTPArticle workflow</a> simply starts the<br/>
+<a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py">FTPArticle activity</a></li>
+<li>creates <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L71">internal activity directories</a></li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L79">download files to be sent</a></li>
+<li><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L85">choose between HEFCE and CENGAGE</a> for ftping the article</li>
+<li>extract ftp credentials <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L105-L117">from the settings.py file</a></li>
+<li>the main differences between HEFCE and CENGAGE can be seen <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_FTPArticle.py#L121-L137">here</a> and seem to be based on differences in files to be sent.</li>
+</ul>
+
+<p><strong>TODO: get clarity on how we get aproval to FTP an article</strong></p>
+
+<p><strong>TODO: refactor to rationalise download from s3</strong></p>
+
+<p><strong>TODO: refactor activity_FTPArticle.py to be a generic FTP script with no knowledge of the endpoint</strong></p>
+
+<hr />
+
+<p><a name="PubmedArticleDeposit"></a></p>
+
+<ul>
+<li><p>cron_starter: starter_PubmedArticleDeposit </p></li>
+<li>workflow: PubmedArticleDeposit
+
+<ul>
+<li>activity: PubmedArticleDeposit</li>
+</ul></li>
+<li><p><code>PubmedArticleDeposit</code> starts workflow <code>PubmedArticleDeposit</code> which starts activity <code>PubmedArticleDeposit</code> </p></li>
+<li><p><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py">PubmedArticleDeposit activity</a> Download article XML from pubmed outbox, generate pubmed article XML, and deposit with pubmed. </p></li>
+<li><p><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L66">poa packaging bucket set by settings</a> </p></li>
+<li><p><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L93">download files</a> </p></li>
+<li><p><a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L104">ftp file files</a> </p></li>
+<li><p>this <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L604">calls on a function in the elife-poa-xml-generation repo to ftp to highwire</a> </p></li>
+<li><p>the actual <a href="https://github.com/elifesciences/elife-poa-xml-generation/blob/master/ftp_to_highwire.py">ftp to highwire code</a> seems to get it&#8217;s<br/>
+FTP settings from a <a href="https://github.com/elifesciences/elife-poa-xml-generation/blob/master/ftp_to_highwire.py#L23-L27">settings file local to elife-poa-xml-generation</a></p></li>
+<li><p><strong>TODO: bring the ftp to pubmed function into a common ftp function</strong></p></li>
+</ul>
+
+<p><strong>TODO: bring more clarity to which kinds of new files (VOR vs POA, asset vs XML) are the files that get actioned by the many cdn deposit workflows.</strong></p>
+
+<hr />
+
+<p><a name="AdminEmail"></a></p>
+
+<p>starter_AdminEmail - Email administrators a workflow history status message.</p>
+
+<ul>
+<li>cron_starter: starter_AdminEmail</li>
+<li>workflow: AdminEmail
+
+<ul>
+<li>activity: AdminEmailHistory</li>
+</ul></li>
+</ul>
+
+<p>Admin email list is set by <code>settings.ses_admin_email</code>.</p>
+
+<hr />
+
+<p><a name="PublishSVG"></a></p>
+
+<p><a name="cron_NewS3SVG"></a> cron_NewS3SVG: converts some SVG files to JPGs, this workflow is no longer needed<br/>
+and should be terminated.</p>
+
+<ul>
+<li>cron_starter: cron_NewS3SVG (this job is no longer needed)</li>
+<li>starter: starter_PublishSVG
+
+<ul>
+<li>workflow: PublishSVG</li>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_UnzipArticleSVG.py">UnzipArticleSVG</a> ( Download a S3 object from the elife-articles bucket, unzip if necessary, and save to the elife-cdn bucket.)</li>
+<li>activity: <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_ConverterSVGtoJPG.py">ConverterSVGtoJPG</a> ( Extract base64 image data from SVG and save as JPG: Download a S3 object from the elife-articles bucket, unzip if necessary, convert each, and save to the elife-cdn bucket.)</li>
+</ul></li>
+</ul>
+
+<p><strong>TODO: remove this workflow from cron.py</strong></p>
+
+<hr />
+
+<h1 id="reccomendationsforrefactoring">Reccomendations for refactoring</h1>
+
+<ul>
+<li>remove SVG workflow</li>
+<li>unify FTP workflows</li>
+<li>unify code used for sending files to CDN</li>
+<li>understand, and potentially remove, the hard coded article number list in ArticleToOutbox</li>
+<li>deduplicate code that is used to send emails</li>
+<li>remove starter dependcy on SDB</li>
+<li>move hard coded config variable out of the code into a settings or YAML file</li>
+</ul>
+<!-- ##END MARKED WRAPPER## -->
+    </div>
+</body>
+</html>
