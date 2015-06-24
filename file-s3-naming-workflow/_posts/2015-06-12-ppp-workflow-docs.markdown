@@ -53,50 +53,16 @@ to be completed
 
 ----
 
-POA workflow
+# Existing POA workflow
 
-- Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity
-- extract a DOI from the Zipfile
-- abort if no DOI can be generated
-- otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)
-- in the [copy_pdf_to_hw_staging_dir](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343) function we attempt to decapitate the PDF
-- The new processed files are placed in `self.elife_poa_lib.settings.STAGING_TO_HW_DIR`.
-- the processing of the zip file should also have decapitated the PDF from EJP, so we
-check whether that PDF has been decapitated. We look in `elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR` to see if that decapitated PDF is present.
-- a new manifest XML file is generated for Highwire
-- download a set of CSV files from EJP
-- create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the
-csv files downloaded from EJP (this will not cotain the body text of the XML file).
-- copy all of these files to an S3 Outbox
-- create an email of the format " email_type = "PackagePOA" and add this to a mail queue. (Mail templates are stored on s3). This is a
-system email and is sent to emails that are configured in `settings.ses_poa_recipient_email`.
-
----
-- the `PublishPOA` workflow kicks in now
-- this invokes the `PublishPOA` and the `DepositCrossref` activities
-- `PublishPOA` creates the following locations
-    - self.publish_bucket = settings.poa_packaging_bucket
-    - self.outbox_folder = "outbox/"
-    - self.published_folder = "published/"
-- files are downloaded from the s3 bucket that `NewS3POA` populated
-- some checks are made to confirm that supp files and zip files have complimentary data and files in them
-- supplement files and zip files are sent to the HW ftp site
-- a go.xml file is created and sent the HW FTP endpoint
-- If these files make it to HW then xml is sent to
-    - xml_to_crossref_outbox_s3
-    - xml_to_pubmed_outbox_s3
-    - xml_to_publication_email_outbox_s3
-- an email is sent to `settings.ses_poa_recipient_email` (the code here is duplicated from the packacgePOA script)
-
----
-- the `DepositCrossref` activity kicks in
-- files are downloaded from s3
-- crossref XML is generated
-- files are tidied away
-- an email is sent to `settings.ses_poa_recipient_email`
-
----
-- Files appears in Highwire express (HWX) with a go.xml file
+- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket
+- when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the `elife-ejp-poa-delivery` S3 bucket
+- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be teh same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
+- on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
+- this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [settings.poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
+- the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
+- this sends files to HW and to crossref and prepares files for downstream delivery.
+- Files appears in Highwire express (HWX)
 - HWX shows all POA articles for the day on one "batch"
 - <span style="color:red">HW creates a record in HWX</span>
 - <span style="color:red">HW creates nodes in Drupal</span>
@@ -114,9 +80,9 @@ system email and is sent to emails that are configured in `settings.ses_poa_reci
 - <span style="color:red">Content is added to the search index </span>
 - usually within 1/2 an hour the paper on the Drupal Site is in a published state
 
----
 
-# High level VOR workflow
+---
+# Existing VOR workflow
 - content processor sends a zip file to an S3 bucket and to a HW FTP endpoint
 - Files appears in Highwire express (HWX) with a go.xml file  [&#128279;]()
 - each file takes it's own batch through the system
@@ -243,6 +209,38 @@ Config for simpledb is done in settings.py
 
   `{{ ppp.simple-db-region }} = {{ ppp.region-value }}`
 
+
+----
+
+<a name="PackagePOA"></a>
+
+- cron_starter: cron_NewS3POA
+  - starter: starter_PackagePOA
+    - workflow: PackagePOA
+      - activity: PackagePOA (build new POA xml based on content from EJP, and place in a location for another workflow to pick up for delivery to HW)
+
+The PackagePOA workflow is quite intricate. Crucially it calls on a number
+of functions in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) for in order to complete the workflow.
+
+- looks for content in {{ ppp.poa-input-bucket-value }} (delivered by EJP)
+- A set of directories are created on the ec2 instance that is running the activity.
+- Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity
+- extract a DOI from the Zipfile
+- abort if no DOI can be generated
+- otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)
+- in the [copy_pdf_to_hw_staging_dir](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343) function we attempt to decapitate the PDF
+- The new processed files are placed in `self.elife_poa_lib.settings.STAGING_TO_HW_DIR`.
+- the processing of the zip file should also have decapitated the PDF from EJP, so we
+check whether that PDF has been decapitated. We look in `elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR` to see if that decapitated PDF is present.
+- a new manifest XML file is generated for Highwire
+- download a set of CSV files from EJP
+- create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the
+csv files downloaded from EJP (this will not cotain the body text of the XML file).
+- copy all of these files to an S3 Outbox
+- create an email of the format " email_type = "PackagePOA" and add this to a mail queue. (Mail templates are stored on s3). This is a
+system email and is sent to emails that are configured in `settings.ses_poa_recipient_email`.
+
+
 ----
 
 <a name="PublishPOA"></a>
@@ -345,36 +343,6 @@ the CDN. They have a significant amount of code duplication.
     - workflow: PublishFiguresPDF
       - activity: [UnzipArticleFiguresPDF](https://github.com/elifesciences/elife-bot/blob/exp/
       activity/activity_UnzipArticleFiguresPDF.py)
-
-----
-
-<a name="PackagePOA"></a>
-
-- cron_starter: cron_NewS3POA
-  - starter: starter_PackagePOA
-    - workflow: PackagePOA
-      - activity: PackagePOA (build new POA xml based on content from EJP, and place in a location for another workflow to pick up for delivery to HW)
-
-The PackagePOA workflow is quite intricate. Crucially it calls on a number
-of functions in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) for in order to complete the workflow.
-
-- looks for content in {{ ppp.poa-input-bucket-value }} (delivered by EJP)
-- A set of directories are created on the ec2 instance that is running the activity.
-- Zipfile gets downloaded to a temporary directory on the Ec2 instance running the activity
-- extract a DOI from the Zipfile
-- abort if no DOI can be generated
-- otherwise create a new directory for output to Highwire (https://github.com/elifesciences/elife-bot/blob/master/activity/activity_PackagePOA.py#L192)
-- in the [copy_pdf_to_hw_staging_dir](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/transform-ejp-zip-to-hw-zip.py#L343) function we attempt to decapitate the PDF
-- The new processed files are placed in `self.elife_poa_lib.settings.STAGING_TO_HW_DIR`.
-- the processing of the zip file should also have decapitated the PDF from EJP, so we
-check whether that PDF has been decapitated. We look in `elife_poa_lib.settings.STAGING_DECAPITATE_PDF_DIR` to see if that decapitated PDF is present.
-- a new manifest XML file is generated for Highwire
-- download a set of CSV files from EJP
-- create a new XML files for submission to HW that has the article XML in it, insofar as we can generate it from the
-csv files downloaded from EJP (this will not cotain the body text of the XML file).
-- copy all of these files to an S3 Outbox
-- create an email of the format " email_type = "PackagePOA" and add this to a mail queue. (Mail templates are stored on s3). This is a
-system email and is sent to emails that are configured in `settings.ses_poa_recipient_email`.
 
 ----
 
