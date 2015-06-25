@@ -25,7 +25,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 - every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket. They have been provided access to this via the [https://cloudgates.net]() service, and to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resullpy FTP credentials to the vendor.
 - when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the `elife-ejp-poa-delivery` S3 bucket
-- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be teh same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
+- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
 - this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [settings.poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
 - the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
@@ -153,6 +153,47 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 - content is placed in the appropriate locations for downstream article deposition to occur
 
 **TODO: evaluate whether we need to retain the existing publish to CDN workflows**
+
+----
+
+# Proposed new POA workflow - with EJP (to be discussed)
+
+- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket. They have been provided access to this via the [https://cloudgates.net]() service, and to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resullpy FTP credentials to the vendor.
+- when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the `elife-ejp-poa-delivery` S3 bucket
+- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
+- on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
+- this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [settings.poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
+- the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
+- this will create a folder in an outbox of the folloiwng format
+    - folder name YYYYMMDD
+    - folder contains, for each article to be published, a file of the following kind
+      - elife_poa_eNNNNN.xml
+      - elife_poa_eNNNNN_ds.zip
+      - decap_elife_poa_eNNNNN.pdf
+- this sends files to HW and to crossref and prepares files for downstream delivery.
+- Files appears in Highwire express (HWX)
+- HWX shows all POA articles for the day on one "batch"
+- <span style="color:red">HW creates a record in HWX</span>
+- <span style="color:red">HW creates nodes in Drupal</span>
+- <span style="color:red">supp files are loaded to the appropriate location for download</span>
+- the PAP batch shows all the POA papers in HWX
+- HWX has a link to the paper in Drupal where the content is in a "not published state"
+- production manually checks the PDF on HWX, usually to check against
+    - special characters
+    - that decapitation has happened on the PDF
+    - that the abstract appears OK
+    - some other checks (listed in the POA protocals document)
+- production push an "Approve" button
+- another page is displayed with another "Approve button"
+- a "Success Page" is displayed
+- <span style="color:red">Content is added to the search index </span>
+- usually within 1/2 an hour the paper on the Drupal Site is in a published state
+- it's not clear to me which of the "publish" activities operate on the contents that we have here.
+
+----
+
+# Proposed new POA workflow - with Tahi (to be discussed)
+
 
 
 ----
