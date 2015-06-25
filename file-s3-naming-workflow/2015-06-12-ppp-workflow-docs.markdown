@@ -123,23 +123,25 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 # Proposed new VOR workflow (all to be discussed)
 
-- content processor sends a zip file to an S3 bucket that follows our [new naming convention]().
-- location of this delivery s3 bucket is set by `ppp-delivery-bucket`
-- The arrival of a file triggers an SQS event which triggers a workflow
-- an activity in the workflow unpacks the zip file into an s3 bucket
-- an activity in the workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store)
-- an activity in the workflow hits an API (or infers this info from the content sent in - we need to decide what we do with the updated date, we need to decide what we do with conetent that is new that does not contain the updated date. ) to determine the current working version number
+- content processor sends a zip file to an S3 bucket that follows our [new file naming convention]().
+- location of this delivery s3 bucket is set by `ppp-delivery-bucket` in bot-settings.py for the bot project.
+- The arrival of a file triggers an SQS event which triggers a workflow. The sqs queue is set by `??` in `??`
+- an activity in the workflow unpacks the zip file into an s3 bucket. The S3 bucket for unpacking these files is given by the `??` setting in `??`.
+- the `??` activity in the `??` workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store). The connection to the processing event store is set by `??` in the `??` configureation file.
+- the `??` activity in the `??` workflow hits an API (or infers this info from the content sent in - we need to decide what we do with the updated date, we need to decide what we do with conetent that is new that does not contain the updated date. ) to determine the current working version number. The API endpoint is `??` and the example query that is hit is `??` and the example response is in `??`.
     - this api will determine what the previous published date was if we are looking
     at resupplying an article through this workflow.
 - on receipt of a usable version number for the file a series of activities are
  invoked
-    - zip content is placed into some working state or working directory (To be confiremed?)
-    - article XML is rewritten to point to the new updated figure and supp file versions
-    - images are renamed to match the new version number
-    - images are resized based on an input YAML file
-    - XML is parsed and generates the EIF JSON, which includes the version number, but indicates that the article needs to be in an unpublished state
-    - the indication of whether the state is published or unpublished has to be inferred from a configuration setting (so that we can chance to a publish immediatly workflow)
-    - need to determine whether we are repopulating already publiched content , in which case publihsing setting should be set to be published (could determine this from the includino of an updated date in the XML)
+    - the `??` activity places placed the current active file into a working location, that that location is set by the `??` variable in the `??` settings file.
+    - article XML is rewritten to point to the new updated figure and supp file versions. This re-rwiting is done by the `??` activity, and this activity gets passed the zip file that it needs to work on by the `??` setting in the `??` setting file.
+    - images are renamed to match the new version number in the `??` activity.
+    - images are resized based on an input YAML file. The pointer to the YAML file is set by the `??` variable in the `??` settings file. The activity that does the resizing is the `??` activity.
+    - XML is parsed and generates the EIF JSON, which includes the version number, but indicates that the article needs to be in an unpublished state. This is done by the `??` activity.
+    - the indication of whether the state is published or unpublished has to be inferred from a configuration setting (so that we can chance to a publish immediatly workflow). That configuration setting needs to be togglable by the productuion team, ideally in the web interface, so setting that toggle should be done by hitting an API call. The API call will have the
+    following form `??` which will hit the follwing endpoint `??`, and this data will be stored by a service located at `??`.
+    The setting for the location of this call will be set by the `??` variable in the `??` settings file.
+    - need to determine whether we are repopulating already published content, in which case publishing settings should be set to be published (could determine this from the inclusion of an updated date in the XML)
     - also need to check if the current file is on a "publishing black list" that indicates that the production team want to hold for preview
     - EIF is sent to Drupal
     - XML is placed in a location where the markup service can access it
@@ -572,3 +574,4 @@ and should be terminated.
 - deduplicate code that is used to send emails
 - remove starter dependcy on SDB
 - move hard coded config variable out of the code into a settings or YAML file
+- rename settings files so that they are more repository specific, e.g. renmae settings.py to bot-settings.py for the elife-bot project.
