@@ -121,13 +121,21 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ---
 
+
+# proposed new top level publishing worfkow
+
+---
+
 # Proposed new VOR workflow (all to be discussed)
 
 - content processor sends a zip file to an S3 bucket that follows our [new file naming convention]().
 - location of this delivery s3 bucket is set by `ppp-delivery-bucket` in bot-settings.py for the bot project.
-- The arrival of a file triggers an SQS event which triggers a workflow. The sqs queue is set by `??` in `??`
+- The arrival of a file triggers an SQS event triggers a notification
+- the notification is read by `queue_worker.py`
+- `queue_worker.py` runs `workflow_NewS3File`
+- `workflow_NewS3File` has an activity `process_new_s3file` which routes the file to the approrpate follow on workflow (it is currently hard coded to start a single workflow `workflow_ProcessXMLArticle`).  
 - an activity in the workflow unpacks the zip file into an s3 bucket. The S3 bucket for unpacking these files is given by the `??` setting in `??`.
-- the `??` activity in the `??` workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store). The connection to the processing event store is set by `??` in the `??` configureation file.
+- the `??` activity in the `??` workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store). The connection to the processing event store is a queue and the queue name is `??` which is set by `??` in the `??` configuration file.
 - the `??` activity in the `??` workflow hits an API (or infers this info from the content sent in - we need to decide what we do with the updated date, we need to decide what we do with conetent that is new that does not contain the updated date. ) to determine the current working version number. The API endpoint is `??` and the example query that is hit is `??` and the example response is in `??`.
     - this api will determine what the previous published date was if we are looking
     at resupplying an article through this workflow.
@@ -139,19 +147,21 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - images are resized based on an input YAML file. The pointer to the YAML file is set by the `??` variable in the `??` settings file. The activity that does the resizing is the `??` activity.
     - XML is parsed and generates the EIF JSON, which includes the version number, but indicates that the article needs to be in an unpublished state. This is done by the `??` activity.
     - the indication of whether the state is published or unpublished has to be inferred from a configuration setting (so that we can chance to a publish immediatly workflow). That configuration setting needs to be togglable by the productuion team, ideally in the web interface, so setting that toggle should be done by hitting an API call. The API call will have the
-    following form `??` which will hit the follwing endpoint `??`, and this data will be stored by a service located at `??`.
+    following form `??` which will hit the follwing endpoint `??`, and this data will be stored by a service located at `??`. (could we have this as a file naming pattern in the configureation, eg. if it has a version in the name then don't send it thoguht )
     The setting for the location of this call will be set by the `??` variable in the `??` settings file.
-    - need to determine whether we are repopulating already published content, in which case publishing settings should be set to be published (could determine this from the inclusion of an updated date in the XML)
-    - also need to check if the current file is on a "publishing black list" that indicates that the production team want to hold for preview
-    - EIF is sent to Drupal
+    - need to determine whether we are repopulating already published content, in which case publishing settings should be set to be published (could determine this from the inclusion of an updated date in the XML) - do we swith the system into a mode? If we are recreating and republishing half of the archive, certain checks are disabled, we could create a new workflow for that repopulating event.
+    - there is a discussion that putting some of this logic into a manifext file, rathern than storing this info in a manifext file, might be a lot easier. THIS IS WORTH THINKING ABOUT. This is where we would then indicae that what we are doing is a repopulation event.
+    - also need to check if the current file is on a "publishing black list" that indicates that the production team want to hold for preview (that could be in addition to the set of patterns on whehter a thing goes through).
+    - EIF is sent to Drupal by an activity `??`  `??`
     - XML is placed in a location where the markup service can access it
-    - the Drupal site hits the markup service and generates the full article page (to be confimed)
-    - a receipt JSON is generated by the Drupal site
-- the publishing team receive a link to enable them to preview the content
-- the publishing team approve content, and publish it
+    - all of the other assettss need to e placed on the CDN (after renaming)
+    - the Drupal site hits the markup service and generates the full article page (to be confimed) (HOW DO WE DO THIS?)
+    - a receipt JSON is generated by the Drupal site - need to define what service the drupal site hits, what it sends, and (John thinks taht this should be the same service that we poll to find out what the next available version number is.) - what ever recives that reciept could drop a property message into the queue - the monitoring site oculd use that property to show the publication team the property iof teh site.
+- the publishing team receive a link to enable them to preview the content.
+- the publishing team approve content, and publish it - we fell that a seperate endpoing in drupal would be clearer, for the event of publishing.
 - Drupal is instructed to update it's search index (we probably want to store the EIF so that the published state value can be modified, rather tha nre-rendering EIF form XML)
 - the Drupal layer confirms that a specific version has been published in an independent communicaiotn, sends a request back to the publication platform to say that it's been published, this is to support batch processing on the Drupal side  
-- content in the CDN is unmasked (to be confirmed)
+- content in the CDN is unmasked (to be confirmed) - we need to understand about the domain I'll think about that.
 - the data store that keeps track of version numbers is updated
 - the files in the working directory are archived with the appropriate version number
 - the publication date of that version is recorded in a data store
