@@ -119,14 +119,34 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 # Proposed new VOR workflow (all to be discussed)
 
-- content processor sends a zip file to an S3 bucket that follows our [new file naming convention]().
-- location of this delivery s3 bucket is set by `ppp-delivery-bucket` in bot-settings.py for the bot project.
-- The arrival of a file triggers an SQS event triggers a notification
-- the notification is read by `queue_worker.py`
-- `queue_worker.py` runs `workflow_NewS3File`
-- `workflow_NewS3File` has an activity `process_new_s3file` which routes the file to the approrpate follow on workflow (it is currently hard coded to start a single workflow `workflow_ProcessXMLArticle`).  
-- an activity in the workflow unpacks the zip file into an s3 bucket. The S3 bucket for unpacking these files is given by the `??` setting in `??`.
-- the `??` activity in the `??` workflow sends a signal to the Processing Event Store (and appropriate other activities in this workflow also send signals to this event store). The connection to the processing event store is a queue and the queue name is `??` which is set by `??` in the `??` configuration file.
+- content processor sends a zip file to an S3 bucket that follows our [new file naming convention](https://github.com/elifesciences/ppp-project/blob/master/file_naming_spec.md).
+- location of this delivery s3 bucket is set by the `publishing_intake_bucket` variable in bot-settings.py for the bot project.
+- The arrival of a file into this bucket triggers an SQS notification.
+- The SQS queue name is set by the `intake_monitor_queue` variable in settings.py.
+- The SQS queue is configured in AWS, and there is [an exampleSQS configuration profile](https://github.com/jrdigi/elife-bot/wiki/AWS-Requirements-for-prototype) on the wiki. It is here that the `intake_monitor_queue` is connected to the `publishing_intake_bucket`.
+- the notification queue is monitored by a new starter - `starter_PublicationRouter.py` (previously `queue_worker.py`).
+    - `starter_PublicationRouter.py` makes a decision on which publication route the incoming file will take, based on
+  attributes of the file. If the file is a VOR file, then `starter_PublicationRouter.py` will start the `workflow_PublishVOR`
+- `workflow_PublishVOR.py` (previously `workflow_NewS3File`) starts a series of activites that do the following  
+    - _the following activity names are arbitrary and open for discussion
+    -  `activity_unzipVOR.py` unpacks the intake zip file into a temporary working directory
+    - `activity_SetVersionNumber.py` checks the incoming zip package name.
+      - if the incoming zip package name contains a version number:
+        - `activity_SetVersionNumber.py` assumes that we are resupplying or repopulating an already published zip file and
+        uses the version number available in the zip file name.
+        - `activity_SetVersionNumber.py` determines the publication date from the article XML
+        - `activity_SetVersionNumber.py` determines the updated date from the file name of the supplied zip file
+        - if no updated date is provided in the inbound file name `activity_SetVersionNumber.py` sets the updated date to today
+      - if the incoming zip package name does not a version number
+        - `activity_SetVersionNumber.py` hits the API endpoint `/articles/{doi}/pub_info` which returns a response set out in
+        this [test gist](https://gist.github.com/IanMulvany/1874ac56d31c4fb02810). 
+    - `activity_ConvertXMLtoEIF.py` generates an EIF JSON out of the XML (previously  `workflow_ProcessXMLArticle`).
+    - `activity_ConvertXMLtoEIF.py` publishes a message to the SNS topic `eLifePublicationEventsSNSTopic`  
+    - `eLifePublicationEventsSNSTopic` triggers a message on the `PublicationEventsLoggingQueue` which logs it's activity
+    - `eLifePublicationEventsSNSTopic` triggers a message on the `PublicationEventsLoggingQueue` which logs it's activity
+
+    - the `Monitor Event Store` is polling on the SQS queue ``
+
 - the `??` activity in the `??` workflow hits an API (or infers this info from the content sent in - we need to decide what we do with the updated date, we need to decide what we do with conetent that is new that does not contain the updated date. ) to determine the current working version number. The API endpoint is `??` and the example query that is hit is `??` and the example response is in `??`.
     - this api will determine what the previous published date was if we are looking
     at resupplying an article through this workflow.
@@ -137,21 +157,21 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - images are renamed to match the new version number in the `??` activity.
     - images are resized based on an input YAML file. The pointer to the YAML file is set by the `??` variable in the `??` settings file. The activity that does the resizing is the `??` activity.
     - XML is parsed and generates the EIF JSON, which includes the version number, but indicates that the article needs to be in an unpublished state. This is done by the `??` activity.
-    - the indication of whether the state is published or unpublished has to be inferred from a configuration setting (so that we can chance to a publish immediatly workflow). That configuration setting needs to be togglable by the productuion team, ideally in the web interface, so setting that toggle should be done by hitting an API call. The API call will have the
-    following form `??` which will hit the follwing endpoint `??`, and this data will be stored by a service located at `??`. (could we have this as a file naming pattern in the configureation, eg. if it has a version in the name then don't send it thoguht )
+    - the indication of whether the state is published or unpublished has to be inferred from a configuration setting (so that we can chance to a publish immediately workflow). That configuration setting needs to be togglable by the productuion team, ideally in the web interface, so setting that toggle should be done by hitting an API call. The API call will have the
+    following form `??` which will hit the follwing endpoint `??`, and this data will be stored by a service located at `??`. (could we have this as a file naming pattern in the configuration, eg. if it has a version in the name then don't send it thoguht )
     The setting for the location of this call will be set by the `??` variable in the `??` settings file.
     - need to determine whether we are repopulating already published content, in which case publishing settings should be set to be published (could determine this from the inclusion of an updated date in the XML) - do we swith the system into a mode? If we are recreating and republishing half of the archive, certain checks are disabled, we could create a new workflow for that repopulating event.
-    - there is a discussion that putting some of this logic into a manifext file, rathern than storing this info in a manifext file, might be a lot easier. THIS IS WORTH THINKING ABOUT. This is where we would then indicae that what we are doing is a repopulation event.
-    - also need to check if the current file is on a "publishing black list" that indicates that the production team want to hold for preview (that could be in addition to the set of patterns on whehter a thing goes through).
+    - there is a discussion that putting some of this logic into a manifext file, rathern than storing this info in a manifext file, might be a lot easier. THIS IS WORTH THINKING ABOUT. This is where we would then indicate that what we are doing is a repopulation event.
+    - also need to check if the current file is on a "publishing black list" that indicates that the production team want to hold for preview (that could be in addition to the set of patterns on whether a thing goes through).
     - EIF is sent to Drupal by an activity `??`  `??`
     - XML is placed in a location where the markup service can access it
-    - all of the other assettss need to e placed on the CDN (after renaming)
+    - all of the other assets need to e placed on the CDN (after renaming)
     - the Drupal site hits the markup service and generates the full article page (to be confimed) (HOW DO WE DO THIS?)
-    - a receipt JSON is generated by the Drupal site - need to define what service the drupal site hits, what it sends, and (John thinks taht this should be the same service that we poll to find out what the next available version number is.) - what ever recives that reciept could drop a property message into the queue - the monitoring site oculd use that property to show the publication team the property iof the site.
+    - a receipt JSON is generated by the Drupal site - need to define what service the drupal site hits, what it sends, and (John thinks taht this should be the same service that we poll to find out what the next available version number is.) - what ever recives that receipt could drop a property message into the queue - the monitoring site oculd use that property to show the publication team the property iof the site.
 - the publishing team receive a link to enable them to preview the content.
 - the publishing team approve content, and publish it - we fell that a seperate endpoing in drupal would be clearer, for the event of publishing.
 - Drupal is instructed to update it's search index (we probably want to store the EIF so that the published state value can be modified, rather tha nre-rendering EIF form XML)
-- the Drupal layer confirms that a specific version has been published in an independent communicaiotn, sends a request back to the publication platform to say that it's been published, this is to support batch processing on the Drupal side  
+- the Drupal layer confirms that a specific version has been published in an independent communication, sends a request back to the publication platform to say that it's been published, this is to support batch processing on the Drupal side  
 - content in the CDN is unmasked (to be confirmed) - we need to understand about the domain I'll think about that.
 - the data store that keeps track of version numbers is updated
 - the files in the working directory are archived with the appropriate version number
