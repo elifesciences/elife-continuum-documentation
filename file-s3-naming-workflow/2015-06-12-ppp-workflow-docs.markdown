@@ -288,15 +288,17 @@ We may decide to integrate with the [elife api](https://github.com/elifesciences
 
 As a result of bringing in the [elife-poa-xml-generation repo](https://github.com/elifesciences/elife-poa-xml-generation) repo there are a number of locations where bot settings can be found. Settings can be used to configure ftp credentials, the names of s3 buckets, times for cron jobs, and a number of other configurables. A summary of these are:
 
-- elife-bot settings
-  the most natural home for settings for the project, for the master branch this is configured via salt.
+- [elife-bot settings](https://github.com/elifesciences/elife-bot/blob/exp/settings-example.py)
+  the most natural home for settings for the project, for the master branch this is configured via [salt](https://github.com/elifesciences/elife-builder/tree/master/salt/salt/elife-bot/config).
+    - [salt versio of the bot settings file](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py)
+    - [salt version of the cron file that runs cron.py](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/home-deployuser-elife-bot.cron)
 - cronfile for the bot
   this starts the main python processes that are responsible for interacting with amazon SWF. For the master branch this is set via salt
-- cron.py & cron starters
+- [cron.py](https://github.com/elifesciences/elife-bot/blob/exp/cron.py) & cron starters
   some specific workflows are tied to starting at specific times of the hour, and those times and workflows are laid out in cron.py and in the
   associated starter files.
 - elife-poa-xml-generation
-  some functions are called from the elif -poa-xml-generation repo, and that repo contains it's own settings file. For example
+  some functions are called from the elif -poa-xml-generation repo, and that repo contains it's own [settings file](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py). For example
   ftp credentials for pubmed are set here, rather than in the main bot settings file.
 - inline
   some functions have settings hardwired in them, I've attempted to call out where that happens in the documentation that follows.
