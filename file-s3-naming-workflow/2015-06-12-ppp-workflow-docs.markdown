@@ -6,15 +6,6 @@ categories: ppp docs workflow
 ---
 
 
-
-----
-
-# TODO list for this document
-
-- highlight the parts of the workflow that we need to create activities for to replace HW (70%)
-- write up a proposed doc showing what our new workflows might look like  (60%)
-- complete tl;dr overview of the doc (10%)
-
 ----
 
 This documentation aims to refer to the [exp branch](https://github.com/elifesciences/elife-bot/tree/exp) of the eLife-bot code.
@@ -122,7 +113,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 ---
 
 
-# proposed new top level publishing worfkow
+# proposed new top level publishing worflkow
 
 ---
 
