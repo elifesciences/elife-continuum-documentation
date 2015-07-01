@@ -14,48 +14,48 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 # Existing POA workflow
 
-- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket. They have been provided access to this via the [https://cloudgates.net]() service, and to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resullpy FTP credentials to the vendor.
+- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket. They have been provided access to this via the [https://cloudgates.net]() service, and to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resupply FTP credentials to the vendor
 - when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the `elife-ejp-poa-delivery` S3 bucket
 - `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
 - this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [settings.poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
-- the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
-- this will create a folder in an outbox of the folloiwng format
+- the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`
+- this will create a folder in an outbox of the following format
     - folder name YYYYMMDD
     - folder contains, for each article to be published, a file of the following kind
       - elife_poa_eNNNNN.xml
       - elife_poa_eNNNNN_ds.zip
       - decap_elife_poa_eNNNNN.pdf
-- this sends files to HW and to crossref and prepares files for downstream delivery.
-- Files appears in Highwire express (HWX)
-- HWX shows all POA articles for the day on one "batch"
+- this sends files to HW and to Crossref and prepares files for downstream delivery
+- files appears in Highwire Express (HWX)
+- HWX shows all POA articles for the day on one 'batch'
 - <span style="color:red">HW creates a record in HWX</span>
 - <span style="color:red">HW creates nodes in Drupal</span>
 - <span style="color:red">supp files are loaded to the appropriate location for download</span>
 - the PAP batch shows all the POA papers in HWX
-- HWX has a link to the paper in Drupal where the content is in a "not published state"
+- HWX has a link to the paper in Drupal where the content is in a 'not published state'
 - production manually checks the PDF on HWX, usually to check against
     - special characters
     - that decapitation has happened on the PDF
     - that the abstract appears OK
     - some other checks (listed in the POA protocals document)
-- production push an "Approve" button
-- another page is displayed with another "Approve button"
-- a "Success Page" is displayed
+- production push an 'Approve' button
+- another page is displayed with another 'Approve button'
+- a 'Success page' is displayed
 - <span style="color:red">Content is added to the search index </span>
-- usually within 1/2 an hour the paper on the Drupal Site is in a published state
+- usually within 1/2 an hour the paper on the Drupal site is in a published state
 - it's not clear to me which of the "publish" activities operate on the contents that we have here.
 
 ---
 
 # Existing VOR workflow
 
-- content processor sends a zip file to an S3 bucket and to a HW FTP endpoint, I _think_ these go into the s3 bucket `elife-articles-hw`.
-- content processor sends Crossref an XML file to update the crossref record
-- These files appear in a directory named as NNNNN - where this is the `f-id`. There is one folder for every article. The folder contains files of the format
+- content processor sends a zip file to an S3 bucket (`elife-articles-hw`) and to a HW FTP endpoint
+- these files appear in a directory named as NNNNN - where this is the `f-id`. There is one folder for every article. The folder contains files of the format
   - elife_YYYY_NNNNN.img.zip
   - elife_YYYY_NNNNN.pdf.zip
   - elife_YYYY_NNNNN.xml.zip
+  - elife_YYYY_NNNNN.inline-media.zip
 - Files appears in Highwire express (HWX)
 - each file takes it's own batch through the system
 - <span style="color:red">HW creates a record in HWX</span>
@@ -99,13 +99,23 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ----
 
-# Existing Deposition workflows
+# Existing deposition workflows
 
 - Pub router deposits once per day 23:45 UTC
 - Cengage deposits once per day 22:45 UTC
 - pubmed depostits happen every hour
 - pubmed deposits inlude some code to determine version number of the article and to
 [set the published date appropriatly](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197).
+
+- content processor sends Crossref an XML file to update the Crossref record and deliver to a S3 bucket (`elife-tnq-crossref-delivery`). There is one XML file per article, using the folowing naming convention: 2050-084X_2014_elifeXXXXX
+- content processor sends PubMedCentral (PMC)the following: 
+	- elife_YYYY_NNNNN.img.zip
+	- elife_YYYY_NNNNN.pdf.zip
+  	- elife_YYYY_NNNNN.xml.zip
+	- elife_YYYY_NNNNN.suppl.zip 
+	- elife_YYYY_NNNNN.video.zip 
+- content processor delivers the PMC package to an S3 bucket (`elife-articles`), complete with an additional zip folder (elife_YYYY_NNNNN.jpg.zip), which contains the jpeg images used by Lens.
+
 
 **TODO: determine where we have code that pings the Drupal site for publication dates**
 
