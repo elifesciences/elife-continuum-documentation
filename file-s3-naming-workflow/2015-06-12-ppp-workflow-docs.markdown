@@ -29,6 +29,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
       - elife_poa_eNNNNN.xml
       - elife_poa_eNNNNN_ds.zip
       - decap_elife_poa_eNNNNN.pdf
+- A workflow renames decap_elife_poa_eNNNNN.pdf to elife_poa_eNNNNN.pdf before delivery to HW
 - this sends files to HW and to Crossref and prepares files for downstream delivery
 - files appears in Highwire Express (HWX)
 - HWX shows all POA articles for the day on one 'batch'
