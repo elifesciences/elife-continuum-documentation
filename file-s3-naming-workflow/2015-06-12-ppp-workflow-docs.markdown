@@ -12,10 +12,13 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ----
 
-# Existing POA workflow
+# Existing PoA workflow
 
-- every hour EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket. They have been provided access to this via the [https://cloudgates.net]() service, and to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resupply FTP credentials to the vendor
-- when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the `elife-ejp-poa-delivery` S3 bucket
+- EJP delivers CSV files to the `elife-ejp-ftp` S3 bucket every two hours at 10 minutes past the hour (7.10am, 9.10am, 11.10am etc). The content of the CSV metadata is defined by SQL queries of the database built by eLife staff. EJP have been provided access to the S3 bucket via the [https://cloudgates.net]() service - to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resupply FTP credentials to the vendor.
+- When an article has been accepted for publication on EJP, the production team hit a button on EJP that will cause EJP to FTP a zip file to the `elife-ejp-poa-delivery` S3 bucket. This is not immediate <span style="color:red">(MH to check when exports occur)</span>. The zip file contains:
+	- XML manifest
+	- Author PDF of Word file (complete with EJP cover sheet - which required 'decapitation')
+	- All associated files for publication (figures, suppl files, videos, etc)
 - `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
 - this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [settings.poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
