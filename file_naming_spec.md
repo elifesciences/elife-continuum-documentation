@@ -14,7 +14,7 @@ This pattern covers both inbound zip files and the contents of those zip files. 
 Inbound zip files will be of the form
 
 >
-	`elife-<f-id>-<status>(-<revision><r-id>)(-v<version>).zip`
+	`elife-<f-id>-<status>(-r<revision>)(-v<version>).zip`
 
 After processing revision numbers will be dropped and zip files will be of the form 
 
