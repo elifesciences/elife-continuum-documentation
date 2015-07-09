@@ -160,12 +160,12 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - `activity_ConvertImages.py` does the image conversion based on a config YAML that is set by `image_resize_yaml`
     - `activity_ConvertImages.py` does the image conversion process on the newly renamed images
     - `activity_ConvertImages.py` publishes a logging message to the SNS topic `eLifePublicationEventsSNSTopic`
-    - `activity_ConvertXMLtoEIF.py` determines whether the default publication setting for the given aritlce should be
+    - `activity_ConvertJATStoEIF.py` determines whether the default publication setting for the given aritlce should be
     "published" or "unpublished" by checking the zip file name against a pattern set in the `publication_setting_yaml`
       - `publication_setting_yaml` sets patterns for publication or for hold states.
         - see an [example `publication_setting_yaml`](http:gist.com).
-    - `activity_ConvertXMLtoEIF.py` generates an EIF JSON out of the XML (previously  `activity_ConvertJATS`).
-    - `activity_ConvertXMLtoEIF.py` publishes a logging message to the SNS topic `eLifePublicationEventsSNSTopic`  
+    - `activity_ConvertJATStoEIF.py` generates an EIF JSON out of the XML (previously  `activity_ConvertJATS`).
+    - `activity_ConvertJATStoEIF.py` publishes a logging message to the SNS topic `eLifePublicationEventsSNSTopic`  
     - `activity_DisburseAssets.py` prepares the CDN with the approporiate artefacts and places the article XML
     in a location that can be accessed by the Markup service.
     - `activity_PostEIFtoDrupal.py` hits the `\MAKE_A_NEW_ARTICLE` with the EIF JSON with a **POST** request.
