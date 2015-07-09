@@ -118,11 +118,12 @@ code id.
 For example, an article with a top level source code, two main figures, where one figure has source code, and one figure has one figure supplement with source code:
 
 - elife-00012-fig1.tiff
-- elife-00012-fig1-code1.csv
+- elife-00012-fig1-code1.py
+- elife-00012-fig1-code2.zip
 - elife-00012-fig2.tiff
 - elife-00012-fig2-figsupp1.tiff
-- elife-00012-fig2-figsupp1-code1.csv
-- elife-00012-code1.csv
+- elife-00012-fig2-figsupp1-code1.zip 
+- elife-00012-code1.r 
 
 ##### v`<version>`
 
