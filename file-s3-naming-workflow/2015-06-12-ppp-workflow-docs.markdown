@@ -108,12 +108,12 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 - Pub router deposits once per day 23:45 UTC
 - Cengage deposits once per day 22:45 UTC
-- pubmed depostits happen every hour
+- pubmed deposits happen every hour
 - pubmed deposits inlude some code to determine version number of the article and to
 [set the published date appropriatly](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197).
 
-- content processor sends Crossref an XML file to update the Crossref record and deliver to a S3 bucket (`elife-tnq-crossref-delivery`). There is one XML file per article, using the folowing naming convention: 2050-084X_2014_elifeXXXXX
-- content processor sends PubMedCentral (PMC)the following:
+- content processor sends CrossRef an XML file to update the CrossRef record and deliver to a S3 bucket (`elife-tnq-crossref-delivery`). There is one XML file per article, using the folowing naming convention: 2050-084X_2014_elifeXXXXX
+- content processor sends PubMedCentral (PMC) the following:
 	- elife_YYYY_NNNNN.img.zip
 	- elife_YYYY_NNNNN.pdf.zip
   	- elife_YYYY_NNNNN.xml.zip
