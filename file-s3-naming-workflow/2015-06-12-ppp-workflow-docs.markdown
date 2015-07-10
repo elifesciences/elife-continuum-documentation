@@ -14,8 +14,8 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 # Existing PoA workflow
 
-- EJP delivers CSV files to the `elife-ejp-ftp` S3 bucket every two hours at 10 minutes past the hour (7.10am, 9.10am, 11.10am etc). The content of the CSV metadata is defined by SQL queries of the database built by eLife staff. EJP have been provided access to the S3 bucket via the [https://cloudgates.net]() service - to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resupply FTP credentials to the vendor.
-- When an article has been accepted for publication on EJP, the production team hit a button on EJP that will cause EJP to FTP a zip file to the `elife-ejp-poa-delivery` S3 bucket. This is not immediate <span style="color:red">(MH to check when exports occur)</span>. The zip file contains:
+- EJP delivers CSV files to the `elife-ejp-ftp` S3 bucket hourly at 10 minutes past the hour. The content of the CSV metadata is defined by SQL queries (defined by eLife staff) of the EJP database. EJP have been provided access to the S3 bucket via the [https://cloudgates.net]() service - to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resupply FTP credentials to the vendor.
+- When an article has been accepted for publication on EJP, the production team 'click a button' on EJP that will trigger EJP to FTP a zip file to the `elife-ejp-poa-delivery` S3 bucket. Exports for eLife are scheduled to run hourly at 9 min past the hout between 6 AM and 7 PM Eastern (11 AM - 12 AM BST). The script begins to run at 9 minutes past the hour; any manuscripts that are triggered to be transferred before then will be picked up and sent. The zip file contains:
 	- XML manifest
 	- Author PDF of Word file (complete with EJP cover sheet - which required 'decapitation')
 	- All associated files for publication (figures, suppl files, videos, etc)
