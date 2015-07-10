@@ -90,7 +90,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 - if the system works correctly then in about 20 minutes
 - <span style="color:red">Content is added to the search index </span>
 - <span style="color:red">HW starts to collect PDF download and pageview metrics </span>
-- <span style="color:red">RSS feed is updated </span>
+- <span style="color:red">RSS feed is updated twice a day, scheduled to run at 8 am and 8pm PDT</span>
 - if it goes "red" all bets are off
 - elife-bot via a setting in the db.provier script, is monitoring for [new files of  spcific types ](https://github.com/elifesciences/elife-bot/blob/master/provider/simpleDB.py#L236) ("xml", "pdf", "img", "suppl", "video", "svg", "jpg", "figures").
 - the bucket that is polled is [defined in settings.py](https://github.com/elifesciences/elife-bot/blob/exp/settings-example.py#L20).
