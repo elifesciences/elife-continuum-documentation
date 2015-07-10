@@ -38,11 +38,12 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 - <span style="color:red">supp files are loaded to the appropriate location for download</span>
 - the PAP batch shows all the POA papers in HWX
 - HWX has a link to the paper in Drupal where the content is in a 'not published state'
-- production manually checks the PDF on HWX, usually to check against
-    - special characters
-    - that decapitation has happened on the PDF
-    - that the abstract appears OK
-    - some other checks (listed in the POA protocals document)
+- production manually checks the PDF and HTML display on HWX:
+    - download and check the merged PDF - common errors include missing or incorrectly sized figures, visible track changes/inconsistent formatting, decapitation errors/missing Highwire cover page
+    - title/abstract - conservation of special characters, italics, superscript etc and that full abstract is displayed
+	- rollover boxes - addresses, competing interests are displaying correctly
+	- figures and data tab - download the data supplement zip folder and check all files present
+	- author info tab - competing interests, license statement and ethics statement are display
 - production push an 'Approve' button
 - another page is displayed with another 'Approve button'
 - a 'Success page' is displayed
