@@ -147,6 +147,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     -  `activity_unzipVOR.py` unpacks the intake zip file into a temporary working directory (perhaps this needs to happen later?)
     - `activity_SetVersionNumber.py` checks the incoming zip package name.
       - if the incoming zip package name contains a version number:
+      <span style="color:red">Thought we'd decided that the production vendor would put a r number on the ziped file, but not add v numbers, so it is totally up to the eLife system to define the v, blind. See #25</span>
         - `activity_SetVersionNumber.py` assumes that we are resupplying or repopulating an already published zip file and
         uses the version number available in the zip file name.
         - `activity_SetVersionNumber.py` determines the publication date from the article XML
