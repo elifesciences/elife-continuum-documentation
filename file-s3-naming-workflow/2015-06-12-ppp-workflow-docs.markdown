@@ -19,7 +19,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 	- XML manifest
 	- Author PDF of Word file (complete with EJP cover sheet - which required 'decapitation')
 	- All associated files for publication (figures, suppl files, videos, etc)
-- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
+- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code) <span style="color:red">Graham to confirm timings, see #24</span>
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
 - this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
 - the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`
