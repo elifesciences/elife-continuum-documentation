@@ -64,7 +64,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 - Files appears in Highwire express (HWX)
 - each file takes it's own batch through the system
 - <span style="color:red">HW creates a record in HWX</span>
-- if production can get to HWX then they see the following stages (information can been seen at each of these stages)
+- In HWX production can see the following stages (information can been seen at each of these stages)
     - pre-intake
     - intake
     - processing
