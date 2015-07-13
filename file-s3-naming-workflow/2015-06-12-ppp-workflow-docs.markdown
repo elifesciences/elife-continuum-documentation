@@ -19,8 +19,8 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 	- XML manifest
 	- Author PDF of Word file (complete with EJP cover sheet - which required 'decapitation')
 	- All associated files for publication (figures, suppl files, videos, etc)
-- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code) <span style="color:red">Graham to confirm timings, see #24</span>
-- on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
+- `cron.py` checks at 11.30am for new content in a bucket defined by the setting `poa_bucket` which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)
+- at 11.30am, on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started
 - this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the [elife-poa-xml-generation](https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py) code. It then sends the output to an s3 bucket [that is defined](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276) by the [poa_packaging_bucket](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60) which is set to `elife-poa-packaging`
 - the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`
 - this will create a folder in an outbox of the following format
@@ -30,7 +30,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
       - elife_poa_eNNNNN_ds.zip
       - decap_elife_poa_eNNNNN.pdf
 - A workflow renames decap_elife_poa_eNNNNN.pdf to elife_poa_eNNNNN.pdf before delivery to HW
-- this sends files to HW and to Crossref and prepares files for downstream delivery
+- at 12.30 pm files are sent to HW and to Crossref and prepares files for downstream delivery
 - files appears in Highwire Express (HWX)
 - HWX shows all POA articles for the day on one 'batch'
 - <span style="color:red">HW creates a record in HWX</span>
