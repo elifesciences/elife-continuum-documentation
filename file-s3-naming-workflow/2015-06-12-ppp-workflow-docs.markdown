@@ -202,7 +202,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 - EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket.
 - on acceptance for an article production export files to the `elife-ejp-poa-delivery` S3 bucket
-- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket`
+- `cron.py` checks at 11.30am for new content in a bucket defined by the setting `poa_bucket`
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started and run as in the existing POA workflow
 - the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
 - the [PublishPOA](#PublishPOA) will be modified to remove the activity that delivers to HW
