@@ -162,7 +162,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - `activity_ConvertImages.py` does the image conversion based on a config YAML that is set by `image_resize_yaml`
     - `activity_ConvertImages.py` does the image conversion process on the newly renamed images
     - `activity_ConvertImages.py` publishes a logging message to the SNS topic `eLifePublicationEventsSNSTopic`
-    - `activity_ConvertJATStoEIF.py` determines whether the default publication setting for the given aritlce should be
+    - `activity_ConvertJATStoEIF.py` determines whether the default publication setting for the given article should be
     "published" or "unpublished" by checking the zip file name against a pattern set in the `publication_setting_yaml`
       - `publication_setting_yaml` sets patterns for publication or for hold states.
         - see an [example `publication_setting_yaml`](http:gist.com).
