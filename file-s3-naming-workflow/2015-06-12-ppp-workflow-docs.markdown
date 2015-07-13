@@ -129,7 +129,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ---
 
-# Proposed new VOR workflow (all to be discussed)
+# Proposed new VoR workflow (all to be discussed)
 
 - content processor sends a zip file to an S3 bucket that follows our [new file naming convention](https://github.com/elifesciences/ppp-project/blob/master/file_naming_spec.md).
 - location of this delivery s3 bucket is set by the `publishing_intake_bucket` variable in bot-settings.py for the bot project.
@@ -171,6 +171,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - `activity_DisburseAssets.py` prepares the CDN with the approporiate artefacts and places the article XML
     in a location that can be accessed by the Markup service.
     - `activity_PostEIFtoDrupal.py` hits the `\MAKE_A_NEW_ARTICLE` with the EIF JSON with a **POST** request.
+    <span style="color:red">Need to add in message to Glencoe with updated XML file name. See #27</span>
       - The Drupal site hits generates it's approproiate nodes
       - The Drupal site hits the markup service to obtain the HTML for the aritcle (or later?)
     - The Drupal site sends a receipt notification the an api endpoint `/pubstate/{doi}/update` with a **POST** message
