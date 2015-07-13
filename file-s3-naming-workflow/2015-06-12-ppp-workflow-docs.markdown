@@ -125,7 +125,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 ---
 
 
-# proposed new top level publishing worflkow
+# proposed new top level publishing workflow
 
 ---
 
