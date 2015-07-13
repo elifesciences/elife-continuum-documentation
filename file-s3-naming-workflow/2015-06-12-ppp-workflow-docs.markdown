@@ -79,11 +79,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
   - <span style="color:red">Some magic related article fun happens</span>
 - when the workflow gets to assembly assembly will turn orange and production can make a decision
 - at assembly there is a QA report that links to the Drupal site
-- production checks everything in the article on the Drupal site
-  - videos
-  - images
-  - tables
-  - decision letters
+- production checks everything in the article on the Drupal site to ensure translation of XML to HTML and display is correct
 - production push an "Approve" button
 - another page is displayed with another "Approve button"
 - HWX shows that state is changing in the production process
