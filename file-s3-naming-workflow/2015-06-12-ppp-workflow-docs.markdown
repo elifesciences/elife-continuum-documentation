@@ -53,7 +53,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ---
 
-# Existing VOR workflow
+# Existing VoR workflow
 
 - content processor sends a zip file to an S3 bucket (`elife-articles-hw`) and to a HW FTP endpoint
 - these files appear in a directory named as NNNNN - where this is the `f-id`. There is one folder for every article. The folder contains files of the format
