@@ -30,6 +30,11 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
       - elife_poa_eNNNNN_ds.zip
       - decap_elife_poa_eNNNNN.pdf
 - A workflow renames decap_elife_poa_eNNNNN.pdf to elife_poa_eNNNNN.pdf before delivery to HW
+- a workflow renames the individual asset files using the following naming convention:
+	- elife_poa_eNNNNN_Figure_1_figure_supplement_1
+	- elife_poa_eNNNNN_Video_1
+	- etc
+- a workflow zips all the renamed assets into a zip file named: elifeNNNNN_Supplemental_files- - this zip file is zipped up into elife_poa_eNNNNN_ds.zip, which is delivered to HWX
 - at 12.30 pm files are sent to HW and to Crossref and prepares files for downstream delivery
 - files appears in Highwire Express (HWX)
 - HWX shows all POA articles for the day on one 'batch'
