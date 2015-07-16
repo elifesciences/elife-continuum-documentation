@@ -100,11 +100,11 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ----
 
-# Existing deposition workflows
+# Deposition workflows
 
 - Pub router deposits once per day 23:45 UTC
 - Cengage deposits once per day 22:45 UTC
-- <span style="color:red">CAS delivery to be added</span>
+- CAS delivery will be added
 - pubmed deposits happen every hour
 - pubmed deposits inlude some code to determine version number of the article and to
 [set the published date appropriatly](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197).
