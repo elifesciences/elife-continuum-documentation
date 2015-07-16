@@ -30,6 +30,11 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
       - elife_poa_eNNNNN_ds.zip
       - decap_elife_poa_eNNNNN.pdf
 - A workflow renames decap_elife_poa_eNNNNN.pdf to elife_poa_eNNNNN.pdf before delivery to HW
+- a workflow renames the individual asset files using the following naming convention:
+	- elife_poa_eNNNNN_Figure_1_figure_supplement_1
+	- elife_poa_eNNNNN_Video_1
+	- etc
+- a workflow zips all the renamed assets into a zip file named: elifeNNNNN_Supplemental_files- - this zip file is zipped up into elife_poa_eNNNNN_ds.zip, which is delivered to HWX
 - at 12.30 pm files are sent to HW and to Crossref and prepares files for downstream delivery
 - files appears in Highwire Express (HWX)
 - HWX shows all POA articles for the day on one 'batch'
@@ -125,11 +130,11 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 ---
 
 
-# proposed new top level publishing worflkow
+# proposed new top level publishing workflow
 
 ---
 
-# Proposed new VOR workflow (all to be discussed)
+# Proposed new VoR workflow (all to be discussed)
 
 - content processor sends a zip file to an S3 bucket that follows our [new file naming convention](https://github.com/elifesciences/ppp-project/blob/master/file_naming_spec.md).
 - location of this delivery s3 bucket is set by the `publishing_intake_bucket` variable in bot-settings.py for the bot project.
@@ -161,7 +166,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - `activity_ConvertImages.py` does the image conversion based on a config YAML that is set by `image_resize_yaml`
     - `activity_ConvertImages.py` does the image conversion process on the newly renamed images
     - `activity_ConvertImages.py` publishes a logging message to the SNS topic `eLifePublicationEventsSNSTopic`
-    - `activity_ConvertJATStoEIF.py` determines whether the default publication setting for the given aritlce should be
+    - `activity_ConvertJATStoEIF.py` determines whether the default publication setting for the given article should be
     "published" or "unpublished" by checking the zip file name against a pattern set in the `publication_setting_yaml`
       - `publication_setting_yaml` sets patterns for publication or for hold states.
         - see an [example `publication_setting_yaml`](http:gist.com).
@@ -170,6 +175,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
     - `activity_DisburseAssets.py` prepares the CDN with the approporiate artefacts and places the article XML
     in a location that can be accessed by the Markup service.
     - `activity_PostEIFtoDrupal.py` hits the `\MAKE_A_NEW_ARTICLE` with the EIF JSON with a **POST** request.
+    <span style="color:red">Need to add in message to Glencoe with updated XML file name. See #27</span>
       - The Drupal site hits generates it's approproiate nodes
       - The Drupal site hits the markup service to obtain the HTML for the aritcle (or later?)
     - The Drupal site sends a receipt notification the an api endpoint `/pubstate/{doi}/update` with a **POST** message
@@ -200,7 +206,7 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 - EJP sends csv files with metadata to the `elife-ejp-ftp` S3 bucket.
 - on acceptance for an article production export files to the `elife-ejp-poa-delivery` S3 bucket
-- `cron.py` checks at 11am for new content in a bucket defined by the setting `poa_bucket`
+- `cron.py` checks at 11.30am for new content in a bucket defined by the setting `poa_bucket`
 - on discovering a new file in that bucket (via the S3Monitor activity) the [PackagePOA](#PackagePOA) activity is started and run as in the existing POA workflow
 - the [PublishPOA](#PublishPOA) is invoked if a new file is found in `elife-poa-packaging`.
 - the [PublishPOA](#PublishPOA) will be modified to remove the activity that delivers to HW
