@@ -40,7 +40,7 @@ body{-webkit-font-smoothing:antialiased;font-family:"Helvetica Neue",Helvetica,A
 </style>
 
 </head>
-<body class="normal firstload">
+<body class="normal">
   <div id="wrapper">
       <hr />
 
@@ -48,16 +48,22 @@ body{-webkit-font-smoothing:antialiased;font-family:"Helvetica Neue",Helvetica,A
 
 <hr />
 
-<h1 id="existingpoaworkflow">Existing POA workflow</h1>
+<h1 id="existingpoaworkflow">Existing PoA workflow</h1>
 
 <ul>
-<li>every hour EJP sends csv files with metadata to the <code>elife-ejp-ftp</code> S3 bucket. They have been provided access to this via the <a href="">https://cloudgates.net</a> service, and to change the location of this we need to <a href="https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service">modify the cloudgates settings</a> and resullpy FTP credentials to the vendor.</li>
-<li>when an article has been accepted for publication in EJP the production team hit a button in EJP that will cause EJP to FTP a file to the <code>elife-ejp-poa-delivery</code> S3 bucket</li>
-<li><code>cron.py</code> checks at 11am for new content in a bucket defined by the setting <code>poa_bucket</code> which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)</li>
-<li>on discovering a new file in that bucket (via the S3Monitor activity) the <a href="#PackagePOA">PackagePOA</a> activity is started</li>
-<li>this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the <a href="https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py">elife-poa-xml-generation</a> code. It then sends the output to an s3 bucket <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276">that is defined</a> by the <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60">settings.poa_packaging_bucket</a> which is set to <code>elife-poa-packaging</code></li>
-<li>the <a href="#PublishPOA">PublishPOA</a> is invoked if a new file is found in <code>elife-poa-packaging</code>.</li>
-<li>this will create a folder in an outbox of the folloiwng format
+<li>EJP delivers CSV files to the <code>elife-ejp-ftp</code> S3 bucket hourly at 10 minutes past the hour. The content of the CSV metadata is defined by SQL queries (defined by eLife staff) of the EJP database. EJP have been provided access to the S3 bucket via the <a href="">https://cloudgates.net</a> service - to change the location of this we need to <a href="https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service">modify the cloudgates settings</a> and resupply FTP credentials to the vendor.</li>
+<li>When an article has been accepted for publication the production team &#8216;click a button&#8217; on EJP that will trigger EJP to FTP a zip file to the <code>elife-ejp-poa-delivery</code> S3 bucket. Exports for eLife are scheduled to run hourly at 9 min past the hout between 6 AM and 7 PM Eastern (11 AM&#8211;12 AM BST). The script begins to run at 9 min past the hour; any manuscripts that are triggered to be transferred before then will be picked up and sent. The zip file contains:
+
+<ul>
+<li>XML manifest</li>
+<li>Author PDF of Word file (complete with EJP cover sheet - which required &#8216;decapitation&#8217;)</li>
+<li>All associated files for publication (figures, suppl files, videos, etc)</li>
+</ul></li>
+<li><code>cron.py</code> checks at 11.30am for new content in a bucket defined by the setting <code>poa_bucket</code> which needs to be set to be the same bucket that EJP are sending their content to (done in settings.py for the elife-bot code)</li>
+<li>at 11.30am, on discovering a new file in that bucket (via the S3Monitor activity) the <a href="#PackagePOA">PackagePOA</a> activity is started</li>
+<li>this activity looks for content in directories on the local Ec2 machine that are set in the settings file of the <a href="https://github.com/elifesciences/elife-poa-xml-generation/blob/master/example-settings.py">elife-poa-xml-generation</a> code. It then sends the output to an s3 bucket <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L276">that is defined</a> by the <a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PackagePOA.py#L60">poa_packaging_bucket</a> which is set to <code>elife-poa-packaging</code></li>
+<li>the <a href="#PublishPOA">PublishPOA</a> is invoked if a new file is found in <code>elife-poa-packaging</code></li>
+<li>this will create a folder in an outbox of the following format
 
 <ul>
 <li>folder name YYYYMMDD</li>
@@ -66,45 +72,55 @@ body{-webkit-font-smoothing:antialiased;font-family:"Helvetica Neue",Helvetica,A
 <li>elife_poa_eNNNNN_ds.zip</li>
 <li>decap_elife_poa_eNNNNN.pdf</li>
 </ul></li>
-<li>this sends files to HW and to crossref and prepares files for downstream delivery.</li>
-<li>Files appears in Highwire express (HWX)</li>
-<li>HWX shows all POA articles for the day on one &#8220;batch&#8221;</li>
+<li>A workflow renames decap_elife_poa_eNNNNN.pdf to elife_poa_eNNNNN.pdf before delivery to HW</li>
+<li>a workflow renames the individual asset files using the following naming convention:
+
+<ul>
+<li>elife_poa_eNNNNN_Figure_1_figure_supplement_1</li>
+<li>elife_poa_eNNNNN_Video_1</li>
+<li>etc</li>
+</ul></li>
+<li>a workflow zips all the renamed assets into a zip file named: elifeNNNNN_Supplemental_files- - this zip file is zipped up into elife_poa_eNNNNN_ds.zip, which is delivered to HWX</li>
+<li>at 12.30 pm files are sent to HW and to Crossref and prepares files for downstream delivery</li>
+<li>files appears in Highwire Express (HWX)</li>
+<li>HWX shows all POA articles for the day on one &#8216;batch&#8217;</li>
 <li><span style="color:red">HW creates a record in HWX</span></li>
 <li><span style="color:red">HW creates nodes in Drupal</span></li>
 <li><span style="color:red">supp files are loaded to the appropriate location for download</span></li>
 <li>the PAP batch shows all the POA papers in HWX</li>
-<li>HWX has a link to the paper in Drupal where the content is in a &#8220;not published state&#8221;</li>
-<li>production manually checks the PDF on HWX, usually to check against
+<li>HWX has a link to the paper in Drupal where the content is in a &#8216;not published state&#8217;</li>
+<li>production manually checks the PDF and HTML display on HWX:
 
 <ul>
-<li>special characters</li>
-<li>that decapitation has happened on the PDF</li>
-<li>that the abstract appears OK</li>
-<li>some other checks (listed in the POA protocals document)</li>
+<li>download and check the merged PDF - common errors include missing or incorrectly sized figures, visible track changes/inconsistent formatting, decapitation errors/missing Highwire cover page</li>
+<li>title/abstract - conservation of special characters, italics, superscript etc and that full abstract is displayed</li>
+<li>rollover boxes - addresses, competing interests are displaying correctly</li>
+<li>figures and data tab - download the data supplement zip folder and check all files present</li>
+<li>author info tab - competing interests, license statement and ethics statement are display</li>
 </ul></li>
-<li>production push an &#8220;Approve&#8221; button</li>
-<li>another page is displayed with another &#8220;Approve button&#8221;</li>
-<li>a &#8220;Success Page&#8221; is displayed</li>
+<li>production push an &#8216;Approve&#8217; button</li>
+<li>another page is displayed with another &#8216;Approve button&#8217;</li>
+<li>a &#8216;Success page&#8217; is displayed</li>
 <li><span style="color:red">Content is added to the search index </span></li>
-<li>usually within 1/2 an hour the paper on the Drupal Site is in a published state</li>
+<li>usually within 1/2 an hour the paper on the Drupal site is in a published state</li>
 <li>it&#8217;s not clear to me which of the &#8220;publish&#8221; activities operate on the contents that we have here.</li>
 </ul>
 
 <hr />
 
-<h1 id="existingvorworkflow">Existing VOR workflow</h1>
+<h1 id="existingvorworkflow">Existing VoR workflow</h1>
 
 <ul>
-<li>content processor sends a zip file to an S3 bucket and to a HW FTP endpoint, I <em>think</em> these go into the s3 bucket <code>elife-articles-hw</code>.</li>
-<li>content processor sends Crossref an XML file to update the crossref record</li>
-<li>These files appear in a directory named as NNNNN - where this is the <code>f-id</code>. There is one folder for every article. The folder contains files of the format</li>
+<li>content processor sends a zip file to an S3 bucket (<code>elife-articles-hw</code>) and to a HW FTP endpoint</li>
+<li>these files appear in a directory named as NNNNN - where this is the <code>f-id</code>. There is one folder for every article. The folder contains files of the format</li>
 <li>elife_YYYY_NNNNN.img.zip</li>
 <li>elife_YYYY_NNNNN.pdf.zip</li>
 <li>elife_YYYY_NNNNN.xml.zip</li>
+<li>elife_YYYY_NNNNN.inline-media.zip</li>
 <li>Files appears in Highwire express (HWX)</li>
 <li>each file takes it&#8217;s own batch through the system</li>
 <li><span style="color:red">HW creates a record in HWX</span></li>
-<li>if production can get to HWX then they see the following stages (information can been seen at each of these stages)
+<li>In HWX production can see the following stages (information can been seen at each of these stages)
 
 <ul>
 <li>pre-intake</li>
@@ -122,18 +138,14 @@ body{-webkit-font-smoothing:antialiased;font-family:"Helvetica Neue",Helvetica,A
 <li><span style="color:red">Some magic related article fun happens</span></li>
 <li>when the workflow gets to assembly assembly will turn orange and production can make a decision</li>
 <li>at assembly there is a QA report that links to the Drupal site</li>
-<li>production checks everything in the article on the Drupal site</li>
-<li>videos</li>
-<li>images</li>
-<li>tables</li>
-<li>decision letters</li>
+<li>production checks everything in the article on the Drupal site to ensure translation of XML to HTML and display is correct</li>
 <li>production push an &#8220;Approve&#8221; button</li>
 <li>another page is displayed with another &#8220;Approve button&#8221;</li>
 <li>HWX shows that state is changing in the production process</li>
 <li>if the system works correctly then in about 20 minutes</li>
 <li><span style="color:red">Content is added to the search index </span></li>
 <li><span style="color:red">HW starts to collect PDF download and pageview metrics </span></li>
-<li><span style="color:red">RSS feed is updated </span></li>
+<li><span style="color:red">RSS feed is updated twice a day, scheduled to run at 8 am and 8pm PDT</span></li>
 <li>if it goes &#8220;red&#8221; all bets are off</li>
 <li>elife-bot via a setting in the db.provier script, is monitoring for <a href="https://github.com/elifesciences/elife-bot/blob/master/provider/simpleDB.py#L236">new files of spcific types </a> (&#8220;xml&#8221;, &#8220;pdf&#8221;, &#8220;img&#8221;, &#8220;suppl&#8221;, &#8220;video&#8221;, &#8220;svg&#8221;, &#8220;jpg&#8221;, &#8220;figures&#8221;).</li>
 <li>the bucket that is polled is <a href="https://github.com/elifesciences/elife-bot/blob/exp/settings-example.py#L20">defined in settings.py</a>.</li>
@@ -148,25 +160,37 @@ body{-webkit-font-smoothing:antialiased;font-family:"Helvetica Neue",Helvetica,A
 
 <hr />
 
-<h1 id="existingdepositionworkflows">Existing Deposition workflows</h1>
+<h1 id="depositionworkflows">Deposition workflows</h1>
 
 <ul>
-<li>Pub router deposits once per day 23:45 UTC</li>
-<li>Cengage deposits once per day 22:45 UTC</li>
-<li>pubmed depostits happen every hour</li>
-<li>pubmed deposits inlude some code to determine version number of the article and to<br/>
-<a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197">set the published date appropriatly</a>.</li>
+<li><p>Pub router deposits once per day 23:45 UTC </p></li>
+<li><p>Cengage deposits once per day 22:45 UTC </p></li>
+<li><p>CAS delivery will be added </p></li>
+<li><p>pubmed deposits happen every hour </p></li>
+<li><p>pubmed deposits inlude some code to determine version number of the article and to<br/>
+<a href="https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_PubmedArticleDeposit.py#L197">set the published date appropriatly</a>.</p></li>
+<li><p>content processor sends CrossRef an XML file to update the CrossRef record and deliver to a S3 bucket (<code>elife-tnq-crossref-delivery</code>). There is one XML file per article, using the folowing naming convention: 2050&#8211;084X_2014_elifeXXXXX </p></li>
+<li>content processor sends PubMedCentral (PMC) the following:
+
+<ul>
+<li>elife_YYYY_NNNNN.img.zip</li>
+<li>elife_YYYY_NNNNN.pdf.zip</li>
+<li>elife_YYYY_NNNNN.xml.zip</li>
+<li>elife_YYYY_NNNNN.suppl.zip</li>
+<li>elife_YYYY_NNNNN.video.zip</li>
+</ul></li>
+<li><p>content processor delivers the PMC package to an S3 bucket (<code>elife-articles</code>), complete with an additional zip folder (elife_YYYY_NNNNN.jpg.zip), which contains the jpeg images used by Lens.</p></li>
 </ul>
 
 <p><strong>TODO: determine where we have code that pings the Drupal site for publication dates</strong></p>
 
 <hr />
 
-<h1 id="proposednewtoplevelpublishingworflkow">proposed new top level publishing worflkow</h1>
+<h1 id="proposednewtoplevelpublishingworkflow">proposed new top level publishing workflow</h1>
 
 <hr />
 
-<h1 id="proposednewvorworkflowalltobediscussed">Proposed new VOR workflow (all to be discussed)</h1>
+<h1 id="proposednewvorworkflowalltobediscussed">Proposed new VoR workflow (all to be discussed)</h1>
 
 <ul>
 <li>content processor sends a zip file to an S3 bucket that follows our <a href="https://github.com/elifesciences/ppp-project/blob/master/file_naming_spec.md">new file naming convention</a>.</li>
@@ -210,18 +234,19 @@ and decides the next version number to be used, this new version number is used 
 <li><code>activity_ConvertImages.py</code> does the image conversion based on a config YAML that is set by <code>image_resize_yaml</code></li>
 <li><code>activity_ConvertImages.py</code> does the image conversion process on the newly renamed images</li>
 <li><code>activity_ConvertImages.py</code> publishes a logging message to the SNS topic <code>eLifePublicationEventsSNSTopic</code></li>
-<li><code>activity_ConvertXMLtoEIF.py</code> determines whether the default publication setting for the given aritlce should be<br/>
+<li><code>activity_ConvertJATStoEIF.py</code> determines whether the default publication setting for the given article should be<br/>
 &#8220;published&#8221; or &#8220;unpublished&#8221; by checking the zip file name against a pattern set in the <code>publication_setting_yaml</code></li>
 <li><code>publication_setting_yaml</code> sets patterns for publication or for hold states.
 
 <ul>
 <li>see an <a href="http:gist.com">example <code>publication_setting_yaml</code></a>.</li>
 </ul></li>
-<li><code>activity_ConvertXMLtoEIF.py</code> generates an EIF JSON out of the XML (previously <code>workflow_ProcessXMLArticle</code>).</li>
-<li><code>activity_ConvertXMLtoEIF.py</code> publishes a logging message to the SNS topic <code>eLifePublicationEventsSNSTopic</code></li>
+<li><code>activity_ConvertJATStoEIF.py</code> generates an EIF JSON out of the XML (previously <code>activity_ConvertJATS</code>).</li>
+<li><code>activity_ConvertJATStoEIF.py</code> publishes a logging message to the SNS topic <code>eLifePublicationEventsSNSTopic</code></li>
 <li><code>activity_DisburseAssets.py</code> prepares the CDN with the approporiate artefacts and places the article XML<br/>
 in a location that can be accessed by the Markup service.</li>
-<li><code>activity_PostEIFtoDrupal.py</code> hits the <code>\MAKE_A_NEW_ARTICLE</code> with the EIF JSON with a <strong>POST</strong> request.</li>
+<li><code>activity_PostEIFtoDrupal.py</code> hits the <code>\MAKE_A_NEW_ARTICLE</code> with the EIF JSON with a <strong>POST</strong> request.<br/>
+<span style="color:red">Need to add in message to Glencoe with updated XML file name. See #27</span></li>
 <li>The Drupal site hits generates it&#8217;s approproiate nodes</li>
 <li>The Drupal site hits the markup service to obtain the HTML for the aritcle (or later?)</li>
 <li>The Drupal site sends a receipt notification the an api endpoint <code>/pubstate/{doi}/update</code> with a <strong>POST</strong> message</li>
@@ -254,7 +279,7 @@ in a location that can be accessed by the Markup service.</li>
 <ul>
 <li>EJP sends csv files with metadata to the <code>elife-ejp-ftp</code> S3 bucket.</li>
 <li>on acceptance for an article production export files to the <code>elife-ejp-poa-delivery</code> S3 bucket</li>
-<li><code>cron.py</code> checks at 11am for new content in a bucket defined by the setting <code>poa_bucket</code></li>
+<li><code>cron.py</code> checks at 11.30am for new content in a bucket defined by the setting <code>poa_bucket</code></li>
 <li>on discovering a new file in that bucket (via the S3Monitor activity) the <a href="#PackagePOA">PackagePOA</a> activity is started and run as in the existing POA workflow</li>
 <li>the <a href="#PublishPOA">PublishPOA</a> is invoked if a new file is found in <code>elife-poa-packaging</code>.</li>
 <li>the <a href="#PublishPOA">PublishPOA</a> will be modified to remove the activity that delivers to HW</li>
