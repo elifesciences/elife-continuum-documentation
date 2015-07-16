@@ -1,0 +1,94 @@
+
+# ATTENDEES:
+im
+mh 
+nl
+
+# BACKGROUND / REFERENCE:
+
+
+# NOTES:
+
+# items of data we don't have
+
+- volume 
+- pub date 
+- version 
+- path 
+
+in the JSON for publishing new content then we expect to have the 
+following in the JSON: 
+
+- volume is derived from 
+- version 
+- path 
+
+the pub date will be set in the workflow later. 
+
+
+
+# PDF date stamper
+
+40% - 50% of articles are first time published articles  in the VOR
+we won't pdf stamp dates at this point, so we need to have a policy around speed of approval on this content. 
+
+therefore is a pub date in in the XML it must be in the JSON (EIF). 
+And if the updated date is available (i.e. in the zip file name), it must be in the JSON. 
+
+
+# version timing issue
+
+ •	if the incoming zip package name does not a version number
+	 ◦	activity_SetVersionNumber.py hits the API endpoint /pubstate/{doi}/pub_infowith a GETrequest which returns a response set out in this test gist.
+	 ◦	activity_SetVersionNumber.py infers from the return data what the previous used version numbers were for this file, and decides the next version number to be used, this new version number is used to call the next activity
+
+I had seen this working slightly differently, with the endpoint incrementing the version number. If we have the activity infer it purely based upon versions that have already been published onto the site, then you could end up with two instances of the same version ‘ in flight ‘ at the same time, which could mean two different steps in the workflow accessing the same expanded folder. Moving to a more unique folder name, meaning potentially two folders for the same version of an article, introduces more complexities when it comes to archiving (which one do you archive). I thought (but could be wrong) we’d said before that if we got a second delivery of the same zip we were happy that it would case a new version, but that isn’t going to happen without something keeping track of the version and incrementing as required, otherwise theres just too long a gap between the start of processing and the info coming back from the pubstate API updating. Or am I missing something?
+
+- version number will be set in the JSON before drupal 
+- we don't know where we go to get the version number
+- we agree that drupal does not decide the version number 
+
+
+# capture discussion on how we set "publication dates" (that we had on 2015-07-16)  
+
+- for content that has not already been published, the "publish action" hitting the publish API will cause Drupal to set the pub date, and we need to work out the return communcaiotn form drupe and the actions that happen after that. This will be only for POA.  
+
+
+
+# supplying over New Years Eve  
+- we won't do that. 
+
+
+
+# resupply strategy 
+if we resupply all of the existing content then we should never add in new content into the same bucket as the resupply bucket. 
+	we will make this a policy. 
+
+
+# under the hood changes to content policy 
+- the system can allow this, but the production team need to be aware of this, and have a policy around this. 
+
+
+
+# zip in the POA issue 
+- we will put all of these in a zip file 
+	- we will keep the current supp file. 
+	- we need to rewrite 
+	- we will not change the file naming or re-file naming of the assets. 
+
+	
+# how we display the information about the name of the file in the POA 
+	- it's a bit up for grabs, but we have determined that it is unlikely that we will depend on the markup service, 
+	- we have determined that there is a preference to not have this information on a "figures tab"
+	- the bot will not need to create the manifest file. 
+
+
+
+# ACTION ITEMS FOR ME:
+# ACTION ITEMS FOR OTHERS:
+
+- we will put the volume and date in the XML 
+
+- cover page on POA 
+
+# update POA to VOR content redirect and access policy. 
