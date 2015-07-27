@@ -43,7 +43,15 @@ This is either `poa` (publish on accept) or `vor` (version of record).
 
 This refers to an asset file related to an article, ie a figure (fig), source code (code), source data (data), media (includes videos, audio and animation) (media), supplementary file (supp), (figures) the figures pdf, reporting standards (repstand).
 
-Should these asset files be present in an appendix or author response, they will take the suffix A or R, respectively before the number, ie: figA or mediaR.
+<span style="color:red">NOTE: Change on 27th July 2015:</span>
+
+Decision letter, author response and Appendix are now at the level of assets:
+dec - decision letter
+resp - author response
+app - appendix
+
+dec and resp do not require a number, but app does as there could be multiple appendices.
+These assets could have any sub assets as below. They will never exist in the file naming heirachy with no sub assets.
 
 ###### `<a-id>`
 
@@ -53,6 +61,7 @@ article with three figures will have the following asset files:
 - elife-00012-fig1.tiff
 - elife-00012-fig2.tiff
 - elife-00012-fig3.tiff
+
 
 ###### `<sub-asset>`
 
@@ -71,6 +80,17 @@ figure has three figure supplements, and one figure has two figure supplements w
 - elife-00012-fig3.tiff
 - elife-00012-fig3-figsupp1.tiff
 - elife-00012-fig3-figsupp2.tiff
+- elife-00012-app1-fig1
+
+
+Some assets only have sub-asset ids, for example, an article with 3 appendices, where appendix 2 has 3 figures, and figure 2 has two figure supplements will have the following:
+
+- elife-00012-app2-fig1.tiff
+- elife-00012-app2-fig2.tiff
+- elife-00012-app2-fig2-figsupp1.tiff
+- elife-00012-app2-fig2-figsupp2.tiff
+- elife-00012-app2-fig3.tiff
+
 
 ###### data
 
