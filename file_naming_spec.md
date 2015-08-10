@@ -3,7 +3,7 @@
 ## File naming pattern
 
 >
-	`elife-<f-id>-<status>(-<revision><r-id>)(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
+	`elife-<f-id>-<status>(-<revision><r-id>)(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>)(YYYYMMDD).<ext>`
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
@@ -19,7 +19,7 @@ Inbound zip files will be of the form
 After processing revision numbers will be dropped and zip files will be of the form 
 
 >
-	`elife-<f-id>-<status>(-v<version>).zip`
+	`elife-<f-id>-<status>(-v<version>)(YYYYMMDD).zip`
 
 
 #### Assets naming pattern 
