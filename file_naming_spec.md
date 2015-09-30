@@ -19,7 +19,7 @@ Inbound zip files will be of the form
 After processing revision numbers will be dropped and zip files will be of the form 
 
 >
-	`elife-<f-id>-<status>(-v<version>)(-YYYYMMDD).zip`
+	`elife-<f-id>-<status>(-v<version>)(-YYYYMMDDHHMMSS).zip`
 
 
 #### Assets naming pattern 
