@@ -585,12 +585,14 @@ I have, mainly as I felt that file names for sub components were becoming unweil
 - figuresupplement -> figsupp
 - supplementary file -> supp
 - media (includes videos, audio and animation) -> media
+- inline-media -> inf
 - source code -> code  
 - source data -> data
 - figures (PDF if the figures) -> figures
-- reporting standards -> repstand
-- appendix asset file, for example figure -> figA
-- author response asset file, for example figure -> figR
+- reporting standards -> repstand [note: not inu se as at October, 2015]
+- decision letter file, for example figure -> dec-fig
+- appendix asset file, for example figure (each appendix gets a unique number X) -> appX-fig
+- author response asset file, for example figure -> resp-fig
 
 
 ## Tying POA and VOR packets in our workflow and their naming convention.
