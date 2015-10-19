@@ -1,5 +1,25 @@
 # eLife file naming specification
 
+## File naming and workflow
+
+eLife receives articles from a content processor as a zip package delivered to
+an Amazon S3 bucket via FTP. Our production system recognises certain metadata
+in the name of the zip file, and expects files within the zip file to be named
+according to the specification laid out in this document.
+
+Some files are processed and sent to a CDN for access from the main site.
+
+The S3 bucket for inbound content, and the location of the CDN that we populate are specified in a settings file for our production workflow. An [example settings file is available](https://github.com/elifesciences/elife-bot/blob/exp/settings-example.py).
+
+The relevant variables in that settings file are:
+
+> S3_monitor_queue # location of the inbound files
+
+> ppp_cdn_bucket  # location of the CDN
+
+In this documentation we will indicate whether a specific filetype needs to be
+placed in the CDN.
+
 ## File naming pattern
 
 >
