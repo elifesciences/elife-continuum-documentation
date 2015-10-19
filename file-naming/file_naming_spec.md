@@ -1,4 +1,4 @@
-# eLife file naming proposal 2015-05-28
+# eLife file naming specification
 
 ## File naming pattern
 
@@ -7,7 +7,7 @@
 
 Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
 
-This pattern covers both inbound zip files and the contents of those zip files. We can break it out into two branches, one for the zip files and one for the assets inside the zip files. 
+This pattern covers both inbound zip files and the contents of those zip files. We can break it out into two branches, one for the zip files and one for the assets inside the zip files.
 
 #### Zip File naming pattern
 
@@ -16,13 +16,13 @@ Inbound zip files will be of the form
 >
 	`elife-<f-id>-<status>(-r<revision>)(-v<version>).zip`
 
-After processing revision numbers will be dropped and zip files will be of the form 
+After processing revision numbers will be dropped and zip files will be of the form
 
 >
 	`elife-<f-id>-<status>(-v<version>)(-YYYYMMDDHHMMSS).zip`
 
 
-#### Assets naming pattern 
+#### Assets naming pattern
 
 >
 	`elife-<f-id>-<status>(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>).<ext>`
@@ -142,8 +142,8 @@ For example, an article with a top level source code, two main figures, where on
 - elife-00012-fig1-code2.zip
 - elife-00012-fig2.tiff
 - elife-00012-fig2-figsupp1.tiff
-- elife-00012-fig2-figsupp1-code1.zip 
-- elife-00012-code1.r 
+- elife-00012-fig2-figsupp1-code1.zip
+- elife-00012-code1.r
 
 ##### v`<version>`
 
