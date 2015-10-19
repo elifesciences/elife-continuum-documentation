@@ -5,7 +5,7 @@
 >
 	`elife-<f-id>-<status>(-<revision><r-id>)(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>)(-YYYYMMDD).<ext>`
 
-Brackets represent optional components. Pipe represents a choice on component, depending on state in the publishing system.
+Brackets represent optional components. A pipe represents a choice on component, which may vary depending on it's state in the publishing system.
 
 This pattern covers both inbound zip files and the contents of those zip files. We can break it out into two branches, one for the zip files and one for the assets inside the zip files.
 
