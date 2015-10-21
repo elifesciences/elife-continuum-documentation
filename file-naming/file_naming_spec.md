@@ -20,6 +20,81 @@ The relevant variables in that settings file are:
 In this documentation we will indicate whether a specific filetype needs to be
 placed in the CDN.
 
+## Files and the CDN
+
+### File Types that need to be placed on the CDN
+
+As a rule of thumb all files associated with the article need to be placed directly on the CDN.
+The only exception to this rule is in relation to the figures, which need to be processed first,
+and then placed on the CDN. Movies are not served by eLife, but we have no reason not to palce them on the CDN.
+
+| Asset Type  | Example Asset Namespaces  | Example File Name | Example Extensions | DOI? |example DOI | landing page? | example landing page |
+|---|---|---|---|---|
+| images |  fig1, app1-fig2, fig1-figsupp1 | elife-07178-fig1-v2.gif  | .gif  | always | 10.7554/eLife.07178.003 | always | http://elifesciences.org/content/4/e07178v2/figure1 |
+| article pdf |  - | elife-07178-v2.pdf | .pdf | always | 10.7554/eLife.07178  | always | http://elifesciences.org/content/4/e07178v2  |
+| figures pdf | figures  | elife-07178-figures-v2.pdf | .pdf  | never | - | never |  - |
+| xml | - | elife-07178-v2.xml  |.xml | always |10.7554/eLife.07178  | always | http://elifesciences.org/content/4/e07178v2  |
+| code | code1, fig1-code1, fig1-figsupp3-code1 | elife-00230-fig1-code2-v2.m | .py, .zip, .m | always| 10.7554/eLife.00230.027 | always | http://elifesciences.org/content/2/e00288v4/figure1/figure-supp3/source-code1 |
+| data | data1, fig1-data2, fig1-figsupp3-code1-data1 | elife-00230-fig1-figsupp3-code1-data1-v2.zip | .csv, .zip  | always| 10.7554/eLife.06426.014 | always |  http://elifesciences.org/content/2/e00288v4/figure4/source-data1	|
+| reporting standards |  repstand1 | elife-00230-repstand1-v2.pdf  | .pdf, .docx | always | 10.7554/eLife.04525.021 | always | http://elifesciences.org/content/2/e00288v4/reporting-standard1 |
+| inline media | inf1 | elife-00230-inf2-v2.gif  | .gif, .tex, .mov | never | - | never | - |
+| media | fig1-figsupp2-media3, media1, fig2-media2 | elife-00012-fig1-figsupp3-media-v1.mov | .wav, .flac | always | 10.7554/eLife.06426.012 | always | http://elifesciences.org/content/2/e00288v4/media7 |
+| supplementary file | supp2, resp-supp2, app3-supp3, dec-fig2-suppfig3-supp1  |  elife-00012-supp2-v2.pdf | .docx, .pdf | always | 10.7554/eLife.01239.011 | always | http://elifesciences.org/content/2/e00288v4/supplemental-file1	|
+
+
+#### Comment on non-file parents
+
+Any given file can have as a parent one of the following items:
+
+- the base article  
+- an appendix  `app`
+- the decision letter `dec`   
+- the author response `resp`
+- another file, particularly a figure or figgure suppliment  
+
+
+#### Comments on some specific file types
+
+**inline media**
+
+- Inline media does not have it's own landing page  
+- Inline media does need to be served from the cdn  
+- The tagging for inline media in the XML overlaps with the tagging for inline figures  
+
+**media**  
+
+Video files are not hosted on our CDN, but any other media file that we publish will need to be hosted on our CDN.
+I've not yet been able to provide an example of a non-video media file that we have already published. The only way to
+discriminate bettwen video and non-video media is by examining the file extensions, so for ease of implementation it may
+be best to simply place all media onto the CDN, irrespective of whether we are serving this content to the site from the CDN or not.
+
+**reporting standards**s
+
+[http://elifesciences.org/content/4/e04525/DC5]() is an example of an article with a reporting standard.
+
+
+**images**
+
+We receive images as .tiff files, and these are converted to gif files as part of the hte publication process. These gif files need to be sent to the CDN.
+
+
+**data**
+
+[http://elifesciences.org/content/4/e06426/article-data#fig-data-additional-files]() is an example of a published article with associated data.
+
+
+#### Processing file names
+
+The elife bot has an [`ArticleInfo` Class](https://github.com/elifesciences/elife-bot/blob/exp/provider/article_structure.py) that encapsulates the information that we can infer from an artilce ile name.
+
+
+#### Processing files to the CDN  
+
+
+
+#### CDN path names
+
+
 ## File naming pattern
 
 >
