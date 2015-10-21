@@ -1,0 +1,28 @@
+Tab : Current
+	match ANY one (or more) of the rules below:
+	- any article which had an "event" in the dashboard since 00:00 yesterday
+	- any article whose latest run of the latest version had an error
+	- any article whose latest run of the latest version is at status ready to publish
+	- any article with a scheduled publication date in the future
+	
+	this could be summarised as 'anything which has been supplied by the content processor but which has not yet been published should appear on the 'current' tab
+	
+	to be displayed an article has to be current and also match the rules for at least one of the following sections:
+	
+	Section : Errors
+		- where the latest event for the latest run of the latest version was an "error" event
+	
+	Section : Scheduled
+		- the article appears in the record of articles to be published at a particular date and time
+	
+	Section : UIR
+		- where one of the following rules is true:  (only one for now!)
+			- the publication status property is set to 'ready to publish'
+	
+	Section : In Progress
+		- where the latest event for the latest run of the latest version was a "starting" event
+	
+	Section precedence where article applicable to multiple sections = Error, Scheduled, Required, In Progress
+
+Tab : Archive
+	- everything (includng what is in current)
