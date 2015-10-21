@@ -29,7 +29,7 @@ The only exception to this rule is in relation to the figures, which need to be 
 and then placed on the CDN. Movies are not served by eLife, but we have no reason not to palce them on the CDN.
 
 | Asset Type  | Example Asset Namespaces  | Example File Name | Example Extensions | DOI? |example DOI | landing page? | example landing page |
-|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|
 | images |  fig1, app1-fig2, fig1-figsupp1 | elife-07178-fig1-v2.gif  | .gif  | always | 10.7554/eLife.07178.003 | always | http://elifesciences.org/content/4/e07178v2/figure1 |
 | article pdf |  - | elife-07178-v2.pdf | .pdf | always | 10.7554/eLife.07178  | always | http://elifesciences.org/content/4/e07178v2  |
 | figures pdf | figures  | elife-07178-figures-v2.pdf | .pdf  | never | - | never |  - |
