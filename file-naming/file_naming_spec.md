@@ -97,6 +97,9 @@ The elife bot has an [`ArticleInfo` Class](https://github.com/elifesciences/elif
 
 #### Processing files to the CDN  
 
+Currently XML files are sent to the CDN with the [DepositXML Activity](https://github.com/elifesciences/elife-bot/blob/exp/activity/activity_DepositXML.py). we anticipate that this will be extended to send all content to the CDN.
+
+This activity runs as part of the PPP projecss, and takes the location of the CDN from the bot `settings.py` file.
 
 
 #### CDN path names
