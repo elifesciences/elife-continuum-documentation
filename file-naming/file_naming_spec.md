@@ -61,12 +61,15 @@ Any given file can have as a parent one of the following items:
 - Inline media does need to be served from the cdn  
 - The tagging for inline media in the XML overlaps with the tagging for inline figures  
 
+Example article with inline media: [http://elifesciences.org/content/4/e05169](), This article is an insight, but it
+has all four article tabs, and the inline media is an image in the boxed section at the top of the artilce, and the image does not have a DOI.
+
+
 **media**  
 
-Video files are not hosted on our CDN, but any other media file that we publish will need to be hosted on our CDN.
-I've not yet been able to provide an example of a non-video media file that we have already published. The only way to
-discriminate bettwen video and non-video media is by examining the file extensions, so for ease of implementation it may
-be best to simply place all media onto the CDN, irrespective of whether we are serving this content to the site from the CDN or not.
+Video files are not hosted on our CDN, but any other media file that we publish will need to be hosted on our CDN. For simplicity
+we are going to place all media files onto our CDN. We currently have no examples of media that are not video.
+
 
 **reporting standards**s
 
@@ -81,6 +84,10 @@ We receive images as .tiff files, and these are converted to gif files as part o
 **data**
 
 [http://elifesciences.org/content/4/e06426/article-data#fig-data-additional-files]() is an example of a published article with associated data.
+
+**code**
+
+[http://elifesciences.org/content/2/e00631]() is an example of an article with source code.
 
 
 #### Processing file names
