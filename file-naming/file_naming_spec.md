@@ -47,7 +47,7 @@ and then placed on the CDN. Movies are not served by eLife, but we have no reaso
 Any given file can have as a parent one of the following items:
 
 - the base article  
-- an appendix  `app`
+- an appendix `app`
 - the decision letter `dec`   
 - the author response `resp`
 - another file, particularly a figure or figgure suppliment  
@@ -94,8 +94,28 @@ The elife bot has an [`ArticleInfo` Class](https://github.com/elifesciences/elif
 
 #### CDN path names
 
+The CDN base path is set by the variable  
 
-## File naming pattern
+> `ppp_cdn_bucket`  # location of the CDN
+
+in the `settings.py` file of the [elife-bot](https://github.com/elifesciences/elife-bot).
+
+To access a specific file, e.g. `elife-00230-inf2-v2.gif` for a specific article `e00123` in the CDN then you can infer the CDN path from the article number via
+
+> `ppp_cdn_bucket`/00123/elife-00230-inf2-v2.gif
+
+All versions of files for a given article are placed into the same CDN directory:
+
+> `ppp_cdn_bucket`/00123/
+
+So for example in this directory you may have the following
+
+> `ppp_cdn_bucket`/00123/elife-00230-inf2-v1.gif  
+> `ppp_cdn_bucket`/00123/elife-00230-inf2-v2.gif  
+> `ppp_cdn_bucket`/00123/elife-00230-inf2-v3.gif  
+
+
+# File naming pattern
 
 >
 	`elife-<f-id>-<status>(-<revision><r-id>)(-<asset><a-id>)(-<sub-asset><sa-id>)(-<data><d-id>)(-<code><c-id>)(-<media><m-id>)(-<reporting standard><repstand-id>)(-<supplementary file><supp-id>)|(-v<version>)(-YYYYMMDD).<ext>`
