@@ -3,6 +3,8 @@ This documentation aims to refer to the [exp branch](https://github.com/elifesci
 
 ----
 
+<style font="red">THIS DOCUMENT IS NOT UP TO DATE, FOR CURRENT BOT DOCUMENTATION PLEASE REFER TO THE ARCHITECTURE DIAGRAMS</style>
+
 # Existing PoA workflow
 
 - EJP delivers CSV files to the `elife-ejp-ftp` S3 bucket hourly at 10 minutes past the hour. The content of the CSV metadata is defined by SQL queries (defined by eLife staff) of the EJP database. EJP have been provided access to the S3 bucket via the [https://cloudgates.net]() service - to change the location of this we need to [modify the cloudgates settings](https://github.com/elifesciences/elifesciences-wiki/wiki/adding-a-ftp-endpoint-to-an-AWS-S3-bucket-via-the-cloudgates-service) and resupply FTP credentials to the vendor.
