@@ -1,12 +1,3 @@
----
-layout: post
-title:  "PPP workflow configuration"
-date:   2015-06-12 11:40:32
-categories: ppp docs workflow
----
-
-
-----
 
 This documentation aims to refer to the [exp branch](https://github.com/elifesciences/elife-bot/tree/exp) of the eLife-bot code.
 
