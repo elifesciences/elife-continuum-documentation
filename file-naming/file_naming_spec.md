@@ -30,7 +30,7 @@ and then placed on the CDN. Movies are not served by eLife, but we have no reaso
 
 | Asset Type  | Example Asset Namespaces  | Example File Name | Example Extensions | DOI? |example DOI | landing page? | example landing page |
 |---|---|---|---|---|---|---|---|
-| images |  fig1, app1-fig2, fig1-figsupp1 | elife-07178-fig1-v2.gif  | .gif  | always | 10.7554/eLife.07178.003 | always | http://elifesciences.org/content/4/e07178v2/figure1 |
+| Figures |  fig1, app1-fig2, fig1-figsupp1 | elife-07178-fig1-v2.gif  |  .tiff, .gif  | always | 10.7554/eLife.07178.003 | always | http://elifesciences.org/content/4/e07178v2/figure1 |
 | article pdf |  - | elife-07178-v2.pdf | .pdf | always | 10.7554/eLife.07178  | always | http://elifesciences.org/content/4/e07178v2  |
 | figures pdf | figures  | elife-07178-figures-v2.pdf | .pdf  | never | - | never |  - |
 | xml | - | elife-07178-v2.xml  |.xml | always |10.7554/eLife.07178  | always | http://elifesciences.org/content/4/e07178v2  |
@@ -38,7 +38,7 @@ and then placed on the CDN. Movies are not served by eLife, but we have no reaso
 | data | data1, fig1-data2, fig1-figsupp3-code1-data1 | elife-00230-fig1-figsupp3-code1-data1-v2.zip | .csv, .zip  | always| 10.7554/eLife.06426.014 | always |  http://elifesciences.org/content/2/e00288v4/figure4/source-data1	|
 | reporting standards |  repstand1 | elife-00230-repstand1-v2.pdf  | .pdf, .docx | always | 10.7554/eLife.04525.021 | always | http://elifesciences.org/content/2/e00288v4/reporting-standard1 |
 | inline media | inf1 | elife-00230-inf2-v2.gif  | .gif, .tex, .mov | never | - | never | - |
-| media | fig1-figsupp2-media3, media1, fig2-media2 | elife-00012-fig1-figsupp3-media-v1.mov | .wav, .flac | always | 10.7554/eLife.06426.012 | always | http://elifesciences.org/content/2/e00288v4/media7 |
+| media | fig1-figsupp2-media3, media1, fig2-media2 | elife-00012-fig1-figsupp3-media.mov | .wav, .flac | always | 10.7554/eLife.06426.012 | always | http://elifesciences.org/content/2/e00288v4/media7 |
 | supplementary file | supp2, resp-supp2, app3-supp3, dec-fig2-suppfig3-supp1  |  elife-00012-supp2-v2.pdf | .docx, .pdf | always | 10.7554/eLife.01239.011 | always | http://elifesciences.org/content/2/e00288v4/supplemental-file1	|
 
 
