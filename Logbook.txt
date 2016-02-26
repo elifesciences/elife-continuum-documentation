@@ -1,0 +1,7 @@
+# 2016-02-08 
+
+stased a version of architecture updates in the architecture-updates branch.
+
+Saved working directory and index state WIP on architecture-update: 75879d1 workflow re-write in progress
+HEAD is now at 75879d1 workflow re-write in progress
+➜  ppp-project git:(architecture-update) ✗
