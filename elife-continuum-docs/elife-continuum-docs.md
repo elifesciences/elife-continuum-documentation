@@ -6,6 +6,14 @@
 
 ## Troubleshooting
 
+## Doing Silent Updates
+
+
+![silent corrections workflow][sc-workflow]
+
+[sc-workflow]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/silent-updates-workflow.jpg?token=AAC28V4Dek9mjZU4GHKumFCJSgQcMZ9dks5W4DfQwA%3D%3D
+
+
 ### Where do my files go?
 
 ### Common errors, and overcoming them
