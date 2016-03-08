@@ -1,0 +1,1 @@
+Some work-in-progress documentation that could be useful for creating updated architecture and process diagrams. Although this is quite high level I wanted to be able to share it early but have added to this subfolder to indicate it may not be 100% accurate yet. 
