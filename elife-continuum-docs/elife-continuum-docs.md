@@ -5,6 +5,10 @@ eLife Continuum
 - [Introduction](#introduction)
 - [High Level Overview](#high-level-overview)
 - [Deploying and configuring the system](#deploying-and-configuring-the-system)
+	- [using elife-builder](#using-elife-builder)
+	- [using elife-builder to see what is running](#using-elife-builder-to-see-what-is-running)
+	- [using elife-builder to ssh into a machine](#using-elife-builder-to-ssh-into-a-machine)
+	- [using elife-builder to deploy a new instance](#using-elife-builder-to-deploy-a-new-instance)
 - [Normal operation](#normal-operation)
 	- [Preview mode](#preview-mode)
 	- [Automatic mode](#automatic-mode)
@@ -16,8 +20,8 @@ eLife Continuum
 	- [Checking system logs](#checking-system-logs)
 	- [Checking workflow status in the AWS console](#checking-workflow-status-in-the-aws-console)
 	- [Restarting the bot](#restarting-the-bot)
-		- [Restarting the bot from within the Ec2 Instance](#restarting-the-bot-from-within-the-ec2-instance)
-		- [Restarting the bot from elife-bilder](#restarting-the-bot-from-elife-bilder)
+		- [Restarting bot processes from within the Ec2 Instance](#restarting-bot-processes-from-within-the-ec2-instance)
+		- [Redeploying the bot from elife-bilder](#redeploying-the-bot-from-elife-bilder)
 - [Common errors, and overcoming them](#common-errors-and-overcoming-them)
 	- [Dashboard article preview links are truncated.](#dashboard-article-preview-links-are-truncated)
 	- [Articles are not making it to the dashboard](#articles-are-not-making-it-to-the-dashboard)
@@ -62,6 +66,41 @@ elife-builder exposes some high level commands to the user for deploying, managi
 tearing down instances. AWS keys with appropriate permissions need to be set on the
 machine of the user.
 
+## using elife-builder
+
+elife-builder is a wrapper for [fabric](http://www.fabfile.org), so in addition to being
+able to issue fabric commands, builder also provides some elife specific commands
+
+The elife specific commands can be listed with
+
+	$ ./bldr -l
+
+## using elife-builder to see what is running
+
+	$ ./bldr aws_stack_list
+
+This will list running stacks on AWS. You should expect to see the following services running:
+
+* elife-bot-*
+* elife-dashbarod-*
+* elife-lax-*
+* elife-metrics-*
+* elife-api-*
+
+If any of these are missing something is wrong.
+
+## using elife-builder to ssh into a machine
+
+All of the services listed with `./bldr aws_stack_list` are Ec2 instances running
+on AWS. elife-builder provides a command to allow you to easily ssh into one of these
+instances, though this is not recommended.
+
+	$ ./bldr ssh
+
+This will return a list of available machines that you can ssh into. Pick the machine of
+interest from the list.
+
+## using elife-builder to deploy a new instance
 
 
 
@@ -96,9 +135,45 @@ It may be a requirement to replace an published article with a minor update with
 
 ## Restarting the bot
 
-### Restarting the bot from within the Ec2 Instance
+### Restarting bot processes from within the Ec2 Instance
 
-### Restarting the bot from elife-bilder
+The bot needs a number of python process to be running to function properly. If any of these processes go AWOL then things will break. You can restart these processes manually
+from within the Ec2 instance, though this is not recommended.
+
+First ssh into the machine where you suspect that there might be problem:
+
+	$ ./bldr ssh
+
+Check to see if the process that you expect are running:
+
+	elife@ip-10-0-2-237:~$ ps -aux | grep "python"  
+
+You should see the following process in operation:
+
+	python decider.py  
+	python worker.py  
+	python queue_worker.py  
+	python queue_workflow_starter.py  
+
+If any of these are missig then there is a problem. To restart the required python processes do the following:L
+
+	elife@ip-10-0-2-237:~$ killall -u elife python  
+	elife@ip-10-0-2-237:~$ cd /opt/elife-bot && /opt/elife-bot/scripts/run_env.sh live
+	
+
+
+### Redeploying the bot from elife-bilder
+
+If you need to tear down the bot, and create a totally new instance, you can do this using elife-builder, though we have not tested this on the production environment yet, so you should probably not try this.
+
+ 	$ ./bldr aws_delete_stack
+
+Then pick the stack that you want to delete.
+
+	$ ./bldr aws_launch_instance
+
+This will sync a set of cloudformation templates to your machine from AWS S3 and provide you with a known list of services that can be created. Pick from the list, and provide
+the appropriate postfix for the service name.
 
 # Common errors, and overcoming them
 
