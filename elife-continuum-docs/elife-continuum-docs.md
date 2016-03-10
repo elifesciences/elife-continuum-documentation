@@ -36,6 +36,35 @@ eLife Continuum
 
 # Deploying and configuring the system
 
+eLife uses a project called [elife-builder](https://github.com/gnott/elife-builder) built on top of [saltstack](https://docs.saltstack.com/en/latest/topics/) for configuration and deployment of Continuum. It is our intention to open source relevant components from elife-builder, however we have not made this project available publicly yet.
+
+elife-builder wraps commands around salt and can be used to deploy instances to
+Vagrant or to Amazon Web Services.
+
+For deployment to AWS the rules that generate the  url that the service is made available from is defined in the [top.sls](https://github.com/gnott/elife-builder/blob/master/salt/salt/top.silent-updates-workflow) file. This file also defines which salt configurations are applied to a
+machine.
+
+For a specific project, the instructions for building that machine are set in
+a project specific folder within the salt project, so to configure the elife-bot
+we use and [elife-bot/init.sls](https://github.com/gnott/elife-builder/blob/master/salt/salt/elife-bot/init.sls) file.
+
+This is also where cron jobs for this system are configured, and deployed to the
+target machine.
+
+This file instructs the machine that is built to deploy the project's python settings
+file, which is also kept under revision in the salt project at [elife-bot/config/opt-elife-bot-settings.py](https://github.com/gnott/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py).
+
+Crucially this system is set to refresh and overwrite settings on all host machines
+once a day. This forces us to keep all system configuration in code and prevents
+customisation happening on the machine.
+
+elife-builder exposes some high level commands to the user for deploying, managing and
+tearing down instances. AWS keys with appropriate permissions need to be set on the
+machine of the user.
+
+
+
+
 # Normal operation
 
 ## Preview mode
