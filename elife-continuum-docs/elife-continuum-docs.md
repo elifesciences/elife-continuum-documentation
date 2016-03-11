@@ -24,9 +24,9 @@ eLife Continuum
 		- [Redeploying the bot from elife-bilder](#redeploying-the-bot-from-elife-bilder)
 - [Common errors, and overcoming them](#common-errors-and-overcoming-them)
 	- [Dashboard article preview links are truncated.](#dashboard-article-preview-links-are-truncated)
+	- [Drupal is returning a 429 error on the PostEIF workflow step](#drupal-is-returning-a-429-error-on-the-posteif-workflow-step)
 	- [Drupal is returning a 500 error on the PostEIF workflow step](#drupal-is-returning-a-500-error-on-the-posteif-workflow-step)
 	- [Drupal is returning a 503 error on the PostEIF workflow step](#drupal-is-returning-a-503-error-on-the-posteif-workflow-step)
-	- [Drupal is returning a 429 error on the PostEIF workflow step](#drupal-is-returning-a-429-error-on-the-posteif-workflow-step)
 	- [Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step](#drupal-is-returning-a-messageconnection-aborted-badstatusline-on-the-posteif-workflow-step)
 	- [Articles are not making it to the dashboard](#articles-are-not-making-it-to-the-dashboard)
 - [ppp-feeder](#ppp-feeder)
@@ -195,14 +195,21 @@ the appropriate postfix for the service name.
 
 ## Dashboard article preview links are truncated.
 
-Occasionally you may see a `The requested URL was not found on the server.` error when trying to view the processing history of an article on the dashboard. Check the link, and if the link looks like The requested URL was not found on the server.``
+Occasionally you may see a `The requested URL was not found on the server.` error when trying to view the processing history of an article on the dashboard. Check the link, and
+if the link looks like The requested URL was not found on the server.``
+
+## Drupal is returning a 429 error on the PostEIF workflow step  
+
+Drupal is busy processing another request. Usually the solution to this is to wait wait as the POST EIF activity will continue to retry for up to five minutes. If the article fails to get through to Drupal within this window you will need to re-run this workflow.
+
+![429 error][429]
+
+[429]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/429-error.jpg
+
 
 ## Drupal is returning a 500 error on the PostEIF workflow step  
 
 ## Drupal is returning a 503 error on the PostEIF workflow step  
-j
-## Drupal is returning a 429 error on the PostEIF workflow step  
-
 
 ## Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step  
 
