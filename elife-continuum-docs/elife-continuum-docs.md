@@ -14,7 +14,7 @@ eLife Continuum
 	- [Automatic mode](#automatic-mode)
 - [Doing Silent Updates](#doing-silent-updates)
 - [Troubleshooting](#troubleshooting)
-	- [Understanding Caching in the system](#understanding-caching-in-the-system)
+	- [Understanding timeouts in the system](#understanding-timeouts-in-the-system)
 	- [Where do my files go?](#where-do-my-files-go)
 	- [Is the system running?](#is-the-system-running)
 	- [Checking system logs](#checking-system-logs)
@@ -127,7 +127,19 @@ It may be a requirement to replace an published article with a minor update with
 
 # Troubleshooting
 
-## Understanding Caching in the system
+## Understanding timeouts in the system
+
+Timeouts can happen in a number of places in the system. Every activity has it's own timeout set in the workflow definition. Activities are usually set to have a timeout of five minutes, however on occasion we were observing that image conversion was taking slightly longer, and so the image conversion timeout was raised to eight minutes.
+
+When an individual activity timeouts then SWF will restart that activity, and it will continue to do so until the workflow itself times out.  
+
+In addition to these timeouts, the webserver will terminate HTTP connections after 60 seconds.
+
+A consequence of this is that for the workflow which sends a message to Drupal instructing Drupal to create a new article, if the Drupal process takes longer than 60 seconds to do this then the activity will receive an error message from the webserver, even though the process on Drupal has not failed. The workflow activity is still under it's own timeout and it will continue to retry sending a message to Drupal. We have noticed that if Drupal is able to process multiple connections this situation can lead to unexpected consequences, and errors in publishing content. As a result we have setup Drupal to only ingest articles sequentially and to refuse requests while the ingest process is happening.
+
+![system timeouts][system-timeouts]
+
+[system-timeouts]:https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/continuum-timeouts.jpg
 
 ## Where do my files go?
 
@@ -228,8 +240,7 @@ you may need to run some of the commands as `sudo`.
 
 	$ git clone https://github.com/elifesciences/ppp-feeder.git
 	$ cd ppp-feeder
-	$ virtualenv feeder-env
-	$ source feeder-env/bin/activate
+	$ virtualenv ppp-feeder
 	$ pip install -r requirements.txt
 	$ export AWS_DEFAULT_REGION=us-east-1
 	$ export AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
