@@ -204,7 +204,7 @@ Drupal is busy processing another request. Usually the solution to this is to wa
 
 ![429 error][429]
 
-[429]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/429-error.jpg
+[429]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/429-error.png
 
 
 ## Drupal is returning a 500 error on the PostEIF workflow step  
@@ -218,7 +218,7 @@ The Drupal server is unavailable,usually a deploy is in progress, the boot will 
 
 ## Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step  
 
-This indicates that our webserver has timed out. The process of ingestion is continuing on the Drupal side, but this is of no help to the elife bot, which, like a forlorn lover, is going to continue to send missives of hope to Drupal. At this point any number of issues might arise, but your best hope is that in the course of resending a publication message to Drupal, the next request comes in after Drupal has completed the previous request, and this request completes in under 60 seconds, and no articles are unpublished or corrupted in the process. 
+This indicates that our webserver has timed out. The process of ingestion is continuing on the Drupal side, but this is of no help to the elife bot, which, like a forlorn lover, is going to continue to send missives of hope to Drupal. At this point any number of issues might arise, but your best hope is that in the course of resending a publication message to Drupal, the next request comes in after Drupal has completed the previous request, and this request completes in under 60 seconds, and no articles are unpublished or corrupted in the process.
 
 ## Articles are not making it to the dashboard
 
