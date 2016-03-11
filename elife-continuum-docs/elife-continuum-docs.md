@@ -209,7 +209,12 @@ Drupal is busy processing another request. Usually the solution to this is to wa
 
 ## Drupal is returning a 500 error on the PostEIF workflow step  
 
+Presently it's unclear what is causing these errors, it is probably judicious to check the health of the Drupal instance before reposting the article, as there may be some identifiable issue with Drupal, such as a specifically slow database query.
+
+
 ## Drupal is returning a 503 error on the PostEIF workflow step  
+
+The Drupal server is unavailable,usually a deploy is in progress, the boot will retry for five minutes, and if it does not success within that window, wait for the deploy to be complete and restart the workflow.
 
 ## Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step  
 
