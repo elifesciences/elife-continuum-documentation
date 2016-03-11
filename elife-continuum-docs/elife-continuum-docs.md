@@ -24,6 +24,10 @@ eLife Continuum
 		- [Redeploying the bot from elife-bilder](#redeploying-the-bot-from-elife-bilder)
 - [Common errors, and overcoming them](#common-errors-and-overcoming-them)
 	- [Dashboard article preview links are truncated.](#dashboard-article-preview-links-are-truncated)
+	- [Drupal is returning a 500 error on the PostEIF workflow step](#drupal-is-returning-a-500-error-on-the-posteif-workflow-step)
+	- [Drupal is returning a 503 error on the PostEIF workflow step](#drupal-is-returning-a-503-error-on-the-posteif-workflow-step)
+	- [Drupal is returning a 429 error on the PostEIF workflow step](#drupal-is-returning-a-429-error-on-the-posteif-workflow-step)
+	- [Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step](#drupal-is-returning-a-messageconnection-aborted-badstatusline-on-the-posteif-workflow-step)
 	- [Articles are not making it to the dashboard](#articles-are-not-making-it-to-the-dashboard)
 - [ppp-feeder](#ppp-feeder)
 	- [Feeding an article into the system using `ppp-feeder`](#feeding-an-article-into-the-system-using-ppp-feeder)
@@ -159,7 +163,7 @@ If any of these are missig then there is a problem. To restart the required pyth
 
 	elife@ip-10-0-2-237:~$ killall -u elife python  
 	elife@ip-10-0-2-237:~$ cd /opt/elife-bot && /opt/elife-bot/scripts/run_env.sh live
-	
+
 
 
 ### Redeploying the bot from elife-bilder
@@ -180,6 +184,15 @@ the appropriate postfix for the service name.
 ## Dashboard article preview links are truncated.
 
 Occasionally you may see a `The requested URL was not found on the server.` error when trying to view the processing history of an article on the dashboard. Check the link, and if the link looks like The requested URL was not found on the server.``
+
+## Drupal is returning a 500 error on the PostEIF workflow step  
+
+## Drupal is returning a 503 error on the PostEIF workflow step  
+j
+## Drupal is returning a 429 error on the PostEIF workflow step  
+
+
+## Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step  
 
 ## Articles are not making it to the dashboard
 
@@ -224,7 +237,6 @@ you may need to run some of the commands as `sudo`.
 Running
 
 	$ `ppp-feeder` ppp-feeder.py -p elife-10856-vor-r4 -r 1  elife-production-final workflow-starter-queue
-
 
 
 ### Feeding an article into the system using an AWS bucket
