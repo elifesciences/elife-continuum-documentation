@@ -215,7 +215,8 @@ you may need to run some of the commands as `sudo`.
 
 	$ git clone https://github.com/elifesciences/ppp-feeder.git
 	$ cd ppp-feeder
-	$ virtualenv ppp-feeder
+	$ virtualenv feeder-env
+	$ source feeder-env/bin/activate
 	$ pip install -r requirements.txt
 	$ export AWS_DEFAULT_REGION=us-east-1
 	$ export AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
