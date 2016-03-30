@@ -35,6 +35,11 @@ eLife Continuum
 	- [`ppp-feeder` quickstart](#ppp-feeder-quickstart)
 		- [Feeding an article into the system using an AWS bucket](#feeding-an-article-into-the-system-using-an-aws-bucket)
 		- [Feeding an article into the system using the SWF console](#feeding-an-article-into-the-system-using-the-swf-console)
+- [Deploying a test instance of Continuum using elife-builder](#deploying-a-test-instance-of-continuum-using-elife-builder)
+	- [Deploying a test instance of the elife website.](#deploying-a-test-instance-of-the-elife-website)
+	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
+	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
+	- [Preparing and creating the required AWS resources](#preparing-and-creating-the-required-aws-resources)
 
 <!-- /TOC -->
 
@@ -268,3 +273,196 @@ Running
 ### Feeding an article into the system using an AWS bucket
 
 ### Feeding an article into the system using the SWF console
+
+
+# Deploying a test instance of Continuum using elife-builder
+
+`elife-builder` is a project that is used for deployments within eLife. It is a wrapper for
+python fabric, and we use [http://saltstack.com]() for configuration management. We use Amazon Cloud Formation templates for deploying machines on the amazon cloud.
+
+Builder knows about projects that are defined in the [top.sls](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/top.sls) file. For our purposes a project is all of the configuration information needed to build a server that can run a service. These projects have their specific detailed configuration image-information defined in salt under the [salt/salt/]
+(https://github.com/elifesciences/elife-builder/tree/master/salt/salt/) directory (e.g. this is our configuration for jira) [elife-jira]
+(https://github.com/elifesciences/elife-builder/tree/master/salt/salt/elife-jira). These instance specific configurations can also inherit from a base configuration, making it tractable to define common pieces of infrastructure, like logging infrastructure.
+
+Builder provides some commands for deploying machines, and there is an experimental version of builder that can be used to deploy git branches, in addition to the main git repository.
+
+>  
+	./bldr aws_launch_instance
+
+Will create an ad-hoc instance and the associated cloud formation templates, if they do not already exist.
+
+>    
+	./bldr deploy
+
+is a command on the experimental branch of builder that can do branch deployes, but currently there is an issue with brnach deploys being misconfigured.  Only projects that are keyed off of a git repository can be deployed like this.
+
+'master' deployments will use the 'master' alternate configuration (in the projects/elife.yaml file) if it exists. Most projects have better instances and rds backed databases for master/production deploys.
+
+
+
+
+
+## Deploying a test instance of the elife website.
+
+In order to deploy to AWS builder uses cloudformation, and so when deploying we need to create the stack template, and then deploy that stack template.
+
+If you wish to just create the cloudformation stack without launching it then use `./bldr create_stack`. To both create and launch a stack use `./bldr aws_launch_instance`.
+
+If the project uses a webserver, it will probably be available at instancename.sub.elifesciences.org. For example, an instance of the lax project called branch-foo when deployed will be available at branch-foo.lax.elifesciences.org. The routing is defined in [/projects/elife.yaml](uri-config).
+
+For this test we are going to use the instance prefix `continuum-test`.
+
+To launch an instance of the elife website do the following
+
+>   
+	bldr aws_launch_instance
+
+You will be asked to choose from projects that builder knows about:
+
+>   
+	please pick a known project:
+	1 - basebox
+	2 - builder-builder
+	3 - central-logging
+	4 - elife-api
+	5 - elife-dashboard
+	6 - elife-jira
+	7 - lagotto
+	8 - elife-bot
+	9 - elife-bot-large
+	10 - master-server
+	11 - elife-civiapi
+	12 - elife-ci
+	13 - elife-crm
+	14 - elife-website
+	15 - elife-website-medium
+	16 - elife-arges
+	17 - elife-lax
+	18 - elife-lax-nonrds
+	19 - elife-metrics
+
+Pick the `elife-website` project and provide the instance id (our prefix)
+ that we want. It defaults to giving an instance id based off of today's date. For this example we will enter `continuum-test` and hit return.
+
+>   
+	 > ('elife-website') 14
+	 instance id [2016-03-29]:
+	 > continuum-test
+
+Looking in [/projects/elife.yaml](uri-config) we [see that the namespace for the website is `v2`](https://github.com/elifesciences/elife-builder/blob/master/projects/elife.yaml#L231):
+
+>    
+	elife-website:
+	    subdomain: v2 # v2.elifesciences.org
+	    aws:
+	        ports:
+	            22: 22
+	            80: 80
+
+so our `continuum-test` version of the website will be available at [http://continuum-test.v2.elifesciences.org]().
+
+This will also sync a copy of the backup DB into Drupal, and brining up this instance took about five minutes.
+
+
+## Deploying an instance of lax
+
+>  
+		$ ./bldr aws_launch_instance
+
+Provide the `continuum-test` as the instance name, and lax is now available at
+
+[uri-config]: https://github.com/elifesciences/elife-builder/blob/master/projects/elife.yaml
+
+
+## Deploying an instance of the dashboard with custom configuration
+
+Configuration for our projects is determined by salt. Salt uses yaml files to find the configuration files, and project configuration is held in the builder repository rather than in the project specific repo. Salt can be configured to set different configuration based on project name, and this provides a nice way to manage alternaitve configrations for live or development enviornments.
+
+[top.sls](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/top.sls) is where this routing is done, and if you examine the section for the dashboard project you can see that currently there are two sets of configurations defined:
+
+
+>   
+	'elife-dashboard-*':
+		- base.daily-system-updates
+		- base.python-dev
+		- base.postgresql
+		- base.nginx
+		- base.uwsgi
+		- base.acme
+		- elife-dashboard
+		- elife-dashboard.uwsgi
+	'elife-dashboard-parallel':
+		- elife-dashboard.parallel
+
+The `elife-dashboard-*` config setting will catch all instances that match elife-dashboard.
+
+the `elife-dashboard-parallel` settings will only be applied to instances that match that name.
+
+To create a custom config for our `continuum-test` namespace we just need to add a new reouting setting here:
+
+>   
+	'elife-dashboard-*':
+		- base.daily-system-updates
+		- base.python-dev
+		- base.postgresql
+		- base.nginx
+		- base.uwsgi
+		- base.acme
+		- elife-dashboard
+		- elife-dashboard.uwsgi
+ 	'elife-dashboard-continuum-test':
+		- elife-dashboard.continuum-test
+	'elife-dashboard-parallel':
+		- elife-dashboard.parallel
+
+These directives point to `.sls` files held in the project specific directory of salt, and those `.sls` files are where the location of the speicifc configuration files are set.
+
+To make `elife-dashboard.continuum-test` active we need a corresponding `continuum-test.sls` file in the `/salt/salt/elife-dashbard/` directory. This file will point to a `salt/salt/elife-dashboard/config/srv-app-dashboard-continuum-test_settings.py` file, and it is in this file that we can define our custom AWS settings for this instance.
+
+`srv-app-dashboard-continuum-test_settings.py`:
+
+>   
+	{% set app = pillar.elife_dashboard %}
+	preview_base_url = 'http://continuum-test.elifesciences.org/'
+	# RDS settings
+	rds_region = 'us-east-1'
+	# SQS settings
+	sqs_region = 'us-east-1'
+	event_monitor_queue = 'ct-event-property-incoming-queue'
+	workflow_starter_queue = 'ct-workflow-starter-queue'
+	event_queue_pool_size = 5
+	event_queue_message_count = 5
+	# Logging
+	log_level = "WARN"
+	log_file = "/var/log/app.log"
+	process_queue_log_file = "/var/log/process-queue.log"
+	# Database
+	database = "{{ app.db.name }}"
+	host = "{{ salt['elife.cfg']('cfn.outputs.RDSHost') or app.db.host }}"
+	port = "{{ salt['elife.cfg']('cfn.outputs.RDSPort') or app.db.port }}"
+	user = "{{ app.db.username }}"
+	password = "{{ app.db.password }}"
+
+We can now bring up this instance with:
+
+>  
+	./bldr aws_launch_instance
+
+This will bring up a dashboard instance at ``. (note, currently any infrastrucutre that is RDS backed will take some time to come up).
+
+We can verify that our configuration has suycceeded by ssh'ing in to the machine and looking at the settings file on the machine.
+
+You can verify that the correct instance of the dashboard has been created by ssh'ing into the machine, and
+
+>
+	$ cd /srv/app/dashboard/
+	$ grep "event_monitor_queue" settings.py
+	event_monitor_queue = 'ct-event-property-incoming-queue'
+
+You should see the same queue name as the one provided in the setting file of the builder repo.
+
+## Preparing and creating the required AWS resources
+
+We need to ensure that some buckets have been created in AWS
+
+Our publishing infrastructure runs off of AWS.
