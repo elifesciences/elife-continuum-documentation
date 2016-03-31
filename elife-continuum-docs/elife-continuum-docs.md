@@ -40,6 +40,11 @@ eLife Continuum
 	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
 	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
 	- [Preparing and creating the required AWS resources](#preparing-and-creating-the-required-aws-resources)
+		- [Creating S3 Buckets](#creating-s3-buckets)
+		- [Creating the required queues](#creating-the-required-queues)
+		- [Connecting our S3 buckets to our queues](#connecting-our-s3-buckets-to-our-queues)
+		- [Creating the required SWF domain](#creating-the-required-swf-domain)
+		- [Using a utility script to create these resources](#using-a-utility-script-to-create-these-resources)
 
 <!-- /TOC -->
 
@@ -463,6 +468,102 @@ You should see the same queue name as the one provided in the setting file of th
 
 ## Preparing and creating the required AWS resources
 
-We need to ensure that some buckets have been created in AWS
+Our publishing infrastructure runs off of AWS. Services use amazon S3 to store articles in different processing states, as well as storing other artifacts, such as the article XML, and as the location of the CDN for content on the live site. We uses SQS to provide queues for communicating between services, and we use Amazon Simple Workflow to coordinate the activities of the publishing bot.
 
-Our publishing infrastructure runs off of AWS.
+The appropriate resources need to be created in AWS before the publishing system can run.
+
+### Creating S3 Buckets
+
+The elife-bot [requires the following buckets](# https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27) to exist:
+
+>      
+    production_bucket = 'elife-production-final'
+    eif_bucket = 'elife-publishing-eif'
+    expanded_bucket = 'elife-publishing-expanded'
+    ppp_cdn_bucket = 'elife-publishing-cdn'
+    archive_bucket = 'elife-publishing-archive'
+    xml_bucket = 'elife-publishing-xml'
+
+Here the variable name is internal to the code and the value should be the name of an actual bucket in your AWS infrastructure.
+
+The elife-bot code takes a variable for a [bucket prefix](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L32), so if you include a prefix here the code will look for AWS S3 buckets that have the name provided in this setting with the addition of this prefix. E.g. if you provide the prefix `exp-` the bot code will look for buckets like `exp-elife-publishing-cdn` etc. This is a handy way to create different resources for testing or production.
+
+### Creating the required queues
+
+The publishing dashboard requires the [following queues](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-dashboard/config/srv-app-dashboard-prod_settings.py#L9-L11) to be created:
+
+>  
+  sqs_region = 'us-east-1'
+  event_monitor_queue = 'event-property-incoming-queue'
+  workflow_starter_queue = 'workflow-starter-queue'
+
+The elife-bot requires the [following queues](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27) to be created:
+
+>       
+  S3_monitor_queue = 'incoming-queue'
+  event_monitor_queue = 'event-property-incoming-queue'
+  workflow_starter_queue = 'workflow-starter-queue'
+
+The code that looks for queues does not have the ability to specify a prefix. This is an inconsistency that we aim to resolve in a later release.
+
+### Connecting our S3 buckets to our queues
+
+The publishing system in Continuum reacts when a new article arrives. The way it does this is that
+S3 buckets can trigger events that can be pushed onto a queue. We trigger an event eery time a new article arrives in a specified bucket, and this populates a queues that the publishing system is listening to. When the publishing system sees that a new article has arrived it triggers the publishing process.
+
+To enable this we need to turn on bucket notifications for the , and
+
+the bucket needs to have the following permissions
+
+aws: list, update/delete, view permissions, edit permissions
+
+>   
+  notifications need to be set to:
+  have a name: NewS3Object
+  events: ObjectCreated (All)
+  SQSqueue
+  queue name: incoming-queue
+
+The appropriate queue needs to have a policy like the following assigned to it:
+
+>   
+  {
+    "Version": "2012-10-17",
+    "Id": "arn:aws:sqs:us-east-1:512686554592:incoming-queue/SQSDefaultPolicy",
+    "Statement": [
+      {
+        "Sid": "",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "*"
+        },
+        "Action": "SQS:SendMessage",
+        "Resource": "arn:aws:sqs:us-east-1:512686554592:incoming-queue",
+        "Condition": {
+          "ArnLike": {
+            "aws:SourceArn": "arn:aws:s3:*:*:elife-production-final"
+          }
+        }
+      }
+    ]
+  }
+
+
+
+
+### Creating the required SWF domain
+
+The bot communicates with Amazon Simple Work Flow, which is a workflow management system. SWF has a concept called domains. These domains provide namespaces within which workflows can operate. We can create instances of our publishing system that operate within different domains, and this ensures that different environments will not interfere with each other.
+
+Domains can be created from the SWF console, and they can also be created using AWS command line utilities or SDKs.
+
+If we have a prefix `ct` that we want to use to create a domain the following `boto3` code will do that for us
+
+>        
+    swf = boto3.client('swf')
+    prefix = `ct`
+    swf.register_domain(name="Publish" + "." + prefix, description="test SWF domain for thie
+
+
+
+### Using a utility script to create these resources
