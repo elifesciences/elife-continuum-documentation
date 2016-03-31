@@ -36,6 +36,8 @@ eLife Continuum
 		- [Feeding an article into the system using an AWS bucket](#feeding-an-article-into-the-system-using-an-aws-bucket)
 		- [Feeding an article into the system using the SWF console](#feeding-an-article-into-the-system-using-the-swf-console)
 - [Deploying a test instance of Continuum using elife-builder](#deploying-a-test-instance-of-continuum-using-elife-builder)
+	- [Useful builder commands](#useful-builder-commands)
+	- [Deploying an instance with builder](#deploying-an-instance-with-builder)
 	- [Deploying a test instance of the elife website.](#deploying-a-test-instance-of-the-elife-website)
 	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
 	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
@@ -45,6 +47,7 @@ eLife Continuum
 		- [Connecting our S3 buckets to our queues](#connecting-our-s3-buckets-to-our-queues)
 		- [Creating the required SWF domain](#creating-the-required-swf-domain)
 		- [Using a utility script to create these resources](#using-a-utility-script-to-create-these-resources)
+	- [how to reset the path to the CDN](#how-to-reset-the-path-to-the-cdn)
 
 <!-- /TOC -->
 
@@ -283,27 +286,34 @@ Running
 # Deploying a test instance of Continuum using elife-builder
 
 `elife-builder` is a project that is used for deployments within eLife. It is a wrapper for
-python fabric, and we use [http://saltstack.com]() for configuration management. We use Amazon Cloud Formation templates for deploying machines on the amazon cloud.
+python fabric, and we use [http://saltstack.com]() for configuration management. We use Amazon Cloud Formation templates for deploying machines on the amazon cloud. It is under rapid development
+and this documentation refers to the [ctdocs-master-v1](https://github.com/elifesciences/elife-builder/tree/ctdocs-master-v1) tag for code on the master branch, and the [ctdocs-v1](https://github.com/elifesciences/elife-builder/tree/ctdocs-v1) for code that is being developed on the [feature-bldr2](https://github.com/elifesciences/elife-builder/tree/feature-bldr2) branch.
 
 Builder knows about projects that are defined in the [top.sls](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/top.sls) file. For our purposes a project is all of the configuration information needed to build a server that can run a service. These projects have their specific detailed configuration image-information defined in salt under the [salt/salt/]
-(https://github.com/elifesciences/elife-builder/tree/master/salt/salt/) directory (e.g. this is our configuration for jira) [elife-jira]
-(https://github.com/elifesciences/elife-builder/tree/master/salt/salt/elife-jira). These instance specific configurations can also inherit from a base configuration, making it tractable to define common pieces of infrastructure, like logging infrastructure.
+(https://github.com/elifesciences/elife-builder/tree/master/salt/salt/) directory (e.g. this is our configuration for jira) [elife-jira](https://github.com/elifesciences/elife-builder/tree/master/salt/salt/elife-jira). These instance specific configurations can also inherit from a base configuration, making it tractable to define common pieces of infrastructure, like logging infrastructure.
 
-Builder provides some commands for deploying machines, and there is an experimental version of builder that can be used to deploy git branches, in addition to the main git repository.
+## Useful builder commands
 
->  
-	./bldr aws_launch_instance
+  $ ./bldr aws_stack_list
 
-Will create an ad-hoc instance and the associated cloud formation templates, if they do not already exist.
+Will list all running ec2 instances that have been created with builder.
 
->    
-	./bldr deploy
+  $ ./bldr ssh
 
-is a command on the experimental branch of builder that can do branch deployes, but currently there is an issue with brnach deploys being misconfigured.  Only projects that are keyed off of a git repository can be deployed like this.
+Will provide options for ssh'ing into any given machine.
 
-'master' deployments will use the 'master' alternate configuration (in the projects/elife.yaml file) if it exists. Most projects have better instances and rds backed databases for master/production deploys.
+## Deploying an instance with builder
 
+Builder provides the `aws_launch_instance` command to launch instances. By default this will
+launch an instance based off of the git repo specified in the salt configuration. When deploying
+with `aws_launch_instance` you are given an option to provide a prefix for instance name, so you
+can use this command to launch multiple instances of the same codebase under different names. We will see an example of doing this later. If you want to launch different branches of the code you will need to alter the salt configuration to point to different branches of your code in git.
+For example, if we wanted to deploy a different branch of lax we would need to modify the [init.sls file here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-lax/init.sls#L9) to point to a specific named branch. If we wished to deploy a different branch of the elife dashboard we would either need to modify [init.sls here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-dashboard/init.sls#L11), or we would need to provide a custom `.sls` file that overrode the information ind `init.sls`.
 
+The [feature-bldr2](https://github.com/elifesciences/elife-builder/tree/feature-bldr2) branch of builder has a command `deploy` that takes a different approach. This command allows you to deploy
+from a branch of a project, and builds a machine with a name keyed off of the branch. This approach makes it a lot faster to deploy branch-based versions of your application. If you want to deploy multiple versions of the same code to different named instances you should clone the branch of interest into a new branch, and then deploy that branch using the `deploy` command.
+
+We will look at examples of both methods for bringing up parts of the continuum infrastructure.
 
 
 
@@ -379,9 +389,10 @@ Provide the `continuum-test` as the instance name, and lax is now available at
 [uri-config]: https://github.com/elifesciences/elife-builder/blob/master/projects/elife.yaml
 
 
+
 ## Deploying an instance of the dashboard with custom configuration
 
-Configuration for our projects is determined by salt. Salt uses yaml files to find the configuration files, and project configuration is held in the builder repository rather than in the project specific repo. Salt can be configured to set different configuration based on project name, and this provides a nice way to manage alternaitve configrations for live or development enviornments.
+Configuration for our projects is determined by salt. Salt uses yaml files to find the configuration files, and project configuration is held in the builder repository rather than in the project specific repo. Salt can be configured to set different configuration based on project name, and this provides a nice way to manage alternative configurations for live or development environments.
 
 [top.sls](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/top.sls) is where this routing is done, and if you examine the section for the dashboard project you can see that currently there are two sets of configurations defined:
 
@@ -403,7 +414,7 @@ The `elife-dashboard-*` config setting will catch all instances that match elife
 
 the `elife-dashboard-parallel` settings will only be applied to instances that match that name.
 
-To create a custom config for our `continuum-test` namespace we just need to add a new reouting setting here:
+To create a custom config for our `continuum-test` namespace we just need to add a new routing setting here:
 
 >   
 	'elife-dashboard-*':
@@ -420,7 +431,7 @@ To create a custom config for our `continuum-test` namespace we just need to add
 	'elife-dashboard-parallel':
 		- elife-dashboard.parallel
 
-These directives point to `.sls` files held in the project specific directory of salt, and those `.sls` files are where the location of the speicifc configuration files are set.
+These directives point to `.sls` files held in the project specific directory of salt, and those `.sls` files are where the location of the specific configuration files are set.
 
 To make `elife-dashboard.continuum-test` active we need a corresponding `continuum-test.sls` file in the `/salt/salt/elife-dashbard/` directory. This file will point to a `salt/salt/elife-dashboard/config/srv-app-dashboard-continuum-test_settings.py` file, and it is in this file that we can define our custom AWS settings for this instance.
 
@@ -453,7 +464,7 @@ We can now bring up this instance with:
 >  
 	./bldr aws_launch_instance
 
-This will bring up a dashboard instance at ``. (note, currently any infrastrucutre that is RDS backed will take some time to come up).
+This will bring up a dashboard instance at `[http://continuum-test.ppp-dash.elifesciences.org/]()`. (note, currently any infrastrucutre that is RDS backed will take some time to come up).
 
 We can verify that our configuration has suycceeded by ssh'ing in to the machine and looking at the settings file on the machine.
 
@@ -567,3 +578,36 @@ If we have a prefix `ct` that we want to use to create a domain the following `b
 
 
 ### Using a utility script to create these resources
+
+
+## how to reset the path to the CDN
+
+go here: http://continuum-test.v2.elifesciences.org/admin/config/services/elife-article-assets-source
+
+drush uli
+http://localhost:80/user/reset/1/1459414781/66jxB_K_HVOtdt3_Mqu19fa6FvCJqvbwNeSYoquv--I/login
+
+and do something
+
+
+----
+
+cd /opt/letsencrypt/
+   2  git status
+   3  git reset --hard
+
+
+  sudo salt-call state.highstate
+
+
+  # something something cron
+  A good question - they're not up-to-date in the builder, and they're also
+commented out in the builder. These two are the current ones on the master
+bot
+
+*/5 * * * * cd /opt/elife-bot && /opt/elife-bot/scripts/run_cron_env.sh live
+27 * * * * killall -u elife python && cd /opt/elife-bot &&
+/opt/elife-bot/scripts/run_env.sh live
+
+First one is the 5 minutely cron
+Second one is the killer and restarter hourly
