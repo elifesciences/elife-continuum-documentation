@@ -38,6 +38,7 @@ eLife Continuum
 - [Deploying a test instance of Continuum using elife-builder](#deploying-a-test-instance-of-continuum-using-elife-builder)
 	- [Useful builder commands](#useful-builder-commands)
 	- [Deploying an instance with builder](#deploying-an-instance-with-builder)
+		- [Fixing builder2 issues with let's encrypt](#fixing-builder2-issues-with-lets-encrypt)
 	- [Deploying a test instance of the elife website.](#deploying-a-test-instance-of-the-elife-website)
 	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
 	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
@@ -314,6 +315,19 @@ The [feature-bldr2](https://github.com/elifesciences/elife-builder/tree/feature-
 from a branch of a project, and builds a machine with a name keyed off of the branch. This approach makes it a lot faster to deploy branch-based versions of your application. If you want to deploy multiple versions of the same code to different named instances you should clone the branch of interest into a new branch, and then deploy that branch using the `deploy` command.
 
 We will look at examples of both methods for bringing up parts of the continuum infrastructure.
+
+### Fixing builder2 issues with let's encrypt
+
+Currently there is an issue with let's encrypt, and when deploying via the `build` command, builds fail. To overcome this you can manually resolve this issue on the machine, and then manually restart the salt deploy.
+
+Ssh into the machine affected and from there do the following:
+----
+
+>   
+  $ cd /opt/letsencrypt/
+  $ git reset --hard
+  $ sudo salt-call state.highstate
+
 
 
 
@@ -626,14 +640,6 @@ If we have a prefix `ct` that we want to use to create a domain the following `b
 
 
 
-----
-
-cd /opt/letsencrypt/
-   2  git status
-   3  git reset --hard
-
-
-  sudo salt-call state.highstate
 
 
   # something something cron
