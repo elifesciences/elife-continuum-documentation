@@ -49,6 +49,7 @@ eLife Continuum
 		- [Connecting our S3 buckets to our queues](#connecting-our-s3-buckets-to-our-queues)
 		- [Creating the required SWF domain](#creating-the-required-swf-domain)
 		- [Using a utility script to create these resources](#using-a-utility-script-to-create-these-resources)
+		- [A note about cron jobs with the elife-bot](#a-note-about-cron-jobs-with-the-elife-bot)
 
 <!-- /TOC -->
 
@@ -640,16 +641,17 @@ If we have a prefix `ct` that we want to use to create a domain the following `b
 
 
 
+### A note about cron jobs with the elife-bot
 
+Some workflows in the publishing system require a cron job to run to periodically
+check for inbound articles. The cron jobs are not currently configured through the builder.
 
-  # something something cron
-  A good question - they're not up-to-date in the builder, and they're also
-commented out in the builder. These two are the current ones on the master
-bot
+It would be good to ensure that the following cron jobs are enabled:
 
-*/5 * * * * cd /opt/elife-bot && /opt/elife-bot/scripts/run_cron_env.sh live
-27 * * * * killall -u elife python && cd /opt/elife-bot &&
-/opt/elife-bot/scripts/run_env.sh live
+>
+  */5 * * * * cd /opt/elife-bot && /opt/elife-bot/scripts/run_cron_env.sh live
+  27 * * * * killall -u elife python && cd /opt/elife-bot &&
+  /opt/elife-bot/scripts/run_env.sh
 
-First one is the 5 minutely cron
-Second one is the killer and restarter hourly
+`run_cron_env.sh live` runs every five minutes to ...
+`run_env.sh` runs every hour to restart the machine because `reasons`
