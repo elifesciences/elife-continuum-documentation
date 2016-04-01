@@ -48,7 +48,6 @@ eLife Continuum
 		- [Connecting our S3 buckets to our queues](#connecting-our-s3-buckets-to-our-queues)
 		- [Creating the required SWF domain](#creating-the-required-swf-domain)
 		- [Using a utility script to create these resources](#using-a-utility-script-to-create-these-resources)
-	- [how to reset the path to the CDN](#how-to-reset-the-path-to-the-cdn)
 
 <!-- /TOC -->
 
@@ -379,7 +378,7 @@ so our `continuum-test` version of the website will be available at [http://cont
 
 This will also sync a copy of the backup DB into Drupal, and brining up this instance took about five minutes.
 
-The path to the CDN is hard coded in this instance, but we can override this from the Drupal management screen. Use `drush` to generate an admin login token, and then go to the following admin screen [http://continuum-test.v2.elifesciences.org/admin/config/services/elife-article-assets-source](). You can configure the path to the DCN from this page. This is important if you are testing your system with a version of the bot that pushes content into a test CDN location.
+The path to the CDN is hard coded in this instance, but we can override this from the Drupal management screen. To access the site you can use the `drush uli` command to generate an admin login token, and then go to the following admin screen [http://continuum-test.v2.elifesciences.org/admin/config/services/elife-article-assets-source](). You can configure the path to the CDN from this page. This is important if you are testing your system with a version of the bot that pushes content into a test CDN location.
 
 
 ## Deploying an instance of lax
@@ -625,15 +624,6 @@ If we have a prefix `ct` that we want to use to create a domain the following `b
 
 ### Using a utility script to create these resources
 
-
-## how to reset the path to the CDN
-
-go here: http://continuum-test.v2.elifesciences.org/admin/config/services/elife-article-assets-source
-
-drush uli
-http://localhost:80/user/reset/1/1459414781/66jxB_K_HVOtdt3_Mqu19fa6FvCJqvbwNeSYoquv--I/login
-
-and do something
 
 
 ----
