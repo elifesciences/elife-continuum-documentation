@@ -41,6 +41,7 @@ eLife Continuum
 	- [Deploying a test instance of the elife website.](#deploying-a-test-instance-of-the-elife-website)
 	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
 	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
+	- [Deploying a custom instance of the bot](#deploying-a-custom-instance-of-the-bot)
 	- [Preparing and creating the required AWS resources](#preparing-and-creating-the-required-aws-resources)
 		- [Creating S3 Buckets](#creating-s3-buckets)
 		- [Creating the required queues](#creating-the-required-queues)
@@ -378,6 +379,8 @@ so our `continuum-test` version of the website will be available at [http://cont
 
 This will also sync a copy of the backup DB into Drupal, and brining up this instance took about five minutes.
 
+The path to the CDN is hard coded in this instance, but we can override this from the Drupal management screen. Use `drush` to generate an admin login token, and then go to the following admin screen [http://continuum-test.v2.elifesciences.org/admin/config/services/elife-article-assets-source](). You can configure the path to the DCN from this page. This is important if you are testing your system with a version of the bot that pushes content into a test CDN location.
+
 
 ## Deploying an instance of lax
 
@@ -389,13 +392,11 @@ Provide the `continuum-test` as the instance name, and lax is now available at
 [uri-config]: https://github.com/elifesciences/elife-builder/blob/master/projects/elife.yaml
 
 
-
 ## Deploying an instance of the dashboard with custom configuration
 
 Configuration for our projects is determined by salt. Salt uses yaml files to find the configuration files, and project configuration is held in the builder repository rather than in the project specific repo. Salt can be configured to set different configuration based on project name, and this provides a nice way to manage alternative configurations for live or development environments.
 
 [top.sls](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/top.sls) is where this routing is done, and if you examine the section for the dashboard project you can see that currently there are two sets of configurations defined:
-
 
 >   
 	'elife-dashboard-*':
@@ -464,9 +465,9 @@ We can now bring up this instance with:
 >  
 	./bldr aws_launch_instance
 
-This will bring up a dashboard instance at `[http://continuum-test.ppp-dash.elifesciences.org/]()`. (note, currently any infrastrucutre that is RDS backed will take some time to come up).
+This will bring up a dashboard instance at `[http://continuum-test.ppp-dash.elifesciences.org/]()`. (note, currently any infrastructure that is RDS backed will take some time to come up).
 
-We can verify that our configuration has suycceeded by ssh'ing in to the machine and looking at the settings file on the machine.
+We can verify that our configuration has succeeded by ssh'ing in to the machine and looking at the settings file on the machine.
 
 You can verify that the correct instance of the dashboard has been created by ssh'ing into the machine, and
 
@@ -476,6 +477,51 @@ You can verify that the correct instance of the dashboard has been created by ss
 	event_monitor_queue = 'ct-event-property-incoming-queue'
 
 You should see the same queue name as the one provided in the setting file of the builder repo.
+
+## Deploying a custom instance of the bot
+
+Configuration for the bot is slightly different. Rather than telling salt to point to a specific custom settings file, we modify the settings file in place, and we add a new class in that settings file that is used by the bot when the bot is run.
+
+We need to add that class to [opt-elife-bot-settings.py](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py), and it should contain pointers to the new instances of `lax`, and the `elife-website` that we have just brought up. It should also point to the appropriately named AWS resources, so for this example we should expect to see the following in this class
+
+>      sqs_region = 'us-east-1'
+    S3_monitor_queue = 'ct-incoming-queue'
+    event_monitor_queue = 'ct-event-property-incoming-queue'
+    workflow_starter_queue = 'ct-workflow-starter-queue'
+    workflow_starter_queue_pool_size = 5
+    workflow_starter_queue_message_count = 5
+
+
+>       # S3 settings
+    publishing_buckets_prefix = 'ct-'
+    # shouldn't need this but uploads seem to fail without. Should correspond with the s3 region
+    # hostname list here http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+    s3_hostname = 's3.amazonaws.com'
+    production_bucket = 'elife-production-final'
+    eif_bucket = 'elife-publishing-eif'
+    expanded_bucket = 'elife-publishing-expanded'
+    ppp_cdn_bucket = 'elife-publishing-cdn'
+    archive_bucket = 'elife-publishing-archive'
+    xml_bucket = 'elife-publishing-xml'
+
+>      # REST endpoint for drupal node builder
+    # drupal_naf_endpoint = 'http://localhost:5000/nodes'
+    drupal_EIF_endpoint = 'http://continuum-test.v2.elifesciences.org/api/article.json'
+    drupal_approve_endpoint = 'http://continuum-test.v2.elifesciences.org/api/publish/'
+
+
+>     # lax endpoint to retrieve information about published versions of articles
+    lax_article_versions = 'https://continuum-test.lax.elifesciences.org/api/v1/article/10.7554/eLife.{article_id}/version/'
+    lax_update = 'https://continuum-test.lax.elifesciences.org/api/v1/article/create-update/'
+
+When building the bot, builder does not launch the bot, so currently in order to run the bot you need to ssh into the bot machine, and launch the bot manually.
+
+>   
+  $ /opt/elife-bot/scripts/run_env.sh continuum
+
+We pass the class name that contains the instance specific settings, in order for the bot to start with those settings.
+
+
 
 ## Preparing and creating the required AWS resources
 
