@@ -349,6 +349,7 @@ If you wish to just create the cloudformation stack without launching it then us
 If the project uses a webserver, it will probably be available at instancename.sub.elifesciences.org. For example, an instance of the lax project called branch-foo when deployed will be available at branch-foo.lax.elifesciences.org. The routing is defined in [/projects/elife.yaml](uri-config).
 
 For this test we are going to use the instance prefix `continuum-test`.
+For this test we are going to use the instance suffix `continuum-test`.
 
 To launch an instance of the elife website do the following
 
@@ -380,6 +381,7 @@ You will be asked to choose from projects that builder knows about:
 	19 - elife-metrics
 
 Pick the `elife-website` project and provide the instance id (our prefix)
+Pick the `elife-website` project and provide the instance id (our suffix)
  that we want. It defaults to giving an instance id based off of today's date. For this example we will enter `continuum-test` and hit return.
 
 >   
