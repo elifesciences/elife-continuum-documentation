@@ -43,13 +43,13 @@ eLife Continuum
 	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
 	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
 	- [Deploying a custom instance of the bot](#deploying-a-custom-instance-of-the-bot)
+		- [A note about cron jobs with the elife-bot](#a-note-about-cron-jobs-with-the-elife-bot)
 	- [Preparing and creating the required AWS resources](#preparing-and-creating-the-required-aws-resources)
 		- [Creating S3 Buckets](#creating-s3-buckets)
 		- [Creating the required queues](#creating-the-required-queues)
 		- [Connecting our S3 buckets to our queues](#connecting-our-s3-buckets-to-our-queues)
 		- [Creating the required SWF domain](#creating-the-required-swf-domain)
 		- [Using a utility script to create these resources](#using-a-utility-script-to-create-these-resources)
-		- [A note about cron jobs with the elife-bot](#a-note-about-cron-jobs-with-the-elife-bot)
 
 <!-- /TOC -->
 
@@ -306,19 +306,12 @@ Will provide options for ssh'ing into any given machine.
 
 ## Deploying an instance with builder
 
-Builder provides the `aws_launch_instance` command to launch instances. By default this will
-launch an instance based off of the git repo specified in the salt configuration. When deploying
-with `aws_launch_instance` you are given an option to provide a prefix for instance name, so you
-can use this command to launch multiple instances of the same codebase under different names. We will see an example of doing this later. If you want to launch different branches of the code you will need to alter the salt configuration to point to different branches of your code in git.
-For example, if we wanted to deploy a different branch of lax we would need to modify the [init.sls file here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-lax/init.sls#L9) to point to a specific named branch. If we wished to deploy a different branch of the elife dashboard we would either need to modify [init.sls here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-dashboard/init.sls#L11), or we would need to provide a custom `.sls` file that overrode the information ind `init.sls`.
 Builder provides the `aws_launch_instance` command to create ad-hoc project instances on AWS.
 When using this command an "instance ID" is required that will uniquely identify this instance from all other instances of this project. The instance ID is suffixed to the project name. The instance ID of `test` for the `elife-website` for example will form the identifier `elife-website-test`.
 This command is able to launch any project but *not* branches of projects that are tied to a repository.
 
 Builder does provide the `deploy` command that will allow the creation of instances of a project specific to it's github branch names.
 
-The [feature-bldr2](https://github.com/elifesciences/elife-builder/tree/feature-bldr2) branch of builder has a command `deploy` that takes a different approach. This command allows you to deploy
-from a branch of a project, and builds a machine with a name keyed off of the branch. This approach makes it a lot faster to deploy branch-based versions of your application. If you want to deploy multiple versions of the same code to different named instances you should clone the branch of interest into a new branch, and then deploy that branch using the `deploy` command.
 The `deploy` command does not support multiple instances of the same branch. To deploy multiple intances of the code in a branch, clone that branch into a new branch and deploy that.
 
 For example, if we wanted to deploy a different branch of lax we would need to modify the [init.sls file here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-lax/init.sls#L9) to point to a specific named branch. If we wished to deploy a different branch of the elife dashboard we would either need to modify [init.sls here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-dashboard/init.sls#L11), or we would need to provide a custom `.sls` file that overrode the information ind `init.sls`.
@@ -331,13 +324,10 @@ Currently there is an issue with let's encrypt, and when deploying via the `buil
 
 Ssh into the machine affected and from there do the following:
 ----
-
 >   
   $ cd /opt/letsencrypt/
   $ git reset --hard
   $ sudo salt-call state.highstate
-
-
 
 
 ## Deploying a test instance of the elife website.
@@ -348,7 +338,6 @@ If you wish to just create the cloudformation stack without launching it then us
 
 If the project uses a webserver, it will probably be available at instancename.sub.elifesciences.org. For example, an instance of the lax project called branch-foo when deployed will be available at branch-foo.lax.elifesciences.org. The routing is defined in [/projects/elife.yaml](uri-config).
 
-For this test we are going to use the instance prefix `continuum-test`.
 For this test we are going to use the instance suffix `continuum-test`.
 
 To launch an instance of the elife website do the following
@@ -380,7 +369,6 @@ You will be asked to choose from projects that builder knows about:
 	18 - elife-lax-nonrds
 	19 - elife-metrics
 
-Pick the `elife-website` project and provide the instance id (our prefix)
 Pick the `elife-website` project and provide the instance id (our suffix)
  that we want. It defaults to giving an instance id based off of today's date. For this example we will enter `continuum-test` and hit return.
 
@@ -513,7 +501,9 @@ Configuration for our projects is determined by salt. Salt uses yaml files to fi
 	'elife-dashboard-parallel':
 		- elife-dashboard.parallel
 
-The `elife-dashboard-*` config setting will catch all instances that match elife-dashboard.
+The `elife-dashboard-*` config setting will catch all instances that match elife-dashboard. The
+`elife-dashboard` directive requires an `init.sls` config file to be in the project directory.
+You can omit a directive like `elife-dashboard`, but you cannot have a `elife-dashboard` directive without the `init.sls` file.
 
 the `elife-dashboard-parallel` settings will only be applied to instances that match that name.
 
@@ -542,7 +532,6 @@ To make `elife-dashboard.continuum-test` active we need a corresponding `continu
 
 >   
 	{% set app = pillar.elife_dashboard %}
-	preview_base_url = 'http://continuum-test.elifesciences.org/'
 	preview_base_url = 'http://continuum-test.v2.elifesciences.org/'
 	# RDS settings
 	rds_region = 'us-east-1'
@@ -570,8 +559,6 @@ We can now bring up this instance with:
 
 This will bring up a dashboard instance at `[http://continuum-test.ppp-dash.elifesciences.org/]()`. (note, currently any infrastructure that is RDS backed will take some time to come up).
 
-We can verify that our configuration has succeeded by ssh'ing in to the machine and looking at the settings file on the machine.
-
 You can verify that the correct instance of the dashboard has been created by ssh'ing into the machine, and
 
 >
@@ -581,69 +568,38 @@ You can verify that the correct instance of the dashboard has been created by ss
 
 You should see the same queue name as the one provided in the setting file of the builder repo.
 
-## Deploying a custom instance of the bot
 ### bringing up an instance of the dashboard
 
-Configuration for the bot is slightly different. Rather than telling salt to point to a specific custom settings file, we modify the settings file in place, and we add a new class in that settings file that is used by the bot when the bot is run.
 We have deployed an instance of the dashboard, however it is not yet communicating with the queues that it needs to receive the info to display on the dashboard, nor to the queues that it needs to send the signal for publishing to Drupal.
 
-We need to add that class to [opt-elife-bot-settings.py](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py), and it should contain pointers to the new instances of `lax`, and the `elife-website` that we have just brought up. It should also point to the appropriately named AWS resources, so for this example we should expect to see the following in this class
 To start the process that consumes feeds:
 
->      sqs_region = 'us-east-1'
-    S3_monitor_queue = 'ct-incoming-queue'
-    event_monitor_queue = 'ct-event-property-incoming-queue'
-    workflow_starter_queue = 'ct-workflow-starter-queue'
-    workflow_starter_queue_pool_size = 5
-    workflow_starter_queue_message_count = 5
 >   
   $ cd /srv/elife-dashboard
   $ python process_dashboard_queue.py &
 
 To get the dashboard to communicate with the outbound queus, there is currently a bug that prevents the nginx process from reading the correct aws permissions, so until that if fixed you can manually copy the `.aws` directory from `/home/elife/.aws` to `/var/www/.aws`. /var/www is the home folder for the www-data user.
 
->       # S3 settings
-    publishing_buckets_prefix = 'ct-'
-    # shouldn't need this but uploads seem to fail without. Should correspond with the s3 region
-    # hostname list here http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-    s3_hostname = 's3.amazonaws.com'
-    production_bucket = 'elife-production-final'
-    eif_bucket = 'elife-publishing-eif'
-    expanded_bucket = 'elife-publishing-expanded'
-    ppp_cdn_bucket = 'elife-publishing-cdn'
-    archive_bucket = 'elife-publishing-archive'
-    xml_bucket = 'elife-publishing-xml'
 ### Restarting the dashboard
 
->      # REST endpoint for drupal node builder
-    # drupal_naf_endpoint = 'http://localhost:5000/nodes'
-    drupal_EIF_endpoint = 'http://continuum-test.v2.elifesciences.org/api/article.json'
-    drupal_approve_endpoint = 'http://continuum-test.v2.elifesciences.org/api/publish/'
 The dashboard flask app is run under `nginx`. To restart that process you need to restart it via `etc/init.d/uwsgi-app`.
 
 ### Updating the dashboard
 
->     # lax endpoint to retrieve information about published versions of articles
-    lax_article_versions = 'https://continuum-test.lax.elifesciences.org/api/v1/article/10.7554/eLife.{article_id}/version/'
-    lax_update = 'https://continuum-test.lax.elifesciences.org/api/v1/article/create-update/'
 Updating any instance is now easily done with the `./bldr deploy` comannd. Run that command and pick the instance that you want to have updated. You will need to pick the porject name and then the branch name. You can also update an instance with the `./bldr aws_update_instance` command. This will provide a list of running instances to choose from for updating.
 
-When building the bot, builder does not launch the bot, so currently in order to run the bot you need to ssh into the bot machine, and launch the bot manually.
-
->   
-  $ /opt/elife-bot/scripts/run_env.sh continuum
-
-We pass the class name that contains the instance specific settings, in order for the bot to start with those settings.
-## Preparing and creating the required AWS resources
-
-Our publishing infrastructure runs off of AWS. Services use amazon S3 to store articles in different processing states, as well as storing other artifacts, such as the article XML, and as the location of the CDN for content on the live site. We uses SQS to provide queues for communicating between services, and we use Amazon Simple Workflow to coordinate the activities of the publishing bot.
 
 
 ## Preparing and creating the required AWS resources
 
 Our publishing infrastructure runs off of AWS. Services use amazon S3 to store articles in different processing states, as well as storing other artifacts, such as the article XML, and as the location of the CDN for content on the live site. We uses SQS to provide queues for communicating between services, and we use Amazon Simple Workflow to coordinate the activities of the publishing bot.
+
+
+
 
 The appropriate resources need to be created in AWS before the publishing system can run.
+
+
 
 ### Creating S3 Buckets
 
@@ -743,21 +699,26 @@ If we have a prefix `ct` that we want to use to create a domain the following `b
 
 
 
-### A note about cron jobs with the elife-bot
 # Gotcha's
 
-Some workflows in the publishing system require a cron job to run to periodically
-check for inbound articles. The cron jobs are not currently configured through the builder.
 ## Let's Encrypt SSL issue on test instances
 
-It would be good to ensure that the following cron jobs are enabled:
 Instances get deployed with a staging SSL certificate that expires after three months. You may encounter calls from the `requests` library failing. If this happens, then you need to issue a new
 certificate to the istance that is failing.
 
->
-  */5 * * * * cd /opt/elife-bot && /opt/elife-bot/scripts/run_cron_env.sh live
-  27 * * * * killall -u elife python && cd /opt/elife-bot &&
-  /opt/elife-bot/scripts/run_env.sh
+### cloning and pushing a branch
+git push --set-upstream origin MyLocalBranch
 
-`run_cron_env.sh live` runs every five minutes to ...
-`run_env.sh` runs every hour to restart the machine because `reasons`
+### Setting credentials for the dashboard to enable it to publish.
+
+### Using this system for testing branches
+
+>
+  commit 939aa873d71b7a26d204f77587b19b05379d70d2
+  Merge: 78d32cd 163a70e
+  Author: John <jhroot@users.noreply.github.com>
+  Date:   Mon Mar 14 13:28:11 2016 +0000
+
+      Merge pull request #2 from davidcmoulton/feature/more-test-messages
+
+      Add more error messages
