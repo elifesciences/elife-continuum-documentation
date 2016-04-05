@@ -311,9 +311,17 @@ launch an instance based off of the git repo specified in the salt configuration
 with `aws_launch_instance` you are given an option to provide a prefix for instance name, so you
 can use this command to launch multiple instances of the same codebase under different names. We will see an example of doing this later. If you want to launch different branches of the code you will need to alter the salt configuration to point to different branches of your code in git.
 For example, if we wanted to deploy a different branch of lax we would need to modify the [init.sls file here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-lax/init.sls#L9) to point to a specific named branch. If we wished to deploy a different branch of the elife dashboard we would either need to modify [init.sls here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-dashboard/init.sls#L11), or we would need to provide a custom `.sls` file that overrode the information ind `init.sls`.
+Builder provides the `aws_launch_instance` command to create ad-hoc project instances on AWS.
+When using this command an "instance ID" is required that will uniquely identify this instance from all other instances of this project. The instance ID is suffixed to the project name. The instance ID of `test` for the `elife-website` for example will form the identifier `elife-website-test`.
+This command is able to launch any project but *not* branches of projects that are tied to a repository.
+
+Builder does provide the `deploy` command that will allow the creation of instances of a project specific to it's github branch names.
 
 The [feature-bldr2](https://github.com/elifesciences/elife-builder/tree/feature-bldr2) branch of builder has a command `deploy` that takes a different approach. This command allows you to deploy
 from a branch of a project, and builds a machine with a name keyed off of the branch. This approach makes it a lot faster to deploy branch-based versions of your application. If you want to deploy multiple versions of the same code to different named instances you should clone the branch of interest into a new branch, and then deploy that branch using the `deploy` command.
+The `deploy` command does not support multiple instances of the same branch. To deploy multiple intances of the code in a branch, clone that branch into a new branch and deploy that.
+
+For example, if we wanted to deploy a different branch of lax we would need to modify the [init.sls file here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-lax/init.sls#L9) to point to a specific named branch. If we wished to deploy a different branch of the elife dashboard we would either need to modify [init.sls here](https://github.com/elifesciences/elife-builder/blob/ctdocs-master-v1/salt/salt/elife-dashboard/init.sls#L11), or we would need to provide a custom `.sls` file that overrode the information ind `init.sls`.
 
 We will look at examples of both methods for bringing up parts of the continuum infrastructure.
 
