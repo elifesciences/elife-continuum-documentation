@@ -416,6 +416,84 @@ Provide the `continuum-test` as the instance name, and lax is now available at
 [uri-config]: https://github.com/elifesciences/elife-builder/blob/master/projects/elife.yaml
 
 
+## Deploying a custom instance of the bot
+
+Configuration for the bot is slightly different. Rather than telling salt to point to a specific custom settings file, we modify the settings file in place, and we add a new class in that settings file that is used by the bot when the bot is run.
+
+We need to add that class to [opt-elife-bot-settings.py](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py), and it should contain pointers to the new instances of `lax`, and the `elife-website` that we have just brought up. It should also point to the appropriately named AWS resources, so for this example we should expect to see the following in this class
+
+>      sqs_region = 'us-east-1'
+    S3_monitor_queue = 'ct-incoming-queue'
+    event_monitor_queue = 'ct-event-property-incoming-queue'
+    workflow_starter_queue = 'ct-workflow-starter-queue'
+    workflow_starter_queue_pool_size = 5
+    workflow_starter_queue_message_count = 5
+
+
+>       # S3 settings
+    publishing_buckets_prefix = 'ct-'
+    # shouldn't need this but uploads seem to fail without. Should correspond with the s3 region
+    # hostname list here http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+    s3_hostname = 's3.amazonaws.com'
+    production_bucket = 'elife-production-final'
+    eif_bucket = 'elife-publishing-eif'
+    expanded_bucket = 'elife-publishing-expanded'
+    ppp_cdn_bucket = 'elife-publishing-cdn'
+    archive_bucket = 'elife-publishing-archive'
+    xml_bucket = 'elife-publishing-xml'
+
+>      # REST endpoint for drupal node builder
+    # drupal_naf_endpoint = 'http://localhost:5000/nodes'
+    drupal_EIF_endpoint = 'http://continuum-test.v2.elifesciences.org/api/article.json'
+    drupal_approve_endpoint = 'http://continuum-test.v2.elifesciences.org/api/publish/'
+
+
+>     # lax endpoint to retrieve information about published versions of articles
+    lax_article_versions = 'https://continuum-test.lax.elifesciences.org/api/v1/article/10.7554/eLife.{article_id}/version/'
+    lax_update = 'https://continuum-test.lax.elifesciences.org/api/v1/article/create-update/'
+
+When building the bot, builder does not launch the bot, so currently in order to run the bot you need to ssh into the bot machine, and launch the bot manually.
+
+Before running the bot we need to register all of the Amazon SWF workflows:
+
+>   
+  $ cd /opt/elife-bot
+  $ python register.py
+
+Now we can run the bot processes.
+
+>   
+  $ cd  /opt/elife-bot
+  $ ./scripts/run_env.sh continuum
+
+(note this script has to be run from the parent drectory).
+
+We pass the class name that contains the instance specific settings, in order for the bot to start with those settings.
+
+We expect the see the following running:
+
+> decider.py
+> worker.py
+> queue_worker.py
+> queue_workflow_starter.py
+
+
+### A note about cron jobs with the elife-bot
+
+Some workflows in the publishing system require a cron job to run to periodically
+check for inbound articles. The cron jobs are not currently configured through the builder.
+
+It would be good to ensure that the following cron jobs are enabled:
+
+>
+  */5 * * * * cd /opt/elife-bot && /opt/elife-bot/scripts/run_cron_env.sh live
+  27 * * * * killall -u elife python && cd /opt/elife-bot &&
+  /opt/elife-bot/scripts/run_env.sh
+
+`run_cron_env.sh live` runs every five minutes to ...
+`run_env.sh` runs every hour to restart the machine because `reasons`
+
+
 ## Deploying an instance of the dashboard with custom configuration
 
 Configuration for our projects is determined by salt. Salt uses yaml files to find the configuration files, and project configuration is held in the builder repository rather than in the project specific repo. Salt can be configured to set different configuration based on project name, and this provides a nice way to manage alternative configurations for live or development environments.
