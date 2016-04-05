@@ -493,10 +493,13 @@ You can verify that the correct instance of the dashboard has been created by ss
 You should see the same queue name as the one provided in the setting file of the builder repo.
 
 ## Deploying a custom instance of the bot
+### bringing up an instance of the dashboard
 
 Configuration for the bot is slightly different. Rather than telling salt to point to a specific custom settings file, we modify the settings file in place, and we add a new class in that settings file that is used by the bot when the bot is run.
+We have deployed an instance of the dashboard, however it is not yet communicating with the queues that it needs to receive the info to display on the dashboard, nor to the queues that it needs to send the signal for publishing to Drupal.
 
 We need to add that class to [opt-elife-bot-settings.py](https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py), and it should contain pointers to the new instances of `lax`, and the `elife-website` that we have just brought up. It should also point to the appropriately named AWS resources, so for this example we should expect to see the following in this class
+To start the process that consumes feeds:
 
 >      sqs_region = 'us-east-1'
     S3_monitor_queue = 'ct-incoming-queue'
@@ -504,7 +507,11 @@ We need to add that class to [opt-elife-bot-settings.py](https://github.com/elif
     workflow_starter_queue = 'ct-workflow-starter-queue'
     workflow_starter_queue_pool_size = 5
     workflow_starter_queue_message_count = 5
+>   
+  $ cd /srv/elife-dashboard
+  $ python process_dashboard_queue.py &
 
+To get the dashboard to communicate with the outbound queus, there is currently a bug that prevents the nginx process from reading the correct aws permissions, so until that if fixed you can manually copy the `.aws` directory from `/home/elife/.aws` to `/var/www/.aws`. /var/www is the home folder for the www-data user.
 
 >       # S3 settings
     publishing_buckets_prefix = 'ct-'
@@ -517,16 +524,20 @@ We need to add that class to [opt-elife-bot-settings.py](https://github.com/elif
     ppp_cdn_bucket = 'elife-publishing-cdn'
     archive_bucket = 'elife-publishing-archive'
     xml_bucket = 'elife-publishing-xml'
+### Restarting the dashboard
 
 >      # REST endpoint for drupal node builder
     # drupal_naf_endpoint = 'http://localhost:5000/nodes'
     drupal_EIF_endpoint = 'http://continuum-test.v2.elifesciences.org/api/article.json'
     drupal_approve_endpoint = 'http://continuum-test.v2.elifesciences.org/api/publish/'
+The dashboard flask app is run under `nginx`. To restart that process you need to restart it via `etc/init.d/uwsgi-app`.
 
+### Updating the dashboard
 
 >     # lax endpoint to retrieve information about published versions of articles
     lax_article_versions = 'https://continuum-test.lax.elifesciences.org/api/v1/article/10.7554/eLife.{article_id}/version/'
     lax_update = 'https://continuum-test.lax.elifesciences.org/api/v1/article/create-update/'
+Updating any instance is now easily done with the `./bldr deploy` comannd. Run that command and pick the instance that you want to have updated. You will need to pick the porject name and then the branch name. You can also update an instance with the `./bldr aws_update_instance` command. This will provide a list of running instances to choose from for updating.
 
 When building the bot, builder does not launch the bot, so currently in order to run the bot you need to ssh into the bot machine, and launch the bot manually.
 
