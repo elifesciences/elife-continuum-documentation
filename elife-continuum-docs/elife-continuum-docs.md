@@ -642,11 +642,15 @@ If we have a prefix `ct` that we want to use to create a domain the following `b
 
 
 ### A note about cron jobs with the elife-bot
+# Gotcha's
 
 Some workflows in the publishing system require a cron job to run to periodically
 check for inbound articles. The cron jobs are not currently configured through the builder.
+## Let's Encrypt SSL issue on test instances
 
 It would be good to ensure that the following cron jobs are enabled:
+Instances get deployed with a staging SSL certificate that expires after three months. You may encounter calls from the `requests` library failing. If this happens, then you need to issue a new
+certificate to the istance that is failing.
 
 >
   */5 * * * * cd /opt/elife-bot && /opt/elife-bot/scripts/run_cron_env.sh live
