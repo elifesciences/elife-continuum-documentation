@@ -534,7 +534,9 @@ When building the bot, builder does not launch the bot, so currently in order to
   $ /opt/elife-bot/scripts/run_env.sh continuum
 
 We pass the class name that contains the instance specific settings, in order for the bot to start with those settings.
+## Preparing and creating the required AWS resources
 
+Our publishing infrastructure runs off of AWS. Services use amazon S3 to store articles in different processing states, as well as storing other artifacts, such as the article XML, and as the location of the CDN for content on the live site. We uses SQS to provide queues for communicating between services, and we use Amazon Simple Workflow to coordinate the activities of the publishing bot.
 
 
 ## Preparing and creating the required AWS resources
