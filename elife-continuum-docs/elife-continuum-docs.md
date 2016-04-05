@@ -455,6 +455,7 @@ To make `elife-dashboard.continuum-test` active we need a corresponding `continu
 >   
 	{% set app = pillar.elife_dashboard %}
 	preview_base_url = 'http://continuum-test.elifesciences.org/'
+	preview_base_url = 'http://continuum-test.v2.elifesciences.org/'
 	# RDS settings
 	rds_region = 'us-east-1'
 	# SQS settings
