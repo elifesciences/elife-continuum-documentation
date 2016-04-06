@@ -836,4 +836,22 @@ Pick the elife-bot project, and provide the suffix, then after the machine has b
 
 Now we launch an instance of the dashboard, we need to modify the dashboard settings to point to the approriate endpoints. From within the builder project
 
-  $ cd ~/elife_builder/salt/salt 
+  $ cd ~/elife_builder/salt/salt
+
+
+Confiuguring the CDN Of Course
+
+{
+	"Version": "2008-10-17",
+	"Statement": [
+		{
+			"Sid": "AddPerm",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": "*"
+			},
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::ct-elife-publishing-cdn/*"
+		}
+	]
+} 
