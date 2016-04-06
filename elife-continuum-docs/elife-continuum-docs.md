@@ -713,12 +713,127 @@ git push --set-upstream origin MyLocalBranch
 
 ### Using this system for testing branches
 
+We now have a complete deploy of the test system. We are deploying via branch name, and
+for the dashboard we are using the branch name `continuum-test`. This is tied to a specific
+configuration file that will connect this instance to the approriatly named AWS resources, and
+the test site.
+
+If we now want to test a feature within this enviornment it should be possible to replace our
+branch with a checkout of the feature branch that we are interested in deploying. We should
+then be able to use the builder update command to redeploy that instance, and it will pulldown the
+new code. We will need to remember to manually restart any services that are requried.
+
+Let's go ahead and deploy the develop branch of the dashboard to the `continuum-test` instance.
+
+First we get rid of the remote branch `continuum-test` on github:
+
 >
-  commit 939aa873d71b7a26d204f77587b19b05379d70d2
-  Merge: 78d32cd 163a70e
-  Author: John <jhroot@users.noreply.github.com>
-  Date:   Mon Mar 14 13:28:11 2016 +0000
+  $ git push origin --delete continuum-test
+  remote: This repository moved. Please use the new location:
+  remote:   https://github.com/elifesciences/elife-dashboard.git
+  To https://github.com/digirati-co-uk/elife-dashboard
+   - [deleted]         continuum-test
 
-      Merge pull request #2 from davidcmoulton/feature/more-test-messages
+Now we delete that branch locally
 
-      Add more error messages
+>   
+  $ git branch -d continuum-test
+  Deleted branch continuum-test (was 939aa87).
+
+Now we checkout a copy of deploy as continuum-test locally
+
+> $ git branch -d continuum-test
+Deleted branch continuum-test (was 939aa87).
+git checkout develop
+Branch develop set up to track remote branch develop from origin.
+Switched to a new branch 'develop'
+➜  elife-dashboard git:(develop) git checkout -b continuum-test
+Switched to a new branch 'continuum-test'
+➜  elife-dashboard git:(continuum-test)
+
+Now we push this new branch back up to github
+
+>   
+  $ git push --set-upstream origin continuum-test
+  Total 0 (delta 0), reused 0 (delta 0)
+  remote: This repository moved. Please use the new location:
+  remote:   https://github.com/elifesciences/elife-dashboard.git
+  To https://github.com/digirati-co-uk/elife-dashboard
+   * [new branch]      continuum-test -> continuum-test
+  Branch continuum-test set up to track remote branch continuum-test from origin.
+
+We can now redeploy the elife-dashboard, and it should deploy this version of the code.
+
+A word of warning, I did try to update the stack using `aws_update_stack`, but that didn't work.
+In order to back out from that I deleted the stack using `aws_delete_stack` and then deployed the
+branch using `./bldr deploy` and selecting the `continuum-test` branch. This succedded in getting the code from the deploy branch onto the continuum-test instance.
+
+# Summarised deployment guide
+
+Note, after ssh'ing into any given project you may need to run `sudo pip install -r requirements.txt` from within the project directory, depending on whether project depencies have been deployed correctly.
+
+You may need to update your version of builder from within the elife builder project vis:
+
+  $ git pull
+  $ ./update.sh
+
+Deploy the aws resources. (still a bit buggy)
+
+  $ python create_s3_resources.py -p `your_test_prefix`
+
+in this case our test prefix is going to be `ct`, short for `continuum-test`.
+
+You now need to make the CDN bucket an actual CDN, log in to your AWS console and go to the
+`` bucket.
+
+Deploy a test instance of lax from within the builder project
+
+  $ cd ~/lax_directory
+  $ git checkout master -b continuum-test
+  $ git push --set-upstream origin continuum-test
+  $ cd ~/elife_builder
+  $ ./bldr deploy
+
+(pick the elife-lax) project and pick the continuum-test branch for deployment.
+
+Now we deploy an instance of the elife website, from within the builder project
+
+  $ ./bldr aws_launch_instance
+
+Pick the elife-website project and provide the `continuum-test` suffix
+
+ssh in to the machine to create an admin login via drush
+
+  $ ./bldr ssh
+
+(the default option should be for the website instance that you have just brought up, and you will now be inthat instance.
+
+    ~> drush uli
+
+Log in to the Drupal instance via the url provided, and go to the following screen
+
+[http://continuum-test.v2.elifesciences.org/admin/config/services/elife-article-assets-source]()
+
+Enter the value of the CDN that was set in the AWS console.
+
+Now we deploy an instance of the bot from within the builder project
+
+We need to configure our settings for the bot to be specific to this test instance.
+
+  $ cd ~/elife_builder/salt/salt/elife-bot/config
+
+edit the file `opt-elife-bot-settings.py` and add a new class that encapsulates the settings that you need for communicating with the new aws resources created earlier. Commit these changes. Now
+launch an instance of the bot. Make a note of the class name as this will be needed to launch this instance of the bot.
+
+  $ ./bldr aws_launch_instance
+
+Pick the elife-bot project, and provide the suffix, then after the machine has been built, ssh into the machine. After ssh'ing in we will register the SWF workflows, and then we will start the bot processes.
+
+  $ ./bldr ssh
+  ~> cd cd /opt/elife-bot
+  ~> python register.py
+  ~> ./scripts/run_env.sh continuum
+
+Now we launch an instance of the dashboard, we need to modify the dashboard settings to point to the approriate endpoints. From within the builder project
+
+  $ cd ~/elife_builder/salt/salt 
