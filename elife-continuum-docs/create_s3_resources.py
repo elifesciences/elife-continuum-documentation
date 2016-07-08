@@ -9,7 +9,7 @@ location = "us-east-1"
 allowed_deletion_prefixes = ["ct","pppim"]
 
 # S3 info derioved from bot settings,
-# https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
+# https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
 
 required_buckets = {"production_bucket" : 'elife-production-final',
                     "eif_bucket" : 'elife-publishing-eif',
@@ -19,8 +19,8 @@ required_buckets = {"production_bucket" : 'elife-production-final',
                     "xml_bucket" : 'elife-publishing-xml'}
 
 # queue info derioved from dashboard settings, and bot settings,
-# e.g. https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-dashboard/config/srv-app-dashboard-prod_settings.py#L9-L11
-# https://github.com/elifesciences/elife-builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
+# e.g. https://github.com/elifesciences/builder/blob/master/salt/salt/elife-dashboard/config/srv-app-dashboard-prod_settings.py#L9-L11
+# https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
 required_queues = {"S3_monitor_queue" : 'incoming-queue',
                     "event_monitor_queue" : 'event-property-incoming-queue',
                     "workflow_starter_queue" : 'workflow-starter-queue'}
@@ -34,7 +34,7 @@ def delete_bucket(bucket):
 def set_notification_on_bucket(bucket_name):
     bucket_notification = s3.BucketNotification('bucket_name')
 
-def create_bucket(bucket_name, location):
+def create_bucket(s3, bucket_name, location):
     print bucket_name, location
     if location == "us-east-1":
         s3.create_bucket(Bucket=bucket_name)
@@ -42,7 +42,7 @@ def create_bucket(bucket_name, location):
         s3.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': location})
     return True
 
-def get_prefixed_buckets(prefix):
+def get_prefixed_buckets(s3, prefix):
     prefixed_buckets = []
     for bucket in s3.buckets.all():
         bucket_name = bucket.name
@@ -58,9 +58,9 @@ def delete_prefixed_buckets(prefix):
     for bucket in prefixed_buckets: delete_bucket(bucket)
     return True
 
-def create_prefixed_buckets(prefix):
+def create_prefixed_buckets(s3, prefix):
     for bucket in required_buckets.values():
-        create_bucket(prefix + "-" + bucket, location)
+        create_bucket(s3, prefix + "-" + bucket, location)
 
 def create_prefixed_queues(prefix):
     for queue in required_queues.values():
@@ -171,7 +171,7 @@ def set_queue_policy(prefix):
             print response
 
 if __name__ == "__main__":
-    # TODO: figure out the difference between boto3.resource and boto3.client for this code 
+    # TODO: figure out the difference between boto3.resource and boto3.client for this code
     s3 = boto3.resource('s3')
     sqs = boto3.client('sqs')
     swf = boto3.client('swf')
