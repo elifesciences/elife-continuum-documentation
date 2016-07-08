@@ -51,7 +51,7 @@ cd elife-bot
         and build `lxml` statically: `sudo STATIC_DEPS=true pip install lxml==3.4.1`
         (see http://stackoverflow.com/questions/27084580/python-error-when-installing-packages)
 
-    1. **always** run ```pip -r install requirements.txt``` Once this has run, check the permissions on the generated `src` directory within the Python virtual environment. Ensure that the user that will run the bot has write permissions within `src/jats_scraper`, otherwise things will break later.
+    1. **always** run ```pip install -r requirements.txt``` Once this has run, check the permissions on the generated `src` directory within the Python virtual environment. Ensure that the user that will run the bot has write permissions within `src/jats_scraper`, otherwise things will break later.
 
 ## Configure prerequisites/settings
 
