@@ -1,72 +1,118 @@
 eLife Continuum
 
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-
-- [Introduction](#introduction)
-- [High Level Overview](#high-level-overview)
-- [Deploying and configuring the system](#deploying-and-configuring-the-system)
-	- [using builder](#using-builder)
-	- [using builder to see what is running](#using-builder-to-see-what-is-running)
-	- [using builder to ssh into a machine](#using-builder-to-ssh-into-a-machine)
-	- [using builder to deploy a new instance](#using-builder-to-deploy-a-new-instance)
-- [Normal operation](#normal-operation)
-	- [Preview mode](#preview-mode)
-	- [Automatic mode](#automatic-mode)
-- [Doing Silent Updates](#doing-silent-updates)
-- [Troubleshooting](#troubleshooting)
-	- [Understanding timeouts in the system](#understanding-timeouts-in-the-system)
-	- [Where do my files go?](#where-do-my-files-go)
-	- [Is the system running?](#is-the-system-running)
-	- [Checking system logs](#checking-system-logs)
-	- [Checking workflow status in the AWS console](#checking-workflow-status-in-the-aws-console)
-	- [Restarting the bot](#restarting-the-bot)
-		- [Restarting bot processes from within the Ec2 Instance](#restarting-bot-processes-from-within-the-ec2-instance)
-		- [Redeploying the bot from elife-bilder](#redeploying-the-bot-from-elife-bilder)
-- [Common errors, and overcoming them](#common-errors-and-overcoming-them)
-	- [Dashboard article preview links are truncated.](#dashboard-article-preview-links-are-truncated)
-	- [Drupal is returning a 429 error on the PostEIF workflow step](#drupal-is-returning-a-429-error-on-the-posteif-workflow-step)
-	- [Drupal is returning a 500 error on the PostEIF workflow step](#drupal-is-returning-a-500-error-on-the-posteif-workflow-step)
-	- [Drupal is returning a 503 error on the PostEIF workflow step](#drupal-is-returning-a-503-error-on-the-posteif-workflow-step)
-	- [Drupal is returning a `message:('Connection aborted.', BadStatusLine("''",))" `on the PostEIF workflow step](#drupal-is-returning-a-messageconnection-aborted-badstatusline-on-the-posteif-workflow-step)
-	- [Articles are not making it to the dashboard](#articles-are-not-making-it-to-the-dashboard)
-- [ppp-feeder](#ppp-feeder)
-	- [Feeding an article into the system using `ppp-feeder`](#feeding-an-article-into-the-system-using-ppp-feeder)
-	- [`ppp-feeder` usage](#ppp-feeder-usage)
-	- [`ppp-feeder` quickstart](#ppp-feeder-quickstart)
-		- [Feeding an article into the system using an AWS bucket](#feeding-an-article-into-the-system-using-an-aws-bucket)
-		- [Feeding an article into the system using the SWF console](#feeding-an-article-into-the-system-using-the-swf-console)
-- [Deploying a test instance of Continuum using builder](#deploying-a-test-instance-of-continuum-using-builder)
-	- [Useful builder commands](#useful-builder-commands)
-	- [Deploying an instance with builder](#deploying-an-instance-with-builder)
-		- [Fixing builder2 issues with let's encrypt](#fixing-builder2-issues-with-lets-encrypt)
-	- [Deploying a test instance of the elife website.](#deploying-a-test-instance-of-the-elife-website)
-	- [Deploying an instance of lax](#deploying-an-instance-of-lax)
-	- [Deploying an instance of the dashboard with custom configuration](#deploying-an-instance-of-the-dashboard-with-custom-configuration)
-	- [Deploying a custom instance of the bot](#deploying-a-custom-instance-of-the-bot)
-		- [A note about cron jobs with the elife-bot](#a-note-about-cron-jobs-with-the-elife-bot)
-	- [Preparing and creating the required AWS resources](#preparing-and-creating-the-required-aws-resources)
-		- [Creating S3 Buckets](#creating-s3-buckets)
-		- [Creating the required queues](#creating-the-required-queues)
-		- [Connecting our S3 buckets to our queues](#connecting-our-s3-buckets-to-our-queues)
-		- [Creating the required SWF domain](#creating-the-required-swf-domain)
-		- [Using a utility script to create these resources](#using-a-utility-script-to-create-these-resources)
-
-<!-- /TOC -->
-
 # Introduction
 
 # High Level Overview
 
 eLife Continuum is composed of a set of software components that together form a publishing and article hosting system. In this documentation we will describe those components and how they fit together. We will describe how they can be deployed and customised.
 
+## Conceptual overview
+
+![High Level Overview][high-level-overview]
+
+[high-level-overview]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/high-level-overview.jpg
+
+eLife continuum is best described as a production and hosting platform It takes article packages from a content processor and then transforms those packages so that they can be hosted on the web. It also provides production teams with a management interface to manage the publishing and scheduling of articles. It provides a Drupal 7 site that can be used to host that journal content. It is build out of a number of software components, and these components mostly interact through a set of well described APIs, meaning that different parts of the system can be replaced or extended with relative ease.
+
+## Component overview
+
+Continuum makes significant use of AWS resources, in particular of AWS Simple WorkFlow, to manage process to process communication. The three main components of continuum are workflow management, publishing dashboard, and content hosting. Communication between the workflows and the publishing dashboard is done via AWS sqs queues, and this is why no direct relationship is shown in the diagram below, which only describes the modules that eLife has written.
+
+![High level component overview][hl-components]
+
+[hl-components]:https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/high-level-component-overview.jpg
+
+### Continuum modules
+
+### Support modules
+#### `builder`
+
+A project that can be used to deploy and configure systems. We use builder for deployment into AWS and for building projects locally in vagrant. Builder is built in python, and uses [fabric](http://www.fabfile.org) and [SaltSack](https://docs.saltstack.com/en/latest/topics/).
+
+#### `ppp-project`
+
+Contains project documentation for Continuum.
+
+### Workflow modules
+
+The heart of Continuum is a way to manage and create publishing workflows. The workflows that we have built do the typical kinds of jobs that are needed in an STM publishing workflow, from unzipping typesetter content, to image formatting, to communicating with downstream services, such as Crossref. Each of these jobs is described in an `activity`.
+
+#### `elife-tools`
+
+Provides a python tool that scrapes content from JATS XML. Is used by `JATS-scraper`.
+
+#### `JATS-scraper`
+
+Uses elite-tools to parse data from JATS-XML and takes a `description` to coerce the JATS into a JSON format defined by this description. Is used by `elife-bot`.
+
+#### `elife-bot`
+
+`elife-bot` defines the SWF workflows, activities, and processes that monitor the different queues looking for triggers for workflows. This is written in python making liveral use of the boto APIs.  The main workflows are triggered by modifications to a named S3 bucket. Changes to that bucket push a message onto an SQS queue, and a processes defined in elife-bot listens on that queue, and triggers the appropriate publishing workflow based on that signal. Workflows can trigger other workflows by sending messages onto a specific named queue. The elife-bot also has an activity that populates our content CDN.
+
+The elife-bot also contains a process that sends metadata to Drupal via a REST API, triggering the creation of published or unpublished nodes in Drupal (depending on settings), which will become the article pages on the hosting site. Currently our Drupal site can only accept requests in serial, but the bot will process new articles as soon as they arrive, so there is a shim between the bot and the Drupal site that stores messages ready to send to Drupal, and only pushes them to Drupal when Drupal is ready to receive another article. This shim totally decouples the bot from Drupal, and so another hosting system can be easily swapped out without making any changes to the workflow code. The code for this shim is also contained in the elife-bot repo.
+
+Activities can report signals to an event store, and those signals are used to populate the publishing dashboard. There is no direct communication between the bot and the publishing dashboard. This means that the reporting and publishing infrastructure can also be swapped out, or integrated with other parallel reporting systems, if needed.
+
+### hosting site
+
+#### elife-metrics
+
+This is a small Django app that holds google analytics pageview data for research articles and is used to populate some article level metrics data on the journal site.
+
+#### elife-website
+
+This is a Drupal7 site that contains all of the eLife journal content, and other non-journal content. Crucially the XML to HTML is done in this site using XSLT that can be found at ...
+
+### article metadata store
+
+#### lax
+
+Lax is a small Django project that contains metadata about versions of published articles. It exposes a REST API for creating new entires in Lax, and for querying lax for information about an article. The elife-bot checks against lax when a new article comes in to the system to see if a previous version of that articles has already been published.
+
+### production dashboard and publishing controls
+
+#### elife-dashboard
+
+The elife-dashboard is a small flask app that shows information about how an aticle has been processed through the system. By default articles are not published immediatly in the system, and they require human approval. The publishing dashboard provides the mechanisim for this approval. The publishing dashboard can set the published state of an article on the Drupal site to published by hitting a REST API that Drupal exposes for this purpose. The publishing dashboard can also be used to schedule articles for future publication. It does scheduling by setting information in the `elife-article-scheduler`
+
+It will also report when there are errors in the publishing process.
+
+#### `elife-article-scheduler`
+
+This is a small flask app that stores information about when a particular article ought to be published in the future. Publishing times can be set to the hour.
+
+## Workflow overview
+
+From the point of view of an article entering the system, it's life cycle is mediated by the different workflows that get triggered, depending on whether the article should be published immediatley, whether it is a "publish on accept" article, or a "version of record" article.
+
+
+
+
 
 
 # Deploying and configuring the system
 
-eLife uses a project called [builder](https://github.com/elifesciences/builder) built on top of [saltstack](https://docs.saltstack.com/en/latest/topics/) for configuration and deployment of Continuum. It is our intention to open source relevant components from builder, however we have not made this project available publicly yet.
+In order to get an instance of continuum working you will need to:
 
-builder wraps commands around salt and can be used to deploy instances to
-Vagrant or to Amazon Web Services.
+- configure the required AWS resources, including buckets, queues and SWF domains.  
+- ensure you have access to the full set of components  
+- configure and deploy the components, locally or into the cloud
+- ensure that content you wish to publish is in the required format
+
+
+## Deploying the system using `builder`
+
+eLife uses a project called [builder](https://github.com/elifesciences/builder) to configure and deploy our systems. This system uses [saltstack](https://docs.saltstack.com/en/latest/topics/).
+
+This tool can be used to deploy locally to a Vagrant machine, or to deploy to an AWS instance.
+
+When deploying to AWS you will need to configure your local instance of builder with the appropriate private keys for AWS, along with other confidential information, such as database configuration.
+
+## A worked example, deploying the metadata store `lax`
+
+## Some handy `builder` commands to help with systems management
+
+##
 
 For deployment to AWS the rules that generate the  url that the service is made available from is defined in the [top.sls](https://github.com/elifesciences/builder/blob/master/salt/salt/top.silent-updates-workflow) file. This file also defines which salt configurations are applied to a
 machine.
@@ -859,3 +905,8 @@ Confiuguring the CDN Of Course
 		}
 	]
 }
+
+
+# Continuous integration and testing
+
+Projects are configured to be run under CI in Jenkins.
