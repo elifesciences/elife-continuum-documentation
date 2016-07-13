@@ -73,7 +73,7 @@ Lax is a small Django project that contains metadata about versions of published
 
 #### elife-dashboard
 
-The elife-dashboard is a small flask app that shows information about how an aticle has been processed through the system. By default articles are not published immediatly in the system, and they require human approval. The publishing dashboard provides the mechanisim for this approval. The publishing dashboard can set the published state of an article on the Drupal site to published by hitting a REST API that Drupal exposes for this purpose. The publishing dashboard can also be used to schedule articles for future publication. It does scheduling by setting information in the `elife-article-scheduler`
+The elife-dashboard is a small flask app that shows information about how an article has been processed through the system. By default articles are not published immediately in the system, and they require human approval. The publishing dashboard provides the mechanism for this approval. The publishing dashboard can set the published state of an article on the Drupal site to published by hitting a REST API that Drupal exposes for this purpose. The publishing dashboard can also be used to schedule articles for future publication. It does scheduling by setting information in the `elife-article-scheduler`
 
 It will also report when there are errors in the publishing process.
 
@@ -83,11 +83,34 @@ This is a small flask app that stores information about when a particular articl
 
 ## Workflow overview
 
-From the point of view of an article entering the system, it's life cycle is mediated by the different workflows that get triggered, depending on whether the article should be published immediatley, whether it is a "publish on accept" article, or a "version of record" article.
+From the point of view of an article entering the system, the article life-cycle is mediated by the different workflows that get triggered, depending on whether the article should be published immediately, whether it is a "publish on accept" article, or a "version of record" article.
+
+A workflow is composed of a set of activities, in which all of the actual work happens. An activity can trigger a follow on workflow, if required. 
+
+These workflows and activities are managed by Amazon Simple Workflow, and they need to be registered with AWS. The `elife-bot` module of Continuum includes a [registration script](https://github.com/elifesciences/elife-bot/blob/develop/register.py) that can be used to do this. 
+
+### Workflow triggering 
+
+Most of the workflows in continuum are triggered by a message sent into a specific Amazon SQS queue, the `workflow-starter-queue`. There is a long running process that listens to messages on this queue. If the message is in the correct format, and contains the name of a registered workflow, then `queue-workflow-starter.py` triggers that workflow. 
+
+Amazon S3 buckets can be configured to send a message to a queue if any of their content is modified. We make use of this to start the very first of the workflows. Modifications to a specific bucket are configured to send a message into a `S3_monitor_queue`. There is a long running process `queue_worker.py` that listens in to this queue. `queue_worker.py` is configured to launch a workflow defined in `newFileWorkflows.yaml`. It does this by sending a message in to `workflow-starter-queue` and the usual process takes over from there. In this way files arriving from a typesetter can automatically trigger the appropriate publication workflows, and those workflows can be configured easily by modifying `newFileWorkflows.yaml`.
 
 
 
+### Communicating between workflow activities and the Drupal hosting layer 
 
+
+### Workflow triggering diagram 
+
+![detail of how workflows get started][wf-starting-detail]
+
+[wf-starting-detail]:https://raw.githubusercontent.com/elifesciences/ppp-project/master/elife-continuum-docs/workflow_starting_detail.jpg
+
+### Detailed Workflow overview 
+
+![detail of how workflows get started][wf-detailed]
+
+[wf-detailed]:https://raw.githubusercontent.com/elifesciences/ppp-project/master/elife-continuum-docs/workflow_overview_detailed.jpg
 
 
 # Deploying and configuring the system
