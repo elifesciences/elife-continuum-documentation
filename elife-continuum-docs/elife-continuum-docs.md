@@ -12,7 +12,7 @@ eLife Continuum is composed of a set of software components that together form a
 
 [high-level-overview]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/high-level-overview.jpg
 
-eLife continuum is best described as a production and hosting platform It takes article packages from a content processor and then transforms those packages so that they can be hosted on the web. It also provides production teams with a management interface to manage the publishing and scheduling of articles. It provides a Drupal 7 site that can be used to host that journal content. It is build out of a number of software components, and these components mostly interact through a set of well described APIs, meaning that different parts of the system can be replaced or extended with relative ease.
+eLife continuum is best described as a production and hosting platform It takes article packages from a content processor and then transforms those packages so that they can be hosted on the web. It also provides production teams with a management interface to manage the publishing and scheduling of articles. It provides a Drupal 7 site that can be used to host that journal content. It is built out of a number of software components, and these components mostly interact through a set of well described APIs, meaning that different parts of the system can be replaced or extended with relative ease.
 
 ## Component overview
 
@@ -47,7 +47,7 @@ Uses elite-tools to parse data from JATS-XML and takes a `description` to coerce
 
 #### `elife-bot`
 
-`elife-bot` defines the SWF workflows, activities, and processes that monitor the different queues looking for triggers for workflows. This is written in python making liveral use of the boto APIs.  The main workflows are triggered by modifications to a named S3 bucket. Changes to that bucket push a message onto an SQS queue, and a processes defined in elife-bot listens on that queue, and triggers the appropriate publishing workflow based on that signal. Workflows can trigger other workflows by sending messages onto a specific named queue. The elife-bot also has an activity that populates our content CDN.
+`elife-bot` defines the SWF workflows, activities, and processes that monitor the different queues looking for triggers for workflows. This is written in python making liberal use of the boto APIs.  The main workflows are triggered by modifications to a named S3 bucket. Changes to that bucket push a message onto an SQS queue, and a processes defined in elife-bot listens on that queue, and triggers the appropriate publishing workflow based on that signal. Workflows can trigger other workflows by sending messages onto a specific named queue. The elife-bot also has an activity that populates our content CDN.
 
 The elife-bot also contains a process that sends metadata to Drupal via a REST API, triggering the creation of published or unpublished nodes in Drupal (depending on settings), which will become the article pages on the hosting site. Currently our Drupal site can only accept requests in serial, but the bot will process new articles as soon as they arrive, so there is a shim between the bot and the Drupal site that stores messages ready to send to Drupal, and only pushes them to Drupal when Drupal is ready to receive another article. This shim totally decouples the bot from Drupal, and so another hosting system can be easily swapped out without making any changes to the workflow code. The code for this shim is also contained in the elife-bot repo.
 
