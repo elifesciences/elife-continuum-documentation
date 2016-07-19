@@ -6,7 +6,6 @@ parser.add_argument("-p", "--prefix", dest="prefix", help="provide a bucket name
 parser.add_argument("-d", "--delete", action="store_true", default=False , dest="delete", help="delete buckets")
 
 location = "us-east-1"
-allowed_deletion_prefixes = ["ct","pppim"]
 
 # S3 info derioved from bot settings,
 # https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
@@ -24,12 +23,6 @@ required_buckets = {"production_bucket" : 'elife-production-final',
 required_queues = {"S3_monitor_queue" : 'incoming-queue',
                     "event_monitor_queue" : 'event-property-incoming-queue',
                     "workflow_starter_queue" : 'workflow-starter-queue'}
-
-def delete_bucket(bucket):
-    for key in bucket.objects.all():
-        key.delete()
-    bucket.delete()
-    return True
 
 def set_notification_on_bucket(bucket_name):
     bucket_notification = s3.BucketNotification('bucket_name')
@@ -178,19 +171,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     prefix = args.prefix
-    delete = args.delete
 
-    if delete:
-        print "about to try to delete some buckets"
-        delete_prefixed_buckets(prefix)
-    else:
-        aws_arn = generate_bucket_arn_from_name("ct-elife-production-final")
-        sqs_arn = get_queue_arn(prefix)
-        policy = generate_sqs_policy(sqs_arn, aws_arn)
-        print policy
-        policy_json = generate_sqs_policy_json(sqs_arn, aws_arn)
-        print policy_json
-        # set_queue_policy(prefix)
-        # bucket_arn = get_bucket_arn(prefix)
-        queue_arn = get_queue_arn(prefix)
-        set_queue_notification(queue_arn)
+    aws_arn = generate_bucket_arn_from_name("ct-elife-production-final")
+    sqs_arn = get_queue_arn(prefix)
+    policy = generate_sqs_policy(sqs_arn, aws_arn)
+    print policy
+    policy_json = generate_sqs_policy_json(sqs_arn, aws_arn)
+    print policy_json
+    # set_queue_policy(prefix)
+    # bucket_arn = get_bucket_arn(prefix)
+    queue_arn = get_queue_arn(prefix)
+    set_queue_notification(queue_arn)
