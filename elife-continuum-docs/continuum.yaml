@@ -1,0 +1,119 @@
+#  Contiuum wide settings.
+#
+# These will be read in to set and coordinate yaml files and settings files
+# across come continuum components.
+#
+# Where possible These will also be used to create AWS resources with the appropriate IDs
+# and permissions
+
+# need path to builder to be able to access ~/builder/projects/elife.yaml
+builder_path: /Users/ian/workbench/builder-config-test
+
+# need path the builder_private repo to be able to access location of expected
+# component configuration files, specifically:
+#
+## salt files - contains configuration that ought to be fine, but actully does contain
+# some configuration data taht MUST NOT be made public.
+#
+# ~/builder-private/salt/elife-bot/config/opt-elife-bot-settings.py - config for elife bot
+# ~/builder-private/salt/elife-dahboard-config/srv-app-dashboard-master_settings.py - config for dahsboard
+# ~/builder-private/salt/elife-dahboard-config/srv-elife-article-scheduler-src-core-master_settings.py - config for scheduler
+#
+## pillar files - contains secrets, like DB passwords, that MUST NOT be made public
+#
+# ~/builder-private/pillar/elife.sls - generic settings, like HTTP AUTH
+#
+builder_private_path: /Users/ian/workbench/builder-private-config-test
+
+aws_region:
+  region: us-west-1
+
+domain_name:
+  domain: 5star.info
+
+http_auth:
+  user: test_user
+  password: test_password
+  crazy_user: crazy_user_example
+  crazy_password: crazy_password_example
+  web_user: web_user_example
+  web_password: web_password_example
+
+
+## Elife bot specific AWS settings
+prefix: ianm
+
+elife_dashboard_user_aws:
+  aws_username: bot_aws_deploy_username
+  key: examplelongleyforawsuser
+  secret: examplelingawssecret
+
+elife_bot_user_aws:
+  aws_username: bot_aws_deploy_username
+  key: examplelongleyforawsuser
+  secret: examplelingawssecret
+
+# S3 info derived from bot settings,
+# https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
+s3_buckets:
+  production_bucket : elife-production-final
+  eif_bucket : elife-publishing-eif
+  expanded_bucket : elife-publishing-expanded
+  ppp_cdn_bucket : elife-publishing-cdn
+  archive_bucket : elife-publishing-archive
+  xml_bucket : elife-publishing-xml
+
+swf_domain:
+  domain: ianm-test
+
+# # queue info derioved from dashboard settings, and bot settings,
+# # e.g. https://github.com/elifesciences/builder/blob/master/salt/salt/elife-dashboard/config/srv-app-dashboard-prod_settings.py#L9-L11
+# # https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
+sqs_queues:
+  S3_monitor_queue: incoming-queue
+  event_monitor_queue: event-property-incoming-queue
+  workflow_starter_queue: workflow-starter-queue
+  website_ingest_queue: website-ingest-queue
+
+
+## Deletion protection settings
+protected_prefixes:
+  end2ned
+  ct
+  elife
+
+s3_protected_buckets:
+  # these specific bucket instances are checked to ensure they are not
+  # delted by the delte scripts
+  production-final
+  publishing-cdn
+  publishing-eif
+  elife-ejp-poa-delivery
+  eif-reference
+  publishing-expanded
+  publishing-archive
+  bot-test-elife-production-final
+  bot-test-elife-publishing-cdn
+  bot-test-elife-publishing-eif
+  bot-test-elife-eif-reference
+  bot-test-elife-publishing-expanded
+  bot-test-elife-publishing-archive
+  elife-poa-packaging-end2end
+  end2end-elife-articles
+  end2end-elife-bot
+  end2end-elife-cdn
+  end2end-elife-ejp-ftp
+  end2end-elife-lens
+  end2end-elife-poa-packaging-end2end
+  end2end-elife-production-final
+  end2end-elife-production-lens-jpg
+  end2end-elife-publishing-archive
+  end2end-elife-publishing-cdn.
+  end2end-elife-publishing-eif
+  end2end-elife-publishing-expanded
+  end2end-elife-publishing-xml
+  end2end-eliife-ejp-poa-delivery
+
+sqs_protected_queues:
+  # these specific sqs queues are checked to ensure they are not
+  # delted by the delte scripts
