@@ -73,13 +73,13 @@ Lax is a small Django project that contains metadata about versions of published
 
 #### elife-dashboard
 
-The elife-dashboard is a small flask app that shows information about how an article has been processed through the system. By default articles are not published immediately in the system, and they require human approval. The publishing dashboard provides the mechanism for this approval. The publishing dashboard can set the published state of an article on the Drupal site to published by hitting a REST API that Drupal exposes for this purpose. The publishing dashboard can also be used to schedule articles for future publication. It does scheduling by setting information in the `elife-article-scheduler`
+The elife-dashboard is a small flask app that shows information about how an article has been processed through the system. By default articles are not published immediately in the system, and they require human approval. The publishing dashboard provides the mechanism for this approval. The publishing dashboard can trigger a workflow that sets the published state of an article on the Drupal site. The workflow communicates via a REST API that Drupal exposes for this purpose. The publishing dashboard can also be used to schedule articles for future publication. It does scheduling by setting information in the `elife-article-scheduler`
 
 It will also report when there are errors in the publishing process.
 
 #### `elife-article-scheduler`
 
-This is a small flask app that stores information about when a particular article ought to be published in the future. Publishing times can be set to the hour.
+This is a small flask app that stores information about when a particular article ought to be published in the future. Publishing times can be set to the minute. The scheduler currently only communicates with the dashboard, and that communication is two way. The scheduler tells the dashboard to publish when its the correct time, and the dashboard both tells the scheduler the expected publication dates and also queries it to find the currently scheduled times).
 
 ## Workflow overview
 
@@ -111,6 +111,14 @@ Amazon S3 buckets can be configured to send a message to a queue if any of their
 ![detail of how workflows get started][wf-detailed]
 
 [wf-detailed]:https://raw.githubusercontent.com/elifesciences/ppp-project/master/elife-continuum-docs/workflow_overview_detailed.jpg
+
+## Brief description of Workflows and Activities and processes 
+
+#### `queue_worker.py`
+
+
+
+### 
 
 
 # Deploying and configuring the system
