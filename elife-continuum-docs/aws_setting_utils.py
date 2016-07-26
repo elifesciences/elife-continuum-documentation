@@ -25,7 +25,6 @@ dashboard_aws_user = doc["elife_dashboard_user_aws"]["aws_username"]
 dashboard_aws_key = doc["elife_dashboard_user_aws"]["key"]
 dashboard_aws_secret = doc["elife_dashboard_user_aws"]["secret"]
 
-
 builder_path = doc["builder_path"]
 builder_private_path = doc["builder_private_path"]
 prefix = doc["prefix"]
