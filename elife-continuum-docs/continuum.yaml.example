@@ -1,7 +1,7 @@
 #  Contiuum wide settings.
 #
 # These will be read in to set and coordinate yaml files and settings files
-# across come continuum components.
+# across come continuum components.gs
 #
 # Where possible These will also be used to create AWS resources with the appropriate IDs
 # and permissions
@@ -26,7 +26,7 @@ builder_path: /Users/ian/workbench/builder-config-test
 builder_private_path: /Users/ian/workbench/builder-private-config-test
 
 aws_region:
-  region: us-west-1
+  region: eu-west-1
 
 domain_name:
   domain: 5star.info
