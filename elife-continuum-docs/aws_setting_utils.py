@@ -27,10 +27,14 @@ dashboard_aws_secret = doc["elife_dashboard_user_aws"]["secret"]
 
 builder_path = doc["builder_path"]
 builder_private_path = doc["builder_private_path"]
+builder_private_repo = doc["builder_private_repo"]
+
 prefix = doc["prefix"]
 domain_name = doc["domain_name"].values()[0]
+
 region = doc["aws_region"].values()[0]
 queue_map = doc["sqs_queues"]
 s3_buckets = doc["s3_buckets"]
 s3_protected_buckets = doc["s3_protected_buckets"]
+s3_protected_queues = doc["sqs_protected_queues"]
 protected_prefixes = doc["protected_prefixes"]

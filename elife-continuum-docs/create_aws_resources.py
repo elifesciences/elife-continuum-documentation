@@ -1,14 +1,19 @@
 import boto3
 from aws_setting_utils import s3_buckets, prefix, region, queue_map
-s3 = boto3.resource('s3')
-sqs = boto3.resource('sqs')
-swf = boto3.client('swf')
 
-print queue_map
-s3_buckets_names = s3_buckets.values()
+s3 = boto3.resource('s3', region_name=region)
+sqs = boto3.client('sqs', region_name=region)
+swf = boto3.client('swf', region_name=region)
+
+s3_buckets = s3_buckets.values()
+
+# we need the full queue dict as we need to be able to identify
+# which queue is associated with the `website_ingest_queue` label.
+# This is the queue that needs to have a policy associated with the
+# incoming AWS s3 bucket.
+sqs_queues = queue_map.values()
 
 
-# generic functions
 def generate_bucket_arn_from_name(bucket_name):
     """
     the bucket arn that we require for setting a policy on an SQS queue can be
@@ -27,7 +32,6 @@ def get_event_monitor_queue_name(prefix):
         return prefix + "-" + queue_name
     except:
         raise error
-
 
 def get_sqs_arn_for_incoming_queue(prefix):
     """
@@ -54,128 +58,66 @@ def create_bucket(s3, bucket, region):
     return True
 
 def create_prefixed_buckets(s3, prefix, region):
-    for bucket in s3_bucket:
+    for bucket in s3_buckets:
         create_bucket(s3, prefix + "-" + bucket, region)
 
 # SQS creation
 def create_prefixed_queues(prefix):
+    """
+    create a set of queues based on a map set in continuum.yaml
+    """
     for queue in sqs_queues:
         queue_name = prefix + "-" + queue
         print "creating queue: " + queue_name
-        sqs.create_queue(QueueName=queue_name)
+        result = sqs.create_queue(QueueName=queue_name)
 
 # SWF Creation
 def create_prefixed_swf_domain(prefix):
+    registered_domains = swf.list_domains(registrationStatus='REGISTERED')
+    reg_domain_info = registered_domains["domainInfos"]
+    reg_domain_count = len(reg_domain_info)
+
+    deprecated_domains = swf.list_domains(registrationStatus='DEPRECATED')
+    dep_domain_info = deprecated_domains["domainInfos"]
+    dep_domain_count = len(dep_domain_info)
+
+    print "you currently have " + str(reg_domain_count) + " regiesterd domains"
+    depricated_domains = swf.list_domains(registrationStatus='DEPRECATED')
+    print "you currently have " + str(dep_domain_count) + " deprecated domains"
+    print "you have " + str(100 - dep_domain_count - reg_domain_count) + " domains left"
+
+    #
+    # if the domain is already registered, don't do anything
+    # if the domain is depricated, report back
+    # otherwise, create the domain
+    #
+    create_domain = True
     swf_name = "Publish." + prefix
-    print "creating swf domain: " + swf_name
-    swf.register_domain(name=swf_name, description="test SWF domain for thie postfixed namespace", workflowExecutionRetentionPeriodInDays="90")
+    for domain in reg_domain_info:
+        if swf_name == domain["name"]:
+            print "domain is already registered !"
+            create_domain = False
+    for domain in dep_domain_info:
+        if swf_name == domain["name"]:
+            print "domain is depricated, cannot register, you will need to pick another domain name"
+            create_domain = False
+    if create_domain:
+        print "creating swf domain: " + swf_name
+        swf.register_domain(name=swf_name, description="test SWF domain for thie postfixed namespace", workflowExecutionRetentionPeriodInDays="90")
+
+# Policy generation
+def generate_sqs_policy(sqs_arn, bucket_arn):
+    policy_doc_template = open("continuum_aws_policy_tempaltes/sqs_policy_template.json", "r").readlines()
+    policy_doc =  policy_doc_template % (sqs_arn,sqs_arn, bucket_arn)
+    return policy_doc
 
 if __name__ == "__main__":
-    # Do resource creation
     get_event_monitor_queue_name(prefix)
-    # create_prefixed_queues(prefix)
-    # create_prefixed_swf_domain(prefix)
-    # create_prefixed_buckets(prefix)
+    create_prefixed_queues(prefix)
+    create_prefixed_buckets(s3, prefix, region)
+    create_prefixed_swf_domain(prefix)
 
-
-
-# def set_notification_on_bucket(bucket_name):
-#     bucket_notification = s3.BucketNotification('bucket_name')
-#
-#
-#
-# def set_bucket_notification():
-#     bucket_notification = s3.BucketNotification('bucket_name')
-#     bucket_notification.put(QueueConfigurations[QueueArn:])
-#
-# def set_queue_notification(queue_arn):
-#     bucket_notification = s3.BucketNotification('ct-elife-production-final')
-#     print bucket_notification.__dict__
-#     data = {}
-#     # for valid event types see  http://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#supported-notification-event-types
-#     data['QueueConfigurations'] = [
-#                 {
-#                     'QueueArn': queue_arn,
-#                     'Events': ["s3:ObjectCreated:*"]
-#                     }
-#                 ]
-#
-#     response = bucket_notification.put(NotificationConfiguration=data)
-#     print response
-#
-
-#
-#
-# def generate_sqs_policy(sqs_arn, bucket_arn):
-#     policy_doc =  """  {
-#         "Version": "2012-10-17",
-#         "Id": "%s/SQSDefaultPolicy",
-#         "Statement": [
-#           {
-#             "Sid": "",
-#             "Effect": "Allow",
-#             "Principal": {
-#               "AWS": "*"
-#             },
-#             "Action": "SQS:SendMessage",
-#             "Resource": "%s",
-#             "Condition": {
-#               "ArnLike": {
-#                 "aws:SourceArn": "%s"
-#               }
-#             }
-#           }
-#         ]
-#       }
-#       """ % (sqs_arn,sqs_arn, bucket_arn)
-#     return policy_doc
-#
-# def generate_sqs_policy_json(sqs_arn, bucket_arn):
-#     policy_doc = {  "Version": "2012-10-17",
-#                     "Id": sqs_arn+"/SQSDefaultPolicy",
-#                     "Statement": [
-#                           {
-#                             "Sid": "",
-#                             "Effect": "Allow",
-#                             "Principal": {
-#                               "AWS": "*"
-#                             },
-#                             "Action": "SQS:SendMessage",
-#                             "Resource": sqs_arn,
-#                             "Condition": {
-#                                 "ArnLike": {
-#                                 "aws:SourceArn": bucket_arn
-#                                 }
-#                             }
-#                         }
-#                     ]
-#                 }
-#     return policy_doc
-#
-# def set_queue_policy(prefix):
-#     queues = sqs.list_queues()["QueueUrls"]
-#     for queue in queues:
-#         queue_simple_name = queue.split("/")[-1]
-#         if queue_simple_name == prefix + "-incoming-queue":
-#             bucket_arn = generate_bucket_arn_from_name("ct-elife-production-final")
-#             sqs_arn = get_queue_arn(prefix)
-#             policy = generate_sqs_policy(sqs_arn, bucket_arn)
-#             response = sqs.set_queue_attributes(QueueUrl=queue, Attributes={"Policy":policy})
-#             print response
-#
-# if __name__ == "__main__":
-#     # TODO: figure out the difference between boto3.resource and boto3.client for this code
-#     s3 = boto3.resource('s3')
-#     sqs = boto3.client('sqs')
-#     swf = boto3.client('swf')
-#
-#     aws_arn = generate_bucket_arn_from_name("ct-elife-production-final")
-#     sqs_arn = get_queue_arn(prefix)
-#     policy = generate_sqs_policy(sqs_arn, aws_arn)
-#     print policy
-#     policy_json = generate_sqs_policy_json(sqs_arn, aws_arn)
-#     print policy_json
-#     # set_queue_policy(prefix)
-#     # bucket_arn = get_bucket_arn(prefix)
-#     queue_arn = get_queue_arn(prefix)
-#     set_queue_notification(queue_arn)
+    ## policy settings
+    # configure the bucket permissions for the s3_buckets["production_bucket"] (with the prefix)
+    # configure the queue permissions for the sqs_queues["S3_monitor_queue"] (with the prefix)
+    # configure the CDN permissions s3_buckets["ppp_cdn_bucket"] (with the prefix)
