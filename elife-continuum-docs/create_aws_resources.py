@@ -5,7 +5,7 @@ s3 = boto3.resource('s3', region_name=region)
 sqs = boto3.client('sqs', region_name=region)
 swf = boto3.client('swf', region_name=region)
 
-s3_buckets = s3_buckets.values()
+s3_buckets_names = s3_buckets.values()
 
 # we need the full queue dict as we need to be able to identify
 # which queue is associated with the `website_ingest_queue` label.
@@ -28,8 +28,14 @@ def generate_bucket_arn_from_name(bucket_name):
 def get_event_monitor_queue_name(prefix):
     try:
         queue_name = queue_map["website_ingest_queue"]
-        print prefix + "-" + queue_name
         return prefix + "-" + queue_name
+    except:
+        raise error
+
+def get_production_final_bucket(prefix):
+    try:
+        bucket_name = s3_buckets["production_bucket"]
+        return prefix + "-" + bucket_name
     except:
         raise error
 
@@ -40,13 +46,15 @@ def get_sqs_arn_for_incoming_queue(prefix):
     This depends on the existence of the queue with the key `event_monitor_queue`.
     """
     incoming_queue_name = get_event_monitor_queue_name(prefix)
-    queues = sqs.list_queues()["QueueUrls"]
-    for queue in queues:
+    queues = sqs.list_queues()
+    queue_urls = queues["QueueUrls"]
+    for queue in queue_urls:
         queue_simple_name = queue.split("/")[-1]
         if queue_simple_name == incoming_queue_name: # if the incoming queue exists, then get it's ARN
             queue_attributes = sqs.get_queue_attributes(QueueUrl=queue, AttributeNames=["QueueArn", "Policy"])
             queue_arn = queue_attributes["Attributes"]["QueueArn"]
-    return queue_arn
+            queue_url = queue
+    return queue_arn, queue_url
 
 # Bucket Creation
 def create_bucket(s3, bucket, region):
@@ -58,7 +66,7 @@ def create_bucket(s3, bucket, region):
     return True
 
 def create_prefixed_buckets(s3, prefix, region):
-    for bucket in s3_buckets:
+    for bucket in s3_buckets_names:
         create_bucket(s3, prefix + "-" + bucket, region)
 
 # SQS creation
@@ -107,17 +115,25 @@ def create_prefixed_swf_domain(prefix):
 
 # Policy generation
 def generate_sqs_policy(sqs_arn, bucket_arn):
-    policy_doc_template = open("continuum_aws_policy_tempaltes/sqs_policy_template.json", "r").readlines()
+    policy_doc_template = open("continuum_aws_policy_tempaltes/sqs_policy_template.json", "r").read()
     policy_doc =  policy_doc_template % (sqs_arn,sqs_arn, bucket_arn)
     return policy_doc
 
+def set_policy_on_queue(prefix):
+    event_monitor_queue = get_event_monitor_queue_name(prefix)
+    production_bucket = get_production_final_bucket(prefix)
+    monitor_bucket_arn = generate_bucket_arn_from_name(production_bucket)
+    event_queue_arn, queue_url = get_sqs_arn_for_incoming_queue(prefix)
+    policy = generate_sqs_policy(event_queue_arn, monitor_bucket_arn)
+    response = sqs.set_queue_attributes(QueueUrl=queue_url, Attributes={"Policy":policy})
+    print response
+
 if __name__ == "__main__":
-    get_event_monitor_queue_name(prefix)
     create_prefixed_queues(prefix)
     create_prefixed_buckets(s3, prefix, region)
     create_prefixed_swf_domain(prefix)
+    set_policy_on_queue(prefix)
 
     ## policy settings
     # configure the bucket permissions for the s3_buckets["production_bucket"] (with the prefix)
-    # configure the queue permissions for the sqs_queues["S3_monitor_queue"] (with the prefix)
     # configure the CDN permissions s3_buckets["ppp_cdn_bucket"] (with the prefix)
