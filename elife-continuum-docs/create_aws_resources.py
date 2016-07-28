@@ -128,12 +128,27 @@ def set_policy_on_queue(prefix):
     response = sqs.set_queue_attributes(QueueUrl=queue_url, Attributes={"Policy":policy})
     print response
 
+def set_notification_on_bucket(prefix):
+    production_bucket = get_production_final_bucket(prefix)
+    notification = s3.BucketNotification(production_bucket)
+    event_queue_arn, queue_url = get_sqs_arn_for_incoming_queue(prefix)
+    data = {}
+    data['QueueConfigurations'] = [
+                {
+                    'QueueArn': event_queue_arn,
+                    'Events': ["s3:ObjectCreated:*"]
+                    }
+                ]
+    response = notification.put(NotificationConfiguration=data)
+    print response
+
 if __name__ == "__main__":
     create_prefixed_queues(prefix)
     create_prefixed_buckets(s3, prefix, region)
     create_prefixed_swf_domain(prefix)
     set_policy_on_queue(prefix)
+    set_notification_on_bucket(prefix)
+
 
     ## policy settings
-    # configure the bucket permissions for the s3_buckets["production_bucket"] (with the prefix)
     # configure the CDN permissions s3_buckets["ppp_cdn_bucket"] (with the prefix)
