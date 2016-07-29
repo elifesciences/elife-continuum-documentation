@@ -1,0 +1,20 @@
+{
+        "Version": "2012-10-17",
+        "Id": "%s/SQSDefaultPolicy",
+        "Statement": [
+          {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "*"
+            },
+            "Action": "SQS:SendMessage",
+            "Resource": "%s",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "%s"
+              }
+            }
+          }
+        ]
+      }
