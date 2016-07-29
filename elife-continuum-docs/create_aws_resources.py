@@ -116,7 +116,7 @@ def create_prefixed_swf_domain(prefix):
 # Policy generation
 def generate_sqs_policy(sqs_arn, bucket_arn):
     policy_doc_template = open("continuum_aws_policy_tempaltes/sqs_policy_template.json", "r").read()
-    policy_doc =  policy_doc_template % (sqs_arn,sqs_arn, bucket_arn)
+    policy_doc =  policy_doc_template % (sqs_arn, sqs_arn, bucket_arn)
     return policy_doc
 
 def set_policy_on_queue(prefix):
@@ -142,13 +142,45 @@ def set_notification_on_bucket(prefix):
     response = notification.put(NotificationConfiguration=data)
     print response
 
+def generate_cdn_arn_from_name(bucket_name):
+    """
+    the bucket arn that we require for setting a policy on an SQS queue can be
+    derived directly from the bucket name, meaning we do not need to make
+    any calls to AWS to obtain this if we already have the bucket name.
+
+    >>> generate_bucket_arn_from_name(name)
+    arn:aws:s3:*:*:name
+    """
+    return "arn:aws:s3:::" + bucket_name
+
+def get_cdn_bucket(prefix):
+    try:
+        bucket_name = s3_buckets["ppp_cdn_bucket"]
+        return prefix + "-" + bucket_name
+    except:
+        raise error
+
+def generate_cdn_policy(arn):
+    cdn_arn = arn + "/*" # trailling backslash star needed to correctly configure permission on CDN content
+    policy_doc_template = open("continuum_aws_policy_tempaltes/cdn_permission_template.json").read()
+    policy_doc =  policy_doc_template % (cdn_arn)
+    return policy_doc
+
+def set_policy_on_cdn(prefix):
+    cdn_bucket = get_cdn_bucket(prefix)
+    bucket_policy = s3.BucketPolicy(cdn_bucket)
+    cdn_arn = generate_cdn_arn_from_name(cdn_bucket)
+    cdn_policy = generate_cdn_policy(cdn_arn)
+    response = bucket_policy.put(Policy=cdn_policy)
+    print response
+
 if __name__ == "__main__":
     create_prefixed_queues(prefix)
     create_prefixed_buckets(s3, prefix, region)
     create_prefixed_swf_domain(prefix)
     set_policy_on_queue(prefix)
     set_notification_on_bucket(prefix)
-
+    set_policy_on_cdn(prefix)
 
     ## policy settings
     # configure the CDN permissions s3_buckets["ppp_cdn_bucket"] (with the prefix)
