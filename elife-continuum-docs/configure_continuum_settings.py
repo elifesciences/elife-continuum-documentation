@@ -186,7 +186,7 @@ def set_vpc_id(value, yaml_file):
 
 def set_ami(value, yaml_file):
     yaml_content = get_yaml(yaml_file)
-    yaml_content["defaults"]["aws"]["vpc-id"] = value
+    yaml_content["defaults"]["aws"]["ami"] = value
     write_yaml(yaml_content, yaml_file)
 
 def set_subnet_id(value, yaml_file):
@@ -358,6 +358,10 @@ def set_bot_aws_credentials(credentials, py_setting):
 if __name__ == "__main__":
     # TODO: remember to ask if we can change the description in
     # /Users/ian/workbench/builder-private-test/pillar/elife.sls for the default user.
+
+    # TODO: set poa_bucket and other downstream options
+
+    # TODO: either put LENS CDN, and other info, into continuum.yaml or derive them directly from AWS progromatically.
 
     # we assume that instance name is going to be the same
     # for different services.
