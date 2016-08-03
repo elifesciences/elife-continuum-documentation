@@ -1,28 +1,58 @@
 eLife Continuum
 
+** DRAFT DOCUMENTATION **
+
 # Introduction
+eLife Continuum is the platform that we use to manage the publishing and hosting or our research content.
 
 # High Level Overview
-
 eLife Continuum is composed of a set of software components that together form a publishing and article hosting system. In this documentation we will describe those components and how they fit together. We will describe how they can be deployed and customised.
 
 ## Conceptual overview
-
 ![High Level Overview][high-level-overview]
 
 [high-level-overview]: https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/high-level-overview.jpg
 
-eLife continuum is best described as a production and hosting platform It takes article packages from a content processor and then transforms those packages so that they can be hosted on the web. It also provides production teams with a management interface to manage the publishing and scheduling of articles. It provides a Drupal 7 site that can be used to host that journal content. It is build out of a number of software components, and these components mostly interact through a set of well described APIs, meaning that different parts of the system can be replaced or extended with relative ease.
+eLife continuum is best described as a production and hosting platform It takes article packages from a content processor and then transforms those packages so that they can be hosted on the web. It also provides production teams with a dashboard to manage the publishing and scheduling of articles. It provides a Drupal 7 site that can be used to host that journal content. It is built out of a number of software components, and these components mostly interact through a set of well described APIs, meaning that different parts of the system can be replaced or extended with relative ease.
 
-## Component overview
+## A comment about the the technology
+Most of the back-end components are written in python, with the hosting platform built on top of Drupal. We make liberal use of Amazon Web Services, and use a variety of storage engines exposed via RDS, including MySQL and Postgres. Redis is also used to store session information.
 
-Continuum makes significant use of AWS resources, in particular of AWS Simple WorkFlow, to manage process to process communication. The three main components of continuum are workflow management, publishing dashboard, and content hosting. Communication between the workflows and the publishing dashboard is done via AWS sqs queues, and this is why no direct relationship is shown in the diagram below, which only describes the modules that eLife has written.
+We manage workflows using AWS Simple WorkFlow.
+
+## Components
+The actual software resides in the following repositories
+
+* [https://github.com/elifesciences/elife-dashboard](https://github.com/elifesciences/elife-dashboard)
+* [https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)
+* [https://github.com/elifesciences/elife-bot](https://github.com/elifesciences/elife-bot)
+* [https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)
+* [https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)
+* [https://github.com/elifesciences/jats-scraper](https://github.com/elifesciences/jats-scraper)
+* [https://github.com/elifesciences/elife-tools](https://github.com/elifesciences/elife-tools)
+
+Documentation and tools for building the components live in the following repositories
+
+* [https://github.com/elifesciences/elife-continuum-documentation](https://github.com/elifesciences/elife-continuum-documentation)
+* [https://github.com/elifesciences/builder](https://github.com/elifesciences/builder)
+* [https://github.com/elifesciences/builder-private-example](https://github.com/elifesciences/builder-private-example)
+
+## Licensing
+eLife Continuum is licensed under the MIT License
+
+## High level overview
+
+The three main components of continuum are workflow management, the publishing dashboard, and content hosting. Communication between the workflows and the publishing dashboard is done via AWS sqs queues, and this is why no direct relationship is shown in the diagram below, which only describes the modules that eLife has written.
 
 ![High level component overview][hl-components]
 
 [hl-components]:https://raw.githubusercontent.com/elifesciences/ppp-project/continuum-user-docs/elife-continuum-docs/high-level-component-overview.jpg
 
 ### Continuum modules
+
+Continuum is composed of the following modules:
+
+
 
 ### Support modules
 #### `builder`
@@ -85,40 +115,40 @@ This is a small flask app that stores information about when a particular articl
 
 From the point of view of an article entering the system, the article life-cycle is mediated by the different workflows that get triggered, depending on whether the article should be published immediately, whether it is a "publish on accept" article, or a "version of record" article.
 
-A workflow is composed of a set of activities, in which all of the actual work happens. An activity can trigger a follow on workflow, if required. 
+A workflow is composed of a set of activities, in which all of the actual work happens. An activity can trigger a follow on workflow, if required.
 
-These workflows and activities are managed by Amazon Simple Workflow, and they need to be registered with AWS. The `elife-bot` module of Continuum includes a [registration script](https://github.com/elifesciences/elife-bot/blob/develop/register.py) that can be used to do this. 
+These workflows and activities are managed by Amazon Simple Workflow, and they need to be registered with AWS. The `elife-bot` module of Continuum includes a [registration script](https://github.com/elifesciences/elife-bot/blob/develop/register.py) that can be used to do this.
 
-### Workflow triggering 
+### Workflow triggering
 
-Most of the workflows in continuum are triggered by a message sent into a specific Amazon SQS queue, the `workflow-starter-queue`. There is a long running process that listens to messages on this queue. If the message is in the correct format, and contains the name of a registered workflow, then `queue-workflow-starter.py` triggers that workflow. 
+Most of the workflows in continuum are triggered by a message sent into a specific Amazon SQS queue, the `workflow-starter-queue`. There is a long running process that listens to messages on this queue. If the message is in the correct format, and contains the name of a registered workflow, then `queue-workflow-starter.py` triggers that workflow.
 
 Amazon S3 buckets can be configured to send a message to a queue if any of their content is modified. We make use of this to start the very first of the workflows. Modifications to a specific bucket are configured to send a message into a `S3_monitor_queue`. There is a long running process `queue_worker.py` that listens in to this queue. `queue_worker.py` is configured to launch a workflow defined in `newFileWorkflows.yaml`. It does this by sending a message in to `workflow-starter-queue` and the usual process takes over from there. In this way files arriving from a typesetter can automatically trigger the appropriate publication workflows, and those workflows can be configured easily by modifying `newFileWorkflows.yaml`.
 
 
 
-### Communicating between workflow activities and the Drupal hosting layer 
+### Communicating between workflow activities and the Drupal hosting layer
 
 
-### Workflow triggering diagram 
+### Workflow triggering diagram
 
 ![detail of how workflows get started][wf-starting-detail]
 
 [wf-starting-detail]:https://raw.githubusercontent.com/elifesciences/ppp-project/master/elife-continuum-docs/workflow_starting_detail.jpg
 
-### Detailed Workflow overview 
+### Detailed Workflow overview
 
 ![detail of how workflows get started][wf-detailed]
 
 [wf-detailed]:https://raw.githubusercontent.com/elifesciences/ppp-project/master/elife-continuum-docs/workflow_overview_detailed.jpg
 
-## Brief description of Workflows and Activities and processes 
+## Brief description of Workflows and Activities and processes
 
 #### `queue_worker.py`
 
 
 
-### 
+###
 
 
 # Deploying and configuring the system
