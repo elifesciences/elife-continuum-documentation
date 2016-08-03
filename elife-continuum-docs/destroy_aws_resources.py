@@ -1,7 +1,7 @@
+import boto3
 import sys
 from aws_setting_utils import prefix, region
 from aws_setting_utils import s3_protected_queues,  s3_protected_buckets, protected_prefixes
-import boto3
 
 s3 = boto3.resource('s3', region_name=region)
 sqs = boto3.client('sqs', region_name=region)

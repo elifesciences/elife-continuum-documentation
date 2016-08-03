@@ -176,7 +176,7 @@ def set_policy_on_cdn(prefix):
 
 if __name__ == "__main__":
     create_prefixed_queues(prefix)
-    create_prefixed_buckets(s3, prefix, region)
+    # create_prefixed_buckets(s3, prefix, region)
     create_prefixed_swf_domain(prefix)
     set_policy_on_queue(prefix)
     set_notification_on_bucket(prefix)
