@@ -7,7 +7,7 @@
 # and permissions
 
 # need path to builder to be able to access ~/builder/projects/elife.yaml
-builder_path: /Users/ian/workbench/builder-config-test
+builder_path: /local/path/to/builder
 
 # need path the builder_private repo to be able to access location of expected
 # component configuration files, specifically:
@@ -23,58 +23,96 @@ builder_path: /Users/ian/workbench/builder-config-test
 #
 # ~/builder-private/pillar/elife.sls - generic settings, like HTTP AUTH
 #
-builder_private_path: /Users/ian/workbench/builder-private-config-test
+builder_private_path: /local/path/t0/builder-private
+builder_private_repo: githubusername/builder-private
 
 aws_region:
-  region: eu-west-1
+  region: eu-central-1
 
 domain_name:
-  domain: 5star.info
+  domain: yourdomain.com
 
 http_auth:
-  user: test_user
-  password: test_password
+  # the basic user password are used to secure access to the production dashboard
+  user: production
+  password: long_password_for_accessing_dashboard
+  # crazy user password is
+  # set in pillar/elife.sls complex, long complex
+  # is also used as lax updated user and lax update password
   crazy_user: crazy_user_example
   crazy_password: crazy_password_example
-  web_user: web_user_example
-  web_password: web_password_example
+  web_user: elife # set in pillar/elife.sls - "open" secret to block robots
+  web_password: sciences
 
+lax_application:
+  app_secret: longhardtoguesssecretforyourapp
+  db_username: nameshouldbelowercase
+  db_password: longhardtoguesssecretforyourdb
+
+application_emails:
+  SES_email: your@email.com
+  deploy_user_email: your@email.com
+
+drupal_site_details:
+  # these target /builer-private/salt/elife-bot/config/opt-elife-bot-settings.py
+  hostname: http://test-instance.com
+  update_user: drupal
+  update_pass: longhardtoguessdurpalpassword
+  # these target builder-private/pillar/elife_website.sls
+  drupal_website_username: website
+  drupal_db_username: drupal
+  drupal_user_username: elife Builder
+  drupal_db_password: longhardtoguesssecretforyourdb
+  drupal_db_test_password: anotherlonghardtoguesssecretforyourdb
+  drupal_user_password: yetanotherlonghardtoguesssecretforyourdb
 
 ## Elife bot specific AWS settings
-prefix: ianm
+prefix: your-prefix
 
-elife_dashboard_user_aws:
-  aws_username: bot_aws_deploy_username
-  key: examplelongleyforawsuser
-  secret: examplelingawssecret
+elife_dashboard_other:
+  db_username: db_username
+  db_password: longpassword
 
-elife_bot_user_aws:
+elife_scheduler_other:
+  db_username: db_username
+  db_password: longpassword
+  app_key: alonghardtoguessapplicationkey
+
+elife_bot_user_aws: # also used as aws keys for the the dashboard
   aws_username: bot_aws_deploy_username
-  key: examplelongleyforawsuser
-  secret: examplelingawssecret
+  key: thesupersecretawskey
+  secret: thesupersecretawssecret
 
 # S3 info derived from bot settings,
 # https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
+# for the settings script to work the keys in this config need to be the same
+# as the keys in the settings file that we are targeting.
 s3_buckets:
-  production_bucket : elife-production-final
-  eif_bucket : elife-publishing-eif
-  expanded_bucket : elife-publishing-expanded
-  ppp_cdn_bucket : elife-publishing-cdn
-  archive_bucket : elife-publishing-archive
-  xml_bucket : elife-publishing-xml
+  production_bucket : production-final
+  eif_bucket : publishing-eif
+  expanded_bucket : publishing-expanded
+  ppp_cdn_bucket : publishing-cdn
+  archive_bucket : publishing-archive
+  xml_bucket : publishing-xml
+  lens_bucket: elife-lens
 
 swf_domain:
-  domain: ianm-test
+  # TODO: check name coordinatino with class name in opt-elife-bot-settings
+  domain: dev # possibly needs to be coordinated with class name in opt-elife-bot-settings
+
+
 
 # # queue info derioved from dashboard settings, and bot settings,
 # # e.g. https://github.com/elifesciences/builder/blob/master/salt/salt/elife-dashboard/config/srv-app-dashboard-prod_settings.py#L9-L11
 # # https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py#L25-L27
+#
+# for the settings script to work the keys in this config need to be the same
+# as the keys in the settings file that we are targeting.
 sqs_queues:
   S3_monitor_queue: incoming-queue
   event_monitor_queue: event-property-incoming-queue
   workflow_starter_queue: workflow-starter-queue
   website_ingest_queue: website-ingest-queue
-
 
 ## Deletion protection settings
 protected_prefixes:
@@ -117,3 +155,23 @@ s3_protected_buckets:
 sqs_protected_queues:
   # these specific sqs queues are checked to ensure they are not
   # delted by the delte scripts
+  ct-event-property-incoming-queue
+  ct-incoming-queue
+  ct-website-ingest-queue
+  ct-workflow-starter-queue
+  end2end-event-property-incoming-queue
+  end2end-incoming-queue
+  end2end-website-ingest-queue
+  end2end-workflow-starter-queue
+  event-property-incoming-queue
+  exp-event-property-incoming-queue
+  exp-incoming-queue
+  exp-workflow-starter-queue
+  incoming-queue
+  nlisgo-incoming-queue
+  parallel-event-property-incoming-queue
+  parallel-incoming-queue
+  parallel-workflow-starter-queue
+  ppp-test-queue-im
+  website-ingest-queue
+  workflow-starter-queue
