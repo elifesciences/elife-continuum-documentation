@@ -85,7 +85,7 @@ def set_element_in_python_settings(value, line_identifiers, settings_file):
     for line in lines:
         for setting_string in line_identifiers:
             if line.find(setting_string) > -1:
-                line = "".join(line.split("=")[:-1]) + " = " + value + "\n"
+                line = "".join(line.split("=")[:-1]) + " = " + '"' + value + '"' + "\n"
                 # print line
         new_file.append(line)
     new_file_content = "".join(new_file)
