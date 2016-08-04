@@ -52,7 +52,7 @@ The three main components of continuum are workflow management, the publishing d
 
 ### [https://github.com/elifesciences/elife-dashboard](https://github.com/elifesciences/elife-dashboard)
 
-Flask app publishing dashboard that can trigger article publication, the scheduling of future publication, and the previewing of articles.
+The elife-dashboard is a small flask app that shows information about how an article has been processed through the system. By default articles are not published immediately in the system, and they require human approval. The publishing dashboard provides the mechanism for this approval. The publishing dashboard can trigger a workflow that sets the published state of an article on the Drupal site. The workflow communicates via a REST API that Drupal exposes for this purpose. The publishing dashboard can also be used to schedule articles for future publication. It does scheduling by setting information in the `elife-article-scheduler`
 
 ### [https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)
 
@@ -64,7 +64,7 @@ Python app that encodes all publishing workflows and activities.
 
 ### [https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)
 
-Stores google analytics page view data on articles to support the altmetrics display on article pages.
+Stores google analytics page view data on articles to support the altmetrics display on article pages. This is a small Django application.
 
 ### [https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)
 
@@ -80,7 +80,7 @@ A set of utility tools, including a JATS scraper written in python, exposing JAT
 
 ### [https://github.com/elifesciences/lax](https://github.com/elifesciences/lax)
 
-Metadata store used to keep track of article versions, and other article related metadata.
+Lax is a small Django project that contains metadata about versions of published articles. It exposes a REST API for creating new entires in Lax, and for querying lax for information about an article. The elife-bot checks against lax when a new article comes in to the system to see if a previous version of that articles has already been published.
 
 ### [https://github.com/elifesciences/elife-continuum-documentation](https://github.com/elifesciences/elife-continuum-documentation)
 
@@ -89,6 +89,10 @@ Documentation for the project.
 ### [https://github.com/elifesciences/builder](https://github.com/elifesciences/builder)
 
 Infrastructure as code, a tool to build the machines that run the components of Continuum.
+
+This tool can be used to deploy locally to a Vagrant machine, or to deploy to an AWS instance.
+
+When deploying to AWS you will need to configure your local instance of builder with the appropriate private keys for AWS, along with other confidential information, such as database configuration.
 
 ### [https://github.com/elifesciences/builder-private-example](https://github.com/elifesciences/builder-private-example)
 
