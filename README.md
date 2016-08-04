@@ -2,6 +2,31 @@ eLife Continuum
 
 ** DRAFT DOCUMENTATION **
 
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Introduction](#introduction)
+- [High Level Overview](#high-level-overview)
+	- [Conceptual overview](#conceptual-overview)
+	- [A comment about the the technology](#a-comment-about-the-the-technology)
+	- [Components](#components)
+	- [Licensing](#licensing)
+	- [High level overview](#high-level-overview)
+	- [Component description](#component-description)
+		- [[https://github.com/elifesciences/elife-dashboard](https://github.com/elifesciences/elife-dashboard)](#httpsgithubcomelifescienceselife-dashboardhttpsgithubcomelifescienceselife-dashboard)
+		- [[https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)](#httpsgithubcomelifescienceselife-article-schedulerhttpsgithubcomelifescienceselife-article-scheduler)
+		- [[https://github.com/elifesciences/elife-bot](https://github.com/elifesciences/elife-bot)](#httpsgithubcomelifescienceselife-bothttpsgithubcomelifescienceselife-bot)
+		- [[https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)](#httpsgithubcomelifescienceselife-metricshttpsgithubcomelifescienceselife-metrics)
+		- [[https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)](#httpsgithubcomelifescienceselife-websitehttpsgithubcomelifescienceselife-website)
+		- [[https://github.com/elifesciences/jats-scraper](https://github.com/elifesciences/jats-scraper)](#httpsgithubcomelifesciencesjats-scraperhttpsgithubcomelifesciencesjats-scraper)
+		- [[https://github.com/elifesciences/elife-tools](https://github.com/elifesciences/elife-tools)](#httpsgithubcomelifescienceselife-toolshttpsgithubcomelifescienceselife-tools)
+		- [[https://github.com/elifesciences/lax](https://github.com/elifesciences/lax)](#httpsgithubcomelifescienceslaxhttpsgithubcomelifescienceslax)
+		- [[https://github.com/elifesciences/elife-continuum-documentation](https://github.com/elifesciences/elife-continuum-documentation)](#httpsgithubcomelifescienceselife-continuum-documentationhttpsgithubcomelifescienceselife-continuum-documentation)
+		- [[https://github.com/elifesciences/builder](https://github.com/elifesciences/builder)](#httpsgithubcomelifesciencesbuilderhttpsgithubcomelifesciencesbuilder)
+		- [[https://github.com/elifesciences/builder-private-example](https://github.com/elifesciences/builder-private-example)](#httpsgithubcomelifesciencesbuilder-private-examplehttpsgithubcomelifesciencesbuilder-private-example)
+- [Installation and Deployment - **DRAFT**](#installation-and-deployment-draft)
+
+<!-- /TOC -->
+
 # Introduction
 eLife Continuum is the platform that we use to manage the publishing and hosting or our research content.
 
@@ -96,4 +121,4 @@ Infrastructure as code, a tool to build the machines that run the components of 
 A support repository to help you get started with how to manage secrets and other confidential configuration information when building components of the system.
 
 # Installation and Deployment - **DRAFT**
-We use [builder](https://github.com/elifesciences/builder) for deployment of components of the system. (More details to follow). 
+We use [builder](https://github.com/elifesciences/builder) for deployment of components of the system. (More details to follow).
