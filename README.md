@@ -26,6 +26,7 @@ eLife Continuum
 - [A note about file formats and file naming](#a-note-about-file-formats-and-file-naming)
 - [A note about communication with Drupal](#a-note-about-communication-with-drupal)
 - [Installation and Deployment - **DRAFT**](#installation-and-deployment-draft)
+- [Feedback and mailing list](#feedback-and-mailing-list)
 
 <!-- /TOC -->
 
@@ -154,4 +155,8 @@ When we initially launched Continuum inside of eLife we encountered a problem wi
 In order to overcome this we re-engineered the way that the bot communicates with Drupal. Instead of communicating directly the bot places a message on a queue, the `website_ingest_queue`. Another process - [shimmy.py](https://github.com/elifesciences/elife-bot/blob/develop/shimmy.py), picks messages from this queue, and then communicates with Drupal. Shimmy only sends a new article to Drupal once the previous article has been fully ingested. As we tend to publish sever articles together, and then have a period of time between publishing, Drupal has plenty of time to work through the articles that are being sent to it. This also means that were you to create a different hosting system, the communication between that system and the bot can be managed by only modifying shimmy.py, for example if you had a system that could handle ingestion of articles in parallel, for scaling purposes.   
 
 # Installation and Deployment - **DRAFT**
-We use [builder](https://github.com/elifesciences/builder) for deployment of components of the system. (More details to follow).
+We use [builder](https://github.com/elifesciences/builder) for deployment of components of the system. Please refer to the  [deployment and configuration guide](https://github.com/elifesciences/elife-continuum-documentation/blob/master/deployment-and-configuration.md).
+
+# Feedback and mailing list
+
+We have setup a [mailing list](https://groups.google.com/forum/#!forum/elife-continuum-list) for this project. For feature requests bugs please file an issue in [this repository](https://github.com/elifesciences/elife-continuum-documentation/issues).  
