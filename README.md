@@ -56,7 +56,7 @@ The elife-dashboard is a small flask app that shows information about how an art
 
 ### [https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)
 
-Django app that stores information about when an article should be published in the future.
+This is a small Django app that stores information about when a particular article ought to be published in the future. Publishing times can be set to the minute. The scheduler currently only communicates with the dashboard, and that communication is two way. The scheduler tells the dashboard to publish when its the correct time, and the dashboard both tells the scheduler the expected publication dates and also queries it to find the currently scheduled times).
 
 ### [https://github.com/elifesciences/elife-bot](https://github.com/elifesciences/elife-bot)
 
@@ -112,11 +112,17 @@ A more detailed diagram of how workflows trigger other workflows can be [found h
 
 # A note about file formats and file naming
 
-- point to documentation
-- mention metadata contained in file naming
-- point to example articles that you can use to drive your projects with
+The elife-bot expects files coming into the system from the content processor to have a specific structure. This is well documented in the [file naming specification](https://github.com/elifesciences/elife-continuum-documentation/blob/master/file-naming/file_naming_spec.md)
+
+Of particular note is that article files are expected to contain information indicating whether they contain Version of Record or Publish on Accept files, if containing an already published version, then what the version number is for an article, and if containing a article that has been updated, what the updated date was.
+
+During the development of Continuum we debated whether all of this information ought to be held in a sidecar metadata file. It was close decision, but we proceeded to use the file naming route to indicate some state information. This is a decision that we may revisit in the future. If you wish to implement a different naming convention, or override the eLife Continuum naming convention, then the key place to do this is in the [article structure](https://github.com/elifesciences/elife-bot/blob/develop/provider/article_structure.py) class in the bot, which provides an abstract representation of the critical information about a file to the rest of the system.
+
+For testing we have made available some [sample elife zip files](http://elife-continuum-test-content.s3.amazonaws.com/) which follow to our naming conventions  
 
 # A note about communication with Drupal
+
+
 
 # Installation and Deployment - **DRAFT**
 We use [builder](https://github.com/elifesciences/builder) for deployment of components of the system. (More details to follow).
