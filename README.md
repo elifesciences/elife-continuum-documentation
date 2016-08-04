@@ -122,7 +122,9 @@ For testing we have made available some [sample elife zip files](http://elife-co
 
 # A note about communication with Drupal
 
+When we initially launched Continuum inside of eLife we encountered a problem with the way that the bot communicated with Drupal. We created an ingest API endpoint in Drupal, but we made it only accept connections in a serial fashion. In contrast the bot will process articles as they appear, and moreover the simple workflow engine will retry activities a number of times before failing. Some articles were taking a long time to ingest on the Drupal side, and the HTTTP connection to the bot was dropping, causing the bot to resend the article to Drupal, while the first request was still being processed. This led to a number of stability issues on the Drupal side.
 
+In order to overcome this we re-engineered the way that the bot communicates with Drupal. Instead of communicating directly the bot places a message on a queue, the `website_ingest_queue`. Another process - [shimmy.py](https://github.com/elifesciences/elife-bot/blob/develop/shimmy.py), picks messages from this queue, and then communicates with Drupal. Shimmy only sends a new article to Drupal once the previous article has been fully ingested. As we tend to publish sever articles together, and then have a period of time between publishing, Drupal has plenty of time to work through the articles that are being sent to it. This also means that were you to create a different hosting system, the communication between that system and the bot can be managed by only modifying shimmy.py, for example if you had a system that could handle ingestion of articles in parallel, for scaling purposes.   
 
 # Installation and Deployment - **DRAFT**
 We use [builder](https://github.com/elifesciences/builder) for deployment of components of the system. (More details to follow).
