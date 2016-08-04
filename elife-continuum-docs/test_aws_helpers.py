@@ -1,7 +1,7 @@
 import pytest
 #  from aws_setting_utils import s3_buckets, prefix, region
 # creation functions
-# from create_aws_resources import generate_sqs_policy_json
+from create_aws_resources import generate_sqs_policy
 from create_aws_resources import generate_bucket_arn_from_name
 from create_aws_resources import create_bucket
 from create_aws_resources import create_prefixed_buckets
@@ -40,7 +40,9 @@ def test_generate_sqs_policy_json():
                         }
                     ]
                 }
-    assert generate_sqs_policy_json("test_sqs", "test_bucket") == test_json
+    result = generate_sqs_policy("test_sqs", "test_bucket")
+    print result 
+    assert generate_sqs_policy("test_sqs", "test_bucket") == test_json
 
 
 def test_positive_check_prefix_against_protected():
