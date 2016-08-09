@@ -56,7 +56,7 @@ The IAM group will need the following permissions
 
 ## Setting up a domain and subdomain in AWS
 
-From Route53 ... 
+From Route53 ...
 
 ## VPN and subnets
 
@@ -106,6 +106,9 @@ At the time of writing:
 # System configuration
 
 ## Image File Format configuration
+
+The [ResizeImages](https://github.com/elifesciences/elife-bot/blob/develop/activity/activity_ResizeImages.py) activity in the bot is responsible for generating image formats for display on the web. It uses ImagMagick. The types and formats of images that this activity produces are configured in [formats.yaml](https://github.com/elifesciences/elife-bot/blob/develop/formats.yaml). 
+
 
 ## Default Publishing Behaviour configuration
 
