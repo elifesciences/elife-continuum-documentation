@@ -19,10 +19,10 @@ from aws_setting_utils import scheduler_app_secret, scheduler_db_username, sched
 
 # AWS contstnats that have to be looked up in the AWS console (for now).
 # This data is not confidentail, as use of if is only possible with AWS keys
-VPC_ID = "vpc-77f82b1e"
-SUBNET_CIDR = "172.31.0.0/20"
-SUBNET_ID_A = "subnet-afc96ec6"
-SUBNET_ID_B = "subnet-cb2ee9b0"
+VPC_ID = "vpc-eb157d8c"
+SUBNET_CIDR = "10.0.128.0/17" # the VPC CIDR is 10.0.0.0/16
+SUBNET_ID_A = "subnet-caf9eef7"
+SUBNET_ID_B = "subnet-4a4c4e12"
 MACHINE_AMI = "ami-cbdd50dc"
 RDS_SUBNETS = [SUBNET_ID_A, SUBNET_ID_B]
 CDN_DISTRIBUTION_ID = "test dist id"
@@ -194,7 +194,7 @@ def set_subnet_id(value, yaml_file):
     targets builder/projects/elife.yaml with the subnet_id value
     """
     yaml_content = get_yaml(elife_global_yaml)
-    yaml_content["defaults"]["aws"]["ami"] = value
+    yaml_content["defaults"]["aws"]["subnet-id"] = value
     write_yaml(yaml_content, yaml_file)
 
 def set_subnet_cidr(value, yaml_file):
