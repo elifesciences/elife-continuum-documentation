@@ -361,6 +361,8 @@ if __name__ == "__main__":
 
     # TODO: set poa_bucket and other downstream options
 
+    # TODO: set the domain name in builder-private/pillar/environment-prod.sls which will set the argument that register.py takes. 
+
     # TODO: either put LENS CDN, and other info, into continuum.yaml or derive them directly from AWS progromatically.
 
     # we assume that instance name is going to be the same

@@ -1,9 +1,9 @@
 import boto3
 from botocore.client import Config
-from aws_setting_utils import s3_buckets, prefix, region, queue_map
+from aws_setting_utils import s3_buckets, prefix, region, queue_map, swf_domain
 
 # v4 authenticatio is being rolled out across all of AWS, so we need to update
-# the creat script 
+# the creat script
 s3 = boto3.resource('s3', region_name=region, config=Config(signature_version='s3v4'))
 sqs = boto3.client('sqs', region_name=region)
 swf = boto3.client('swf', region_name=region)
@@ -69,8 +69,14 @@ def create_bucket(s3, bucket, region):
     return True
 
 def create_prefixed_buckets(s3, prefix, region):
-    for bucket in s3_buckets_names:
-        create_bucket(s3, prefix + "-" + bucket, region)
+    existing_buckets = []
+    for bucket in s3.buckets.all(): existing_buckets.append(bucket)
+    for new_bucket in s3_buckets_names:
+        prefixed_new_bucket = prefix + "-" + new_bucket
+        if prefixed_new_bucket in existing_buckets:
+            print prefixed_new_bucket + " already exists!"
+        else:
+            create_bucket(s3, prefixed_new_bucket, region)
 
 # SQS creation
 def create_prefixed_queues(prefix):
@@ -180,7 +186,7 @@ def set_policy_on_cdn(prefix):
 if __name__ == "__main__":
     create_prefixed_queues(prefix)
     create_prefixed_buckets(s3, prefix, region)
-    create_prefixed_swf_domain(prefix)
+    create_prefixed_swf_domain(swf_domain)
     set_policy_on_queue(prefix)
     set_notification_on_bucket(prefix)
     set_policy_on_cdn(prefix)

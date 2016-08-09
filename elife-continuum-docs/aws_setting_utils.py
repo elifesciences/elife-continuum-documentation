@@ -34,7 +34,9 @@ builder_private_path = doc["builder_private_path"]
 builder_private_repo = doc["builder_private_repo"]
 
 prefix = doc["prefix"]
+swf_domain = doc["swf_domain"].values()[0]
 domain_name = doc["domain_name"].values()[0]
+
 
 region = doc["aws_region"].values()[0]
 queue_map = doc["sqs_queues"]

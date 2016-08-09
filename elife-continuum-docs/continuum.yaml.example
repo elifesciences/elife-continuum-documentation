@@ -68,6 +68,7 @@ drupal_site_details:
 
 ## Elife bot specific AWS settings
 prefix: your-prefix
+swf_domain: dev 
 
 elife_dashboard_other:
   db_username: db_username
