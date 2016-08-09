@@ -23,7 +23,7 @@ VPC_ID = "vpc-77f82b1e"
 SUBNET_CIDR = "172.31.0.0/20"
 SUBNET_ID_A = "subnet-afc96ec6"
 SUBNET_ID_B = "subnet-cb2ee9b0"
-MACHINE_AMI = "ami-9cee02f3"
+MACHINE_AMI = "ami-cbdd50dc"
 RDS_SUBNETS = [SUBNET_ID_A, SUBNET_ID_B]
 CDN_DISTRIBUTION_ID = "test dist id"
 CDN_DOMAIN_NAME = "test cdn domain name"
@@ -361,7 +361,7 @@ if __name__ == "__main__":
 
     # TODO: set poa_bucket and other downstream options
 
-    # TODO: set the domain name in builder-private/pillar/environment-prod.sls which will set the argument that register.py takes. 
+    # TODO: set the domain name in builder-private/pillar/environment-prod.sls which will set the argument that register.py takes.
 
     # TODO: either put LENS CDN, and other info, into continuum.yaml or derive them directly from AWS progromatically.
 

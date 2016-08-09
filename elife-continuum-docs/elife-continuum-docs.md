@@ -77,7 +77,7 @@ Uses elite-tools to parse data from JATS-XML and takes a `description` to coerce
 
 #### `elife-bot`
 
-`elife-bot` defines the SWF workflows, activities, and processes that monitor the different queues looking for triggers for workflows. This is written in python making liveral use of the boto APIs.  The main workflows are triggered by modifications to a named S3 bucket. Changes to that bucket push a message onto an SQS queue, and a processes defined in elife-bot listens on that queue, and triggers the appropriate publishing workflow based on that signal. Workflows can trigger other workflows by sending messages onto a specific named queue. The elife-bot also has an activity that populates our content CDN.
+`elife-bot` defines the SWF workflows, activities, and processes that monitor the different queues looking for triggers for workflows. This is written in python making liberal use of the boto APIs.  The main workflows are triggered by modifications to a named S3 bucket. Changes to that bucket push a message onto an SQS queue, and a processes defined in elife-bot listens on that queue, and triggers the appropriate publishing workflow based on that signal. Workflows can trigger other workflows by sending messages onto a specific named queue. The elife-bot also has an activity that populates our content CDN.
 
 The elife-bot also contains a process that sends metadata to Drupal via a REST API, triggering the creation of published or unpublished nodes in Drupal (depending on settings), which will become the article pages on the hosting site. Currently our Drupal site can only accept requests in serial, but the bot will process new articles as soon as they arrive, so there is a shim between the bot and the Drupal site that stores messages ready to send to Drupal, and only pushes them to Drupal when Drupal is ready to receive another article. This shim totally decouples the bot from Drupal, and so another hosting system can be easily swapped out without making any changes to the workflow code. The code for this shim is also contained in the elife-bot repo.
 
@@ -116,6 +116,8 @@ This is a small flask app that stores information about when a particular articl
 From the point of view of an article entering the system, the article life-cycle is mediated by the different workflows that get triggered, depending on whether the article should be published immediately, whether it is a "publish on accept" article, or a "version of record" article.
 
 A workflow is composed of a set of activities, in which all of the actual work happens. An activity can trigger a follow on workflow, if required.
+
+
 
 These workflows and activities are managed by Amazon Simple Workflow, and they need to be registered with AWS. The `elife-bot` module of Continuum includes a [registration script](https://github.com/elifesciences/elife-bot/blob/develop/register.py) that can be used to do this.
 
