@@ -1,7 +1,10 @@
 import boto3
+from botocore.client import Config
 from aws_setting_utils import s3_buckets, prefix, region, queue_map
 
-s3 = boto3.resource('s3', region_name=region)
+# v4 authenticatio is being rolled out across all of AWS, so we need to update
+# the creat script 
+s3 = boto3.resource('s3', region_name=region, config=Config(signature_version='s3v4'))
 sqs = boto3.client('sqs', region_name=region)
 swf = boto3.client('swf', region_name=region)
 
@@ -58,7 +61,7 @@ def get_sqs_arn_for_incoming_queue(prefix):
 
 # Bucket Creation
 def create_bucket(s3, bucket, region):
-    print "creating bucket: " + bucket
+    print "creating bucket: " + bucket + " in region " + region
     if region == "us-east-1": # AWS api is inconsistent
         s3.create_bucket(Bucket=bucket)
     else:
@@ -176,7 +179,7 @@ def set_policy_on_cdn(prefix):
 
 if __name__ == "__main__":
     create_prefixed_queues(prefix)
-    # create_prefixed_buckets(s3, prefix, region)
+    create_prefixed_buckets(s3, prefix, region)
     create_prefixed_swf_domain(prefix)
     set_policy_on_queue(prefix)
     set_notification_on_bucket(prefix)
