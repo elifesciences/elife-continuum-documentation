@@ -54,6 +54,10 @@ The IAM group will need the following permissions
 }
 ```
 
+## Setting up a domain and subdomain in AWS
+
+From Route53 ... 
+
 ## VPN and subnets
 
 If you are creating a new account, AWS should create a VPC for you, but if you have an older account you may need to create your own VPC.
