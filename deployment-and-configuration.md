@@ -4,6 +4,35 @@ eLife continuum is currently deployed within eLife's AWS infrastructure. This gu
 
 As of writing this deployment recipe is incomplete, and will probably not lead to success, but we are actively working on getting this into a usable state ASAP and expect to have a Jenkins build pipeline ready soon.
 
+# Basic AWS configuration
+
+Before getting started with the deployment you will need to have some basic configuration setup in AWS. We have provided a couple of scripts that assist with AWS configuraiton, but the following steps currently need to be done manually:
+
+* create an IAM user with the correct permissions  
+* setup a test domain name, and configure domain management through Route 53   
+* configure, or ensure that you have, a VPN and associated subnets setup  
+
+## Creating the IAM user.
+
+## VPN and subnets
+
+If you are creating a new account, AWS should create a VPC for you, but if you have an older account you may need to create your own VPC.
+
+Go to the VPC Dashboard and create a VPC. I used `10.0.0.0/16` as the CIDR value.
+
+Next go to the Subnets tab and create two subnets, making sure to choose different availability zones for each one. I used a `10.0.128.0/17` / `10.0.128.0/17` split when creating them.
+
+You will now have values for:
+
+* `VPC_ID`
+* `SUBNET_CIDR`
+* `SUBNET_ID_A`
+* `SUBNET_ID_B`
+
+These values can be inserted into the [`configure_continuum_settings.py
+`](https://github.com/elifesciences/elife-continuum-documentation/blob/master/elife-continuum-docs/configure_continuum_settings.py) script for preparing the configuration of the different settings files that are needed to build your environment. 
+
+
 # Configuring the SWF domain that the bot is running under.
 
 SWF supports different domains. These are namespaces, and they can be used to run different production or test environments of the bot. SWF only allows you to create up to 100 domains, so do not use them with abandon.
