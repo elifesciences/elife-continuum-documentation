@@ -14,6 +14,46 @@ Before getting started with the deployment you will need to have some basic conf
 
 ## Creating the IAM user.
 
+You will need a set of AWS keys. The safest way to do this is to create an IAM user and add this user to a group that has the required permissions. If you keys get compromised you can delete your user, and create a new user with new keys.
+
+The IAM group will need the following permissions
+
+* S3
+* Ec2
+* SWF
+* RDS
+* Route53
+* custom CloufFormation policy to grant full cloud formation access
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+          "cloudformation:CancelUpdateStack",
+          "cloudformation:ContinueUpdateRollback",
+          "cloudformation:CreateChangeSet",
+          "cloudformation:CreateStack",
+          "cloudformation:DeleteChangeSet",
+          "cloudformation:DeleteStack",
+          "cloudformation:Describe*",
+          "cloudformation:EstimateTemplateCost",
+          "cloudformation:ExecuteChangeSet",
+          "cloudformation:Get*",
+          "cloudformation:List*",
+          "cloudformation:SetStackPolicy",
+          "cloudformation:SignalResource",
+          "cloudformation:UpdateStack",
+          "cloudformation:ValidateTemplate"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
 ## VPN and subnets
 
 If you are creating a new account, AWS should create a VPC for you, but if you have an older account you may need to create your own VPC.
@@ -30,7 +70,7 @@ You will now have values for:
 * `SUBNET_ID_B`
 
 These values can be inserted into the [`configure_continuum_settings.py
-`](https://github.com/elifesciences/elife-continuum-documentation/blob/master/elife-continuum-docs/configure_continuum_settings.py) script for preparing the configuration of the different settings files that are needed to build your environment. 
+`](https://github.com/elifesciences/elife-continuum-documentation/blob/master/elife-continuum-docs/configure_continuum_settings.py) script for preparing the configuration of the different settings files that are needed to build your environment.
 
 
 # Configuring the SWF domain that the bot is running under.
