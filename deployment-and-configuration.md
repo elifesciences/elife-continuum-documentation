@@ -10,7 +10,7 @@ Before getting started with the deployment you will need to have some basic conf
 
 * create an IAM user with the correct permissions  
 * setup a test domain name, and configure domain management through Route 53   
-* configure, or ensure that you have, a VPN and associated subnets setup  
+* configure, or ensure that you have, a VPC and associated subnets setup  
 
 ## Creating the IAM user.
 
@@ -56,15 +56,22 @@ The IAM group will need the following permissions
 
 ## Setting up a domain and subdomain in AWS
 
-From Route53 ...
+Two hosted zones must be created in Route 53:
+
+- a public hosted zone (e.g. `thedailybugle.org`) which serves traffic coming from outside the VPC
+- a private hosted zone (e.g. `thedailybugle.internal`) which serves internal traffic between the instances.
+
+The domains of these two hosted zones should be configured into `continuum.yaml`, as the `domain` and `intdomain` keys in the `defaults` section.
 
 ## VPN and subnets
+
+All the resources that follow should be created within the `us-east-1` AWS region, which is the only one supported at the moment.
 
 If you are creating a new account, AWS should create a VPC for you, but if you have an older account you may need to create your own VPC.
 
 Go to the VPC Dashboard and create a VPC. I used `10.0.0.0/16` as the CIDR value.
 
-Next go to the Subnets tab and create two subnets, making sure to choose different availability zones for each one. I used a `10.0.128.0/17` / `10.0.128.0/17` split when creating them.
+Next go to the Subnets tab and create two subnets, making sure to choose different availability zones for each one. I used a `10.0.0.0/17` / `10.0.128.0/17` split when creating them, which assigns half the available private IP addresses to each.
 
 You will now have values for:
 
