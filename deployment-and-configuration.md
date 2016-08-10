@@ -23,34 +23,74 @@ The IAM group will need the following permissions
 * SWF
 * RDS
 * Route53
-* custom CloufFormation policy to grant full cloud formation access
+* custom CloudFormation policy to grant full cloud formation access
 
+A very simple policy for these permissions would look like:
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-          "cloudformation:CancelUpdateStack",
-          "cloudformation:ContinueUpdateRollback",
-          "cloudformation:CreateChangeSet",
-          "cloudformation:CreateStack",
-          "cloudformation:DeleteChangeSet",
-          "cloudformation:DeleteStack",
-          "cloudformation:Describe*",
-          "cloudformation:EstimateTemplateCost",
-          "cloudformation:ExecuteChangeSet",
-          "cloudformation:Get*",
-          "cloudformation:List*",
-          "cloudformation:SetStackPolicy",
-          "cloudformation:SignalResource",
-          "cloudformation:UpdateStack",
-          "cloudformation:ValidateTemplate"
-      ],
-      "Resource": "*"
-    }
-  ]
+   "Version": "2012-10-17",
+   "Statement": [
+       {
+           "Sid": "Stmt1470822343000",
+           "Effect": "Allow",
+           "Action": [
+               "s3:*"
+           ],
+           "Resource": [
+               "*"
+           ]
+       },
+       {
+           "Sid": "Stmt1470822362000",
+           "Effect": "Allow",
+           "Action": [
+               "ec2:*"
+           ],
+           "Resource": [
+               "*"
+           ]
+       },
+       {
+           "Sid": "Stmt1470822388000",
+           "Effect": "Allow",
+           "Action": [
+               "swf:*"
+           ],
+           "Resource": [
+               "*"
+           ]
+       },
+       {
+           "Sid": "Stmt1470822405000",
+           "Effect": "Allow",
+           "Action": [
+               "rds:*"
+           ],
+           "Resource": [
+               "*"
+           ]
+       },
+       {
+           "Sid": "Stmt1470822424000",
+           "Effect": "Allow",
+           "Action": [
+               "route53:*"
+           ],
+           "Resource": [
+               "*"
+           ]
+       },
+       {
+           "Sid": "Stmt1470822437000",
+           "Effect": "Allow",
+           "Action": [
+               "cloudformation:*"
+           ],
+           "Resource": [
+               "*"
+           ]
+       }
+   ]
 }
 ```
 
@@ -82,7 +122,6 @@ You will now have values for:
 
 These values can be inserted into the [`configure_continuum_settings.py
 `](https://github.com/elifesciences/elife-continuum-documentation/blob/master/elife-continuum-docs/configure_continuum_settings.py) script for preparing the configuration of the different settings files that are needed to build your environment.
-
 
 # Configuring the SWF domain that the bot is running under.
 

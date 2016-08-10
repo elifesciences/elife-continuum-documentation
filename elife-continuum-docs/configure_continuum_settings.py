@@ -17,7 +17,7 @@ from aws_setting_utils import scheduler_app_secret, scheduler_db_username, sched
 #     lambda dumper, value: dumper.represent_scalar(u'tag:yaml.org,2002:null', None)
 #   )
 
-# AWS contstnats that have to be looked up in the AWS console (for now).
+# AWS constants that have to be looked up in the AWS console (for now).
 # This data is not confidentail, as use of if is only possible with AWS keys
 VPC_ID = "vpc-eb157d8c"
 SUBNET_CIDR = "10.0.128.0/17" # the VPC CIDR is 10.0.0.0/16
