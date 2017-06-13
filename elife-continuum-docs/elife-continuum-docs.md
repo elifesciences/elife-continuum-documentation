@@ -27,7 +27,6 @@ The actual software resides in the following repositories
 * [https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)
 * [https://github.com/elifesciences/elife-bot](https://github.com/elifesciences/elife-bot)
 * [https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)
-* [https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)
 * [https://github.com/elifesciences/jats-scraper](https://github.com/elifesciences/jats-scraper)
 * [https://github.com/elifesciences/elife-tools](https://github.com/elifesciences/elife-tools)
 
@@ -88,10 +87,6 @@ Activities can report signals to an event store, and those signals are used to p
 #### elife-metrics
 
 This is a small Django app that holds google analytics pageview data for research articles and is used to populate some article level metrics data on the journal site.
-
-#### elife-website
-
-This is a Drupal7 site that contains all of the eLife journal content, and other non-journal content. Crucially the XML to HTML is done in this site using XSLT that can be found at ...
 
 ### article metadata store
 
@@ -420,7 +415,7 @@ Will provide options for ssh'ing into any given machine.
 ## Deploying an instance with builder
 
 Builder provides the `aws_launch_instance` command to create ad-hoc project instances on AWS.
-When using this command an "instance ID" is required that will uniquely identify this instance from all other instances of this project. The instance ID is suffixed to the project name. The instance ID of `test` for the `elife-website` for example will form the identifier `elife-website-test`.
+When using this command an "instance ID" is required that will uniquely identify this instance from all other instances of this project. The instance ID is suffixed to the project name. The instance ID of `test` for the `journal` for example will form the identifier `journal--test`.
 This command is able to launch any project but *not* branches of projects that are tied to a repository.
 
 Builder does provide the `deploy` command that will allow the creation of instances of a project specific to it's github branch names.
@@ -475,26 +470,24 @@ You will be asked to choose from projects that builder knows about:
 	11 - elife-civiapi
 	12 - elife-ci
 	13 - elife-crm
-	14 - elife-website
-	15 - elife-website-medium
+    14 - lax
 	16 - elife-arges
-	17 - elife-lax
 	18 - elife-lax-nonrds
 	19 - elife-metrics
 
-Pick the `elife-website` project and provide the instance id (our suffix)
+Pick the `lax` project and provide the instance id (our suffix)
  that we want. It defaults to giving an instance id based off of today's date. For this example we will enter `continuum-test` and hit return.
 
 >   
-	 > ('elife-website') 14
+	 > ('lax') 14
 	 instance id [2016-03-29]:
 	 > continuum-test
 
 Looking in [/projects/elife.yaml](uri-config) we [see that the namespace for the website is `v2`](https://github.com/elifesciences/builder/blob/master/projects/elife.yaml#L231):
 
 >    
-	elife-website:
-	    subdomain: v2 # v2.elifesciences.org
+	lax:
+	    subdomain: lax # lax.elifesciences.org
 	    aws:
 	        ports:
 	            22: 22
@@ -521,7 +514,7 @@ Provide the `continuum-test` as the instance name, and lax is now available at
 
 Configuration for the bot is slightly different. Rather than telling salt to point to a specific custom settings file, we modify the settings file in place, and we add a new class in that settings file that is used by the bot when the bot is run.
 
-We need to add that class to [opt-elife-bot-settings.py](https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py), and it should contain pointers to the new instances of `lax`, and the `elife-website` that we have just brought up. It should also point to the appropriately named AWS resources, so for this example we should expect to see the following in this class
+We need to add that class to [opt-elife-bot-settings.py](https://github.com/elifesciences/builder/blob/master/salt/salt/elife-bot/config/opt-elife-bot-settings.py), and it should contain pointers to the new instances of `lax`, that we have just brought up. It should also point to the appropriately named AWS resources, so for this example we should expect to see the following in this class
 
 >      sqs_region = 'us-east-1'
     S3_monitor_queue = 'ct-incoming-queue'

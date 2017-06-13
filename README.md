@@ -15,7 +15,6 @@ eLife Continuum
 		- [[https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)](#httpsgithubcomelifescienceselife-article-schedulerhttpsgithubcomelifescienceselife-article-scheduler)
 		- [[https://github.com/elifesciences/elife-bot](https://github.com/elifesciences/elife-bot)](#httpsgithubcomelifescienceselife-bothttpsgithubcomelifescienceselife-bot)
 		- [[https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)](#httpsgithubcomelifescienceselife-metricshttpsgithubcomelifescienceselife-metrics)
-		- [[https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)](#httpsgithubcomelifescienceselife-websitehttpsgithubcomelifescienceselife-website)
 		- [[https://github.com/elifesciences/jats-scraper](https://github.com/elifesciences/jats-scraper)](#httpsgithubcomelifesciencesjats-scraperhttpsgithubcomelifesciencesjats-scraper)
 		- [[https://github.com/elifesciences/elife-tools](https://github.com/elifesciences/elife-tools)](#httpsgithubcomelifescienceselife-toolshttpsgithubcomelifescienceselife-tools)
 		- [[https://github.com/elifesciences/lax](https://github.com/elifesciences/lax)](#httpsgithubcomelifescienceslaxhttpsgithubcomelifescienceslax)
@@ -53,7 +52,6 @@ The actual software resides in the following repositories
 * [https://github.com/elifesciences/elife-article-scheduler](https://github.com/elifesciences/elife-article-scheduler)
 * [https://github.com/elifesciences/elife-bot](https://github.com/elifesciences/elife-bot)
 * [https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)
-* [https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)
 * [https://github.com/elifesciences/jats-scraper](https://github.com/elifesciences/jats-scraper)
 * [https://github.com/elifesciences/elife-tools](https://github.com/elifesciences/elife-tools)
 * [https://github.com/elifesciences/lax](https://github.com/elifesciences/lax)
@@ -93,10 +91,6 @@ Python app that encodes all publishing workflows and activities.
 ### [https://github.com/elifesciences/elife-metrics](https://github.com/elifesciences/elife-metrics)
 
 Stores google analytics page view data on articles to support the altmetrics display on article pages. This is a small Django application.
-
-### [https://github.com/elifesciences/elife-website](https://github.com/elifesciences/elife-website)
-
-Drupal instance of the eLife website.
 
 ### [https://github.com/elifesciences/jats-scraper](https://github.com/elifesciences/jats-scraper)
 
