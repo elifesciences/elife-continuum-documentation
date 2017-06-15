@@ -2,9 +2,9 @@ Continuum has been built on AWS services and this is the preferred environment t
 
 This guide will walk you through setting up a demonstrative version of `journal`, the user-visible website that exposes all the content inside Continuum. `api-dummy` will provide journal with a small, realistic data set.
 
-1. [requirements.md](Requirements)
-1. [builder.md](Configure builder)
-1. [builder-private.md](Create a builder-private repository)
-1. [deploy-master.md](Deploying a master server)
-1. [deploy-api-dummy.md](Deploying a api-dummy instance)
-1. [deploy-journal.md](Deploying a journal instance)
+1. [Requirements](requirements.md)
+1. [Configure builder](builder.md)
+1. [Create a builder-private repository](builder-private.md)
+1. [Deploying a master server](deploy-master.md)
+1. [Deploying a api-dummy instance](deploy-api-dummy.md)
+1. [Deploying a journal instance](deploy-journal.md)
