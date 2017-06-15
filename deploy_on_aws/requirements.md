@@ -11,6 +11,7 @@ Inside your AWS account, you will need:
 - a Route 53 public hosted zone, with a domain such `thedailybugle.org`.
 - a Route 53 private hosted zone, with a internal domain such as `thedailybugle.internal`.
 - a wildcard SSL certificate, e.g. for `*.thedailybugle.org`; along with its private key and certificate chain in PEM format.
+- a IAM AWS user with the necessary permissions to create the resources needed by the components. A [wery wide policy JSON document](wide-policy.json) is available.
 
 ### Known constraints
 
