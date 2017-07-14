@@ -4,8 +4,10 @@
 
 Run
 ```
-./bldr deploy:journal,prod
+./bldr deploy:journal,baseline
 ```
-to deploy a new `journal--prod` stack (or update an existing one.)
+to deploy a new `journal--baseline` stack (or update an existing one.)
+
+We are using the `baseline` environment for all stacks, which should correspond to the most basic configuration (excluding additional components such as CDNs or load balancers).
 
 Refer to [https://github.com/elifesciences/builder-private-example/blob/master/pillar/journal.sls] for journal configuration.
