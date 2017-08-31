@@ -73,7 +73,7 @@ MTTR: 3:46
 - Make Luke aware that Paul Kelly's report problem may be related to this backfill (SIAN DONE)
 - Make everyone aware not to do backfills at the moment (PAUL)
 - Make Lax load balanced and run backfill only on one instance https://elifesciences.atlassian.net/browse/ELPP-3026 (GIORGIO)
-- Measure times from three backfill phases (generate, validate, ingest) to look for optimizations like [avoiding ingests on unchanged articles](https://github.com/elifesciences/elife-continuum-documentation/blob/7987c51d5cc944d9a9aba13dd7595a90ce069f36/incidents/2017-08-25-Lax-backfill-service-degradation.md). To be investigated *after* it is load balanced (GIORGIO)
+- Measure times from three backfill phases (generate, validate, ingest) to look for optimizations like [avoiding ingests on unchanged articles](https://elifesciences.atlassian.net/browse/ELPP-3068). To be investigated *after* it is load balanced (GIORGIO)
 - Set up some kind of monitoring on CPU credits, possibly New Relic. Ask New Relic contacts (GIORGIO)
 - Amend playbook on backfill to include both starting and stopping (GIORGIO)
 - Ensure all team members use Slack on incidents (PAUL)
