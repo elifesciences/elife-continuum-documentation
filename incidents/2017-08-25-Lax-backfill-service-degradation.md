@@ -49,7 +49,7 @@ Change doesn't make a difference.
 ## Contributing Factor(s)
 
 - only one EC2 instance
-- instance is a `t2.*`, burstable type with CPU credits
+- instance is a `t2.small`, burstable type with CPU credits
 - no notification of CPU credit balance being 0
 - lack of knowledge about how to stop a backfill
 - not all team members on Slack
@@ -73,7 +73,7 @@ MTTR: 3:46
 - Make Luke aware that Paul Kelly's report problem may be related to this backfill (SIAN DONE)
 - Make everyone aware not to do backfills at the moment (PAUL)
 - Make Lax load balanced and run backfill only on one instance https://elifesciences.atlassian.net/browse/ELPP-3026 (GIORGIO)
-- Measure times from three backfill phases (generate, validate, ingest) to look for optimizations like avoiding ingests on unchanged articles. To be investigated *after* it is load balanced (GIORGIO)
+- Measure times from three backfill phases (generate, validate, ingest) to look for optimizations like [avoiding ingests on unchanged articles](https://elifesciences.atlassian.net/browse/ELPP-3068). To be investigated *after* it is load balanced (GIORGIO)
 - Set up some kind of monitoring on CPU credits, possibly New Relic. Ask New Relic contacts (GIORGIO)
 - Amend playbook on backfill to include both starting and stopping (GIORGIO)
 - Ensure all team members use Slack on incidents (PAUL)
