@@ -65,5 +65,5 @@ MTTR: 3:17
 ## Corrective Actions
 
 - Fix search lack of support for field of content types with complex structure (authorResponse in articles but also other article fields but also other content types) (CHRIS)
-- We need to be notified when Search logs produces this kind of errors, either through Loggly or New Relic (GIORGIO)
-- Pipeline that updates kitchen sink should notice their changes, and we should check they are indexed and propagated everywhere (GIORGIO)
+- We need to be notified when Search logs produces this kind of errors, either through Loggly or New Relic (GIORGIO) [ELPP-3151](https://elifesciences.atlassian.net/browse/ELPP-3151)
+- Pipeline that updates kitchen sink should notice their changes, and we should check they are indexed and propagated everywhere (GIORGIO) [ELPP-3152](https://elifesciences.atlassian.net/browse/ELPP-3152)
