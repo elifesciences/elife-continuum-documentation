@@ -75,4 +75,4 @@ MTTR: 0:32
 - Revoke permissions in existing keys are superfluous (GIORGIO) [ELPP-3149](https://elifesciences.atlassian.net/browse/ELPP-3149)
 - Investigate termination protection for production instances (GIORGIO) [ELPP-3149](https://elifesciences.atlassian.net/browse/ELPP-3149)
 - Access to console for all tech team staff needs to be enabled (DAVID)
-- Runbook for this type of incident (how to create a new stack quickly, and restore a database) (GIORGIO)
+- Playbook for this type of incident (how to create a new stack quickly, and restore a database) (GIORGIO) [Playbook on recreating stacks](https://github.com/elifesciences/continuum-playbook/blob/master/operations/recreating_stacks.md)
