@@ -26,7 +26,7 @@ It is later understood that this change was from 60 MB free to 0 MB free.
 
 09:34 elifesciences.org is confirmed as still reachable in random sampled pages, using cached API responses
 
-09:39 the SQS queue of `journal-cms--prod` is identified as still containing messages and correlated with the disk filling. Messages are identified as `elife-metrics` events.
+09:39 the SQS queue of `journa-cms--prod` is identified as still containing messages and correlated with the disk filling. Messages are identified as `elife-metrics` events.
 
 09:41 the cache rebuilds on `journal-cms--prod` are hanging due to the full db, and are manually killed.
 
@@ -44,23 +44,32 @@ It is later understood that this change was from 60 MB free to 0 MB free.
 
 ## Contributing Factor(s)
 
-TBD
+- no way to notice database was getting full
+- processes hanging which made the EC2 instance crash
+- graph of RDS space which had no unit of measure
+- unnecessary versioning on journal-cms
 
 ## Stabilization Steps
 
-TBD
+1. Restart the instance
+2. Stop all processes like cache rebuild and article import
+3. Increase RDS size through console directly
 
 ## Impact
 
-TBD
+Not cached data not available on elifesciences.org, but random sampling shown was not much scope
 
-MTTD: TBD
+MTTD: 5h30m from New Relic measurement and alert to first Slack post
 
-MTTR: TBD
+MTTR: 7h34m from alert to /ping working again
 
 ## Corrective Actions
 
-TBD
-
-`If you do a post-mortem, actions are to fix logging in Recommendations and to move Drupal’s lock to Redis. Idea for the DB increase in Journal CMS is to find out if revisioning is turned on, and if so, make sure it’s switched off for external data.`
-`Revisioning is annoyingly a requirement for using paragraphs. I would love to kill it. I will revisit that. We need it for covers but should be able to pick and choose when it is used.`
+- alert on RDS space [GIORGIO, LUKE]
+- check or update the TTL of journal's caches (API and CloudFront, IIIF). Can we turn off journal-cms for 72 hours and rely on caches? [CHRIS]
+- investigation: see if we can turn off revisions for article content (especially views) and clean up old data left there [NATHAN]
+- investigation: can we set up autoscaling on RDS space? [GIORGIO]
+- investigate: data gathering from New Relic to expose pages there as a dashboard [SEAN]
+- extract from logs where processes were hanging so that we can set up a timeout on the db connection [GIORGIO]
+- possibly move Drupal’s lock to Redis [CHRIS to clarify]
+- logging in recommendations may be insufficient to detect the problem [GIORGIO]
