@@ -1,3 +1,8 @@
+
+**This document has been superceded by the [eLife file naming and asset IDs](https://github.com/elifesciences/XML-mapping/blob/master/elife_file_naming_2016_08_25.md) document.**
+
+---
+
 # eLife file naming specification
 
 ## File naming and workflow
