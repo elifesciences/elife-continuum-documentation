@@ -592,7 +592,7 @@ Configuration for our projects is determined by salt. Salt uses yaml files to fi
 	'elife-dashboard-*':
 		- base.daily-system-updates
 		- base.python-dev
-		- base.postgresql
+		- base.postgresql-12
 		- base.nginx
 		- base.uwsgi
 		- base.acme
@@ -613,7 +613,7 @@ To create a custom config for our `continuum-test` namespace we just need to add
 	'elife-dashboard-*':
 		- base.daily-system-updates
 		- base.python-dev
-		- base.postgresql
+		- base.postgresql-12
 		- base.nginx
 		- base.uwsgi
 		- base.acme
